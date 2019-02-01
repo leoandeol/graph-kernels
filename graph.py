@@ -3,6 +3,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy.sparse as sp
 
 def gen_graph(type, n):
     if type == "ring":
@@ -29,3 +30,10 @@ def alter_graph(G, nodes):
 def gen_and_draw(type, n):
     nx.draw(gen_graph(type,n))
     plt.show()
+
+def product_graph(X,Y):
+	A = nx.adjacency_matrix(X)
+	B = nx.adjacency_matrix(Y)
+	W = sp.kron(A,B)
+	G = nx.from_scipy_sparse_matrix(W)
+	return G, W
