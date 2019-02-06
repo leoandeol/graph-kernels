@@ -1,5 +1,5 @@
 # graph-kernels
-First Master Thesis on the topic of Graph Kernels and SVMs for Pattern recognition, focusing on low-complexity algorithms for labelled graphs
+First Master Thesis on the topic of Graph Kernels and SVMs for Pattern recognition, focusing on low-complexity kernels for labelled graphs using random walks
 
 Libs : libsvm (through sklearn) + networkx
 
