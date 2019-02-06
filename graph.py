@@ -92,6 +92,7 @@ def gen_database(nb_graphs, nb_altered, nb_nodes, nb_colors, intensity):
             D = np.diagflat(1/np.sum(A_,axis=0))
             A = A_ @ D
             db_A.append((A,typ))
+    np.radom.shuffle(db_A)
     return np.array(db_A)
         
 def export_db(db,path):
