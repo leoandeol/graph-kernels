@@ -2,7 +2,7 @@
 
 import networkx as nx
 import matplotlib.pyplot as plt
-import numpy as np
+import numpy as np; np.random.seed(0)
 import scipy.sparse as sp
 from random import random
 import pickle as pk

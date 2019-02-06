@@ -20,7 +20,7 @@ def raw_kernel(A1, A2):
 	n = Wx.shape[0]
 	px = np.ones((n,1))/n
 	qx = np.ones((n,1))/n
-	return np.sum([mu(k) * qx.T @ np.power(Wx,k) @ px for k in range(1,Wx.shape[0])])
+	return np.sum([mu(k) * qx.T @ np.power(Wx,k) @ px for k in range(1,5*Wx.shape[0])])
 
 def build_gram_matrix(db):
 	gram = np.empty((len(db),len(db)))
@@ -30,6 +30,15 @@ def build_gram_matrix(db):
 			gram[i, j] = ker
 			if i != j:
 				gram[j, i] = ker
+	return gram
+
+#optimiser
+def build_gram_matrix_nonsq(X, Z):
+	gram = np.empty((len(X),len(Z)))
+	for i in range(len(X)):
+		for j in range(len(Z)):
+			ker = raw_kernel(X[i],Z[j])
+			gram[i, j] = ker
 	return gram
 	
 def test(db):
@@ -48,6 +57,7 @@ def test(db):
         kernel_train = build_gram_matrix(X_train)
         svc.fit(kernel_train, y_train)
         # en fait np.dot(X_test, X_train.T)
-        kernel_test = build_gram_matrix(X_test)
+        kernel_test = build_gram_matrix_nonsq(X_test, X_train.T)
         y_pred = svc.predict(kernel_test)
         print(zero_one_loss(y_test,y_pred))
+        return svc
