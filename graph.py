@@ -31,7 +31,6 @@ def gen_graph(type, n, nb_colors):
         G.edges[u,v]["label"] = np.random.randint(nb_colors)
     return G
 
-#alter nodes or edges or labels ?
 def alter_graph_nodes(G, n):
     G.remove_nodes_from(map(tuple,np.random.permutation(G.nodes())[:n]))
                         
@@ -80,8 +79,8 @@ def gen_database(nb_graphs, nb_altered, nb_nodes, nb_colors, intensity):
         GS = gen_graph(typ,nb_nodes,nb_colors)
         if GS == "Error":
             print("Error")
-        A_ = nx.adjacency_matrix(GS).T.A
-        D = np.diag(1/np.sum(A_,0))
+        A_ = nx.to_numpy_matrix(GS).T
+        D = np.diagflat(1/np.sum(A_,axis=0))
         A = A_ @ D
         db_A.append((A,typ))
         for _ in range(nb_altered):
@@ -89,8 +88,8 @@ def gen_database(nb_graphs, nb_altered, nb_nodes, nb_colors, intensity):
             alter_graph_nodes(GS,np.random.randint(max(1,int(np.floor(nb_nodes*intensity)))))
             alter_graph_edges(GS,np.random.randint(max(1,int(np.floor(nb_nodes*intensity)))))
             alter_graph_labels(GS,np.random.randint(max(1,int(np.floor(nb_nodes*intensity)))))
-            A_ = nx.adjacency_matrix(G).T.A
-            D = np.diag(1/np.sum(A_,0))
+            A_ = nx.to_numpy_matrix(G).T
+            D = np.diagflat(1/np.sum(A_,axis=0))
             A = A_ @ D
             db_A.append((A,typ))
     return np.array(db_A)

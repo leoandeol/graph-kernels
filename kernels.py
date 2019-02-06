@@ -1,5 +1,4 @@
 from graph import gen_database, product_graph
-import scipy.sparse as sp
 import matplotlib.pyplot as plt
 
 
@@ -16,7 +15,7 @@ def mu(k):
 #somme infinie ?
 # comment choisir mu, p, q
 def raw_kernel(A1, A2):
-	Wx = sp.kron(A1,A2)
+	Wx = np.kron(A1,A2)
 	n = Wx.shape[0]
 	px = np.ones((n,1))/n
 	qx = np.ones((n,1))/n
@@ -46,18 +45,14 @@ def test(db):
         gram = build_gram_matrix(db[:,0])
         #plt.matshow(gram)
         sns.heatmap(gram)
-        plt.show()
         n = int(gram.shape[0]*0.7)
         X, y = shuffle(db[:,0], db[:,1])
-        print(X.shape, y.shape)
         X_train, X_test = X[:n], X[n:]
         y_train, y_test = y[:n], y[n:]
         svc = SVC(kernel='precomputed')
         
         kernel_train = build_gram_matrix(X_train)
         svc.fit(kernel_train, y_train)
-        # en fait np.dot(X_test, X_train.T)
         kernel_test = build_gram_matrix_nonsq(X_test, X_train.T)
         y_pred = svc.predict(kernel_test)
         print(zero_one_loss(y_test,y_pred))
-        return svc
