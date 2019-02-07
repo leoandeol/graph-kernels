@@ -57,7 +57,7 @@ def product_graph(X,Y):
     G = nx.from_scipy_sparse_matrix(W)
     return G, W
     
-def gen_database(nb_graphs, nb_altered, nb_nodes, nb_colors, intensity):
+def gen_database(nb_graphs, nb_altered, nb_nodes, nb_colors, intensity, normalized=False):
     """ Generates a database of graphs
 	Parameters
 	----------
@@ -89,8 +89,11 @@ def gen_database(nb_graphs, nb_altered, nb_nodes, nb_colors, intensity):
             alter_graph_edges(GS,np.random.randint(max(1,int(np.floor(nb_nodes*intensity)))))
             alter_graph_labels(GS,np.random.randint(max(1,int(np.floor(nb_nodes*intensity)))))
             A_ = nx.to_numpy_matrix(G).T
-            D = np.diagflat(1/np.sum(A_,axis=0))
-            A = A_ @ D
+            if normalized:
+                D = np.diagflat(1/np.sum(A_,axis=0))
+                A = A_ @ D
+            else:
+                A = A_
             db_A.append((A,typ))
     np.random.shuffle(db_A)
     return np.array(db_A)
@@ -104,8 +107,8 @@ def import_db(path):
         return pk.load(f)
 
 
-def gen_export_db(nb_graphs, nb_altered, nb_nodes, nb_colors, intensity):
-    db = gen_database(nb_graphs, nb_altered, nb_nodes, nb_colors, intensity)
+def gen_export_db(nb_graphs, nb_altered, nb_nodes, nb_colors, intensity, normalized=True):
+    db = gen_database(nb_graphs, nb_altered, nb_nodes, nb_colors, intensity, normalized)
     path = str("dbs/db-"+str(time())+".dat")
     export_db(db,path)
     return (db,path)
