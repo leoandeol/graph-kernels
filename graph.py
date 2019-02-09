@@ -32,6 +32,11 @@ def gen_graph(type, n, nb_colors):
     return G
 
 def alter_graph_nodes(G, n):
+#donner les noeuds à ne pas enlever
+#s'assurer que ce qu'on enleve ne change pas la classe
+#par ex hypercube jouer sur la dimension
+#bruit en deuxieme temps, en premier temps alterations qui restent de la même topologie
+#commencer avec 2 topologies
     G.remove_nodes_from(map(tuple,np.random.permutation(G.nodes())[:n]))
                         
 def alter_graph_edges(G, n):
@@ -47,7 +52,7 @@ def gen_and_draw(type, n, quantif):
     quantif : int
     number of values the label can take
     """
-    nx.draw(gen_graph(type,n))
+    nx.draw(gen_graph(type,n,quantif))
     plt.show()
 
 def product_graph(X,Y):
@@ -95,7 +100,7 @@ def gen_database(nb_graphs, nb_altered, nb_nodes, nb_colors, intensity, normaliz
             else:
                 A = A_
             db_A.append((A,typ))
-    np.random.shuffle(db_A)
+    #np.random.shuffle(db_A)
     return np.array(db_A)
         
 def export_db(db,path):
