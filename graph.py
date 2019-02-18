@@ -13,7 +13,7 @@ class Database:
 
     def __init__(self, path = None):
         # on se concentre sur star, ring et tree
-        self.GRAPH_TYPES = ["ring", "star", "grid", "tree", "cube", "chain"]
+        self.GRAPH_TYPES = ["ring", "star", "tree"]
         if path is None:
             self.loaded = False
             self.path = None
@@ -28,29 +28,61 @@ class Database:
             G = nx.cycle_graph(n)
         elif type == "star":
             G = nx.star_graph(n)
-        elif type == "grid":
-            G = nx.grid_2d_graph(n//2,n//2)
         elif type == "tree":
-            G = nx.balanced_tree(2,int(np.floor(np.log2(n-1))))
-        elif type == "cube":
-            G = nx.hypercube_graph(int(np.floor(np.log2(n))))
-        elif type == "chain":
-            G = nx.path_graph(n)
+            G = nx.balanced_tree(2,int(np.floor(np.log2(n)-1)))
+            while len(G.nodes()) < n:
+                node = np.random.choice(G.nodes())
+                if G.degree[node]==1:
+                    node2 = len(G.nodes())
+                    G.add_node(node2)
+                    G.add_edge(node,node2)
+        # elif type == "grid":
+        #     G = nx.grid_2d_graph(n//2,n//2)
+        # elif type == "cube":
+        #     G = nx.hypercube_graph(int(np.floor(np.log2(n))))
+        # elif type == "chain":
+        #     G = nx.path_graph(n)
         else:
             return "Error"
         for (u,v) in G.edges():
             G.edges[u,v]["label"] = np.random.randint(nb_colors)
         return G
-        
-    def alter_graph_struct(self, G, type, n):
-        if type == "":
-            pass
-        G.remove_edges_from(map(tuple,np.random.permutation(G.edges())[:n]))
-        
+    
+    def alter_graph_struct(self, G_orig, type, n):
+        G = G_orig.copy()
+        if type == "star":
+            if random()<0.5:
+                G = nx.star_graph(len(G.nodes())-n)
+            else:
+                G = nx.star_graph(len(G.nodes())+n)
+        elif type == "ring": 
+            if random()<0.5:
+                G = nx.cycle_graph(len(G.nodes())-n)
+            else:
+                G = nx.cycle_graph(len(G.nodes())+n)
+        elif type == "tree":
+            if random()<0.5:
+                while n > 0:
+                    no = np.random.choice(G.nodes())
+                    if G.degree[no]==1:
+                        n -= 1
+                        G.remove_nodes_from([no])
+            else:
+                while n > 0:
+                    no = np.random.choice(G.nodes())
+                    if G.degree[no]==1:
+                        n -= 1
+                        no2 = len(G.nodes())
+                        G.add_node(no2)
+                        G.add_edge(no,no2)
+        else:
+            raise NotImplementedError
+        return G
+            
     def alter_graph_labels(self, G, n):
         for (u,v) in map(tuple,np.random.permutation(G.edges())[:n]):
             G.edges[u,v]["label"]=np.random.randint(n)
-                
+            
         
     def gen_and_draw(self, type, n, quantif):
         """
@@ -105,7 +137,7 @@ class Database:
                 else:
                     A = A_
                     db_A.append((A,typ))
-        #np.random.shuffle(db_A)
+                    #np.random.shuffle(db_A)
         return np.array(db_A)
 
         def export_db(self, db, path):
