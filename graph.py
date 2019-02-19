@@ -99,7 +99,7 @@ class Database:
         G = nx.from_scipy_sparse_matrix(W)
         return G, W
 
-    def gen_database(self, nb_graphs, nb_altered, nb_nodes, nb_colors, intensity, normalized=False):
+    def gen_database(self, nb_graphs, nb_altered, nb_nodes, nb_colors, intensity):
         """ Generates a database of graphs
 	    Parameters
 	    ----------
@@ -129,16 +129,13 @@ class Database:
                 G = self.alter_graph_struct(GS, typ, np.random.randint(max(1,int(np.floor(nb_nodes*intensity)))))
                 self.alter_graph_labels(G, np.random.randint(max(1,int(np.floor(nb_nodes*intensity)))))
                 A_ = nx.to_numpy_matrix(G).T
-                if normalized:
-                    D = np.diagflat(1/np.sum(A_,axis=0))
-                    A = A_ @ D
-                else:
-                    A = A_
+                D = np.diagflat(1/np.sum(A_,axis=0))
+                A = A_ @ D
                 db_A.append((A,typ))
         #np.random.shuffle(db_A)
         return np.array(db_A)
 
-    def gen_database_test(self, nb_altered, nb_nodes, nb_colors, intensity, normalized=False):
+    def gen_database_test(self, nb_altered, nb_nodes, nb_colors, nb_altered_nodes_max):
         """ Generates a database of graphs
 	    Parameters
 	    ----------
@@ -163,14 +160,11 @@ class Database:
             A = A_ @ D
             db_A.append((A,typ))
             for _ in range(nb_altered):
-                G = self.alter_graph_struct(GS, typ, np.random.randint(max(1,int(np.floor(nb_nodes*intensity)))))
-                self.alter_graph_labels(G, np.random.randint(max(1,int(np.floor(nb_nodes*intensity)))))
+                G = self.alter_graph_struct(GS, typ, np.random.randint(nb_altered_nodes_max))
+                self.alter_graph_labels(G, np.random.randint(nb_altered_nodes_max))
                 A_ = nx.to_numpy_matrix(G).T
-                if normalized:
-                    D = np.diagflat(1/np.sum(A_,axis=0))
-                    A = A_ @ D
-                else:
-                    A = A_
+                D = np.diagflat(1/np.sum(A_,axis=0))
+                A = A_ @ D
                 db_A.append((A,typ))
         #np.random.shuffle(db_A)
         return np.array(db_A)

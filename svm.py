@@ -4,8 +4,10 @@ import matplotlib.pyplot as plt
 from sklearn.svm import SVC
 from sklearn.utils import shuffle
 from sklearn.metrics import zero_one_loss
+from sklearn.model_selection import cross_val_score, GridSearchCV, StratifiedKFold
 from kernel import Kernel
 import numpy as np
+from time import time
 
 class SVM:
 
@@ -15,11 +17,7 @@ class SVM:
         self.M = np.max([len(x.nonzero()[0]) for x in db[:,0]])
         self.mu = mu
         self.k = Kernel(self.mu,self.N,self.M)
-        X, y = db[:,0], db[:,1]
-        #shuffle turned of for debug here and in graph
-        #X, y = shuffle(db[:,0], db[:,1])
-        self.X_train, self.X_test = X[:self.n], X[self.n:]
-        self.y_train, self.y_test = y[:self.n], y[self.n:]
+        self.X, self.y = shuffle(db[:,0], db[:,1])
         self.svc = SVC(kernel='precomputed')
 
     def learn(self):
@@ -31,6 +29,13 @@ class SVM:
         self.kernel_test = self.k.build_gram_matrix_nonsq(self.X_test, self.X_train.T)
         self.y_pred = self.svc.predict(self.kernel_test)
         return zero_one_loss(self.y_test,self.y_pred)
+
+    def cross_val_score(self, k):
+        start = time()
+        self.kernel = self.k.build_gram_matrix(self.X)
+        end = time() - start
+        score = cross_val_score(self.svc, self.kernel, self.y, cv=k)
+        return { "accuracy": sum(score)/len(score), "time": end, "stddev": np.std(score)}
 
     def display_heatmap(self, categ = "traintest"):
         #revoir labels
