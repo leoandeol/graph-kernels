@@ -1,7 +1,3 @@
-from graph import gen_database, product_graph
-import matplotlib.pyplot as plt
-
-
 import numpy as np; np.random.seed(1)#probleme double graine ? 
 
 class Kernel:
