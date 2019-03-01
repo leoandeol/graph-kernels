@@ -11,28 +11,29 @@ from time import time
 
 class SVM:
 
-    def __init__(self, db, ratio_split, mu):
-        self.n = int(len(db)*0.7)
+    def __init__(self, db, ratio_split, lbd, kernel="raw_kernel"):
+        self.n = int(len(db)*ratio_split)
         self.N = np.max(db[:,0].shape[0])
         self.M = np.max([len(x.nonzero()[0]) for x in db[:,0]])
-        self.mu = mu
-        self.k = Kernel(self.mu,self.N,self.M)
+        self.lbd = lbd
+        self.k = Kernel(self.lbd,self.N,self.M)
+        self.ker = getattr(self.k, kernel)
         self.X, self.y = shuffle(db[:,0], db[:,1])
         self.svc = SVC(kernel='precomputed')
 
     def learn(self):
-        self.kernel_train = self.k.build_gram_matrix(self.X_train)
+        self.kernel_train = self.k.build_gram_matrix(self.X_train, self.ker)
         self.svc.fit(self.kernel_train, self.y_train)
 
     def score(self):
         #check is matrice dans bon sens
-        self.kernel_test = self.k.build_gram_matrix_nonsq(self.X_test, self.X_train.T)
+        self.kernel_test = self.k.build_gram_matrix_nonsq(self.X_test, self.X_train.T, self.ker)
         self.y_pred = self.svc.predict(self.kernel_test)
         return zero_one_loss(self.y_test,self.y_pred)
 
     def cross_val_score(self, k):
         start = time()
-        self.kernel = self.k.build_gram_matrix(self.X)
+        self.kernel = self.k.build_gram_matrix(self.X, self.ker)
         end = time() - start
         score = cross_val_score(self.svc, self.kernel, self.y, cv=k)
         return { "accuracy": sum(score)/len(score), "time": end, "stddev": np.std(score)}
