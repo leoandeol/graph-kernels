@@ -1,5 +1,7 @@
 import numpy as np; np.random.seed(1)#probleme double graine ?
 from scipy.sparse.linalg import cg
+from scipy.linalg import solve_discrete_lyapunov
+from scipy.optimize import fixed_point
 
 class Kernel:
 
@@ -13,6 +15,7 @@ class Kernel:
         self.M = M
         self.mu = lambda x: pow(self.lbd,x)
 
+    #pourquoi divisé par self.N
     def raw_kernel(self, A1, A2):
         Wx = np.kron(A1,A2)
         n = Wx.shape[0]
@@ -32,11 +35,16 @@ class Kernel:
 
     def sylv_eq_kernel(self, A1, A2):
         """ 
-        Sylvester equation Methods
+        Sylvester equation Methods (lyapunov)
         O(n^3)
-        for graph with discrete edge labels
+        for graph with no labels only 
         """
-        pass
+        n = Wx.shape[0]
+        m = len(Wx.nonzero()[0])
+        px = np.ones((n,1))/self.N
+        qx = np.ones((n,1))/self.N
+        #introuvable
+        
 
     #TODO optimiser tehcnique y
     def conj_grad_kernel(self, A1, A2):
@@ -54,6 +62,15 @@ class Kernel:
          x,_ = cg(M,px)
          return qx.T@x
 
+     def fixed_point_kernel(self, A1, A2):
+         Wx = np.kron(A1,A2)
+         n = Wx.shape[0]
+         m = len(Wx.nonzero()[0])
+         px = np.ones((n,1))/self.N
+         qx = np.ones((n,1))/self.N
+         
+         return np.sum([self.mu(k) * qx.T @ np.power(Wx,k) @ px for k in range(self.N)])/m
+    
     def build_gram_matrix(self, db, kernel):
         gram = np.empty((len(db),len(db)))
         for i in range(len(db)):
