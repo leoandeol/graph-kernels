@@ -62,14 +62,39 @@ class Kernel:
          x,_ = cg(M,px)
          return qx.T@x
 
-     def fixed_point_kernel(self, A1, A2):
-         Wx = np.kron(A1,A2)
-         n = Wx.shape[0]
-         m = len(Wx.nonzero()[0])
-         px = np.ones((n,1))/self.N
-         qx = np.ones((n,1))/self.N
-         
-         return np.sum([self.mu(k) * qx.T @ np.power(Wx,k) @ px for k in range(self.N)])/m
+    def fixed_point_kernel(self, A1, A2):
+        Wx = np.kron(A1,A2)
+        n = Wx.shape[0]
+        m = len(Wx.nonzero()[0])
+        px = np.ones((n,1))/self.N
+        qx = np.ones((n,1))/self.N
+        func = lambda x: px+(self.lbd*Wx@x)
+        x = fixed_point(func, px)
+        #pas sur
+        return qx.T@x
+
+    def spec_decomp_kernel(self, A1, A2):
+        Wx = np.kron(A1,A2)
+        Dx,Px = np.linalg.eig(Wx)
+        real = np.isreal(Dx)
+        print("Px shape before",Px.shape)
+        Dx = Dx[np.where(real==True)]
+        Px = Px[np.where(real==True),:]
+        print("Px shape meanwhile",Px.shape)
+        Px = Px[:,np.where(real==True)]
+        print("Px shape after",Px.shape)
+
+        Dx = np.diag(Dx)
+        Px1 = np.linalg.inv(Px)
+        n = Wx.shape[0]
+        m = len(Wx.nonzero()[0])
+        px = np.ones((n,1))/self.N
+        qx = np.ones((n,1))/self.N
+        k = qx.T @ Px @ np.linalg.inv(np.identity(n)-self.lbd*Dx) @ Px1 @ px
+        k = np.asscalar(k)
+        print(k)
+        print(type(k))
+        return k
     
     def build_gram_matrix(self, db, kernel):
         gram = np.empty((len(db),len(db)))
