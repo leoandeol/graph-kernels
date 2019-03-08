@@ -1,0 +1,4 @@
+x0 aleatoire conj grad et faire moyenne et ecart type
+metrique entre les matrices de gram (distance euclidienne et rang)
+
+A precoditioner aleatoire symetrique définie postive  tester (vecteur aleatoire x : x@x.T

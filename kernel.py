@@ -15,7 +15,7 @@ class Kernel:
         self.M = M
         self.mu = lambda x: pow(self.lbd,x)
 
-    #pourquoi divisé par self.N
+    #pourquoi diviser par self.N
     def raw_kernel(self, A1, A2):
         Wx = np.kron(A1,A2)
         n = Wx.shape[0]
