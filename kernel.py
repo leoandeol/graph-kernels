@@ -68,9 +68,10 @@ class Kernel:
         px = np.ones((n,1))/self.N
         qx = np.ones((n,1))/self.N
         #ca marche mais cuisine
-        self.lbd = 1/(10+np.max(np.linalg.eigvals(Wx)))
+        self.lbd = 1/(1+np.max(np.linalg.eigvals(Wx)))
         func = lambda x: np.asarray(px+self.lbd*Wx@x)
-        try:
+		x = fixed_point(func, np.asarray(px),maxiter=1000)
+		try:
             x = fixed_point(func, np.asarray(px),maxiter=1000)
         except:
             print("somme en ligne",np.sum(Wx,axis=1))
