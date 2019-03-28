@@ -19,7 +19,7 @@ class Kernel:
         px = np.ones((n,1))/self.N
         qx = np.ones((n,1))/self.N
         #diviser par le nombre d'arretes le rapproche du reste et augmente le score?
-        return np.sum([self.mu(k) * qx.T @ np.power(Wx,k) @ px for k in range(self.N)])/m
+        return np.sum([self.mu(k) * qx.T @ np.power(Wx,k) @ px for k in range(self.N)])/n
 
     def inv_kernel(self, A1, A2):
         # (16)
@@ -93,7 +93,7 @@ class Kernel:
         #a fixer
         if np.linalg.det(Px)==0:
             print(Px)
-            return 
+            return
         
         Dx = np.diag(Dx)
         Px1 = np.linalg.inv(Px)
