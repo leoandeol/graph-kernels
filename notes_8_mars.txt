@@ -8,10 +8,6 @@ symetriser = A+A.T / 2 pour SpecDecomp
 calculer la 23 itérativement (l'évaluer) initialiser avec px ou avec une approximation de la droite de 25 par developpement de taylor par exemple.
  => regarder aussi sur http://numerical.recipes/
  
- ne pas calculer toutes les valeurs propres fixed point mais juste la plus grande
- faire des maths pour trouver une condition suffisante sur lambda pour la convergence (faire des remplacements/borner des valeurs)
- et pour k
- 
  faire itérativement les fixed point
  L(lambda)<0 (convergence)
  
@@ -38,3 +34,11 @@ calculer la 23 itérativement (l'évaluer) initialiser avec px ou avec une appro
  synthetiser differement comme l'article, rappeller quel est l'article central
  faire un rappel sur les noyaux et définitions pour introduction
  demander taille finale du rapport et un exemple de rapport
+
+FAIT :
+
+
+ ne pas calculer toutes les valeurs propres fixed point mais juste la plus grande
+ faire des maths pour trouver une condition suffisante sur lambda pour la convergence (faire des remplacements/borner des valeurs)
+ et pour k
+ 

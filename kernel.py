@@ -1,6 +1,6 @@
 import numpy as np; np.random.seed(1)#probleme double graine ?
 from scipy.sparse.linalg import cg
-from scipy.linalg import solve_discrete_lyapunov
+from scipy.linalg import solve_discrete_lyapunov, eigh
 from scipy.optimize import fixed_point
 
 #coder graph labélisés
@@ -67,40 +67,44 @@ class Kernel:
         m = len(Wx.nonzero()[0])
         px = np.ones((n,1))/self.N
         qx = np.ones((n,1))/self.N
-        #ca marche mais cuisine
-        self.lbd = 1/(1+np.max(np.linalg.eigvals(Wx)))
-        func = lambda x: np.asarray(px+self.lbd*Wx@x)
-		x = fixed_point(func, np.asarray(px),maxiter=1000)
-		try:
-            x = fixed_point(func, np.asarray(px),maxiter=1000)
-        except:
-            print("somme en ligne",np.sum(Wx,axis=1))
-            print("somme en colonne",np.sum(Wx,axis=0))
-            print(Wx.shape,"det=",np.linalg.det(self.lbd*Wx))
+        #diagonaliser
+        Wx = (Wx + Wx.T)/2
+        #on calcule que la valeur propre max
+        self.lbd = 1/(12+abs(eigh(Wx,eigvals_only=True,eigvals=(n-1,n-1))[0]))
+        #si lambda trop proche de l'inverse de la valeur propre peut etre tres lent à converger quand la matrice d'adjacence est très dense
+        func = lambda x: np.asarray(px+(self.lbd*Wx)@x)
+        x = fixed_point(func, np.asarray(px),maxiter=1500)
         k = np.real(np.asscalar(qx.T@x))
         return k
 
     def spec_decomp_kernel(self, A1, A2):
         Wx = np.kron(A1,A2)
+        #diagonaliser Wx
+        #Wx = (Wx + Wx.T)/2
         Dx,Px = np.linalg.eig(Wx)
-        real = np.isreal(Dx)
-        print("Px shape before",Px.shape)
-        Dx = Dx[np.where(real==True)]
-        Px = np.delete(Px, np.where(real==False),axis=0)
-        Px = np.delete(Px, np.where(real==False),axis=1)
-        print("Px shape after",Px.shape)
+        # real = np.isreal(Dx)
+        # print("Px shape before",Px.shape)
+        # Dx = Dx[np.where(real==True)]
+        # Px = np.delete(Px, np.where(real==False),axis=0)
+        # Px = np.delete(Px, np.where(real==False),axis=1)
+        # print("Px shape after",Px.shape)
 
+
+        #a fixer
+        if np.linalg.det(Px)==0:
+            print(Px)
+            return 
+        
         Dx = np.diag(Dx)
         Px1 = np.linalg.inv(Px)
-        print("Dx shape",Dx.shape)
+
+        
         n = Dx.shape[0]
         m = len(Wx.nonzero()[0])
         px = np.ones((n,1))/self.N
         qx = np.ones((n,1))/self.N
         k = qx.T @ Px @ np.linalg.inv(np.identity(n)-self.lbd*Dx) @ Px1 @ px
         k = np.real(np.asscalar(k))
-        print(k)
-        print(type(k))
         return k
     
     def build_gram_matrix(self, db, kernel):
