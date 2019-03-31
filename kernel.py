@@ -2,6 +2,7 @@ import numpy as np; np.random.seed(1)#probleme double graine ?
 from scipy.sparse.linalg import cg
 from scipy.linalg import solve_discrete_lyapunov, eigh
 from scipy.optimize import fixed_point
+from control import dlyap
 
 #coder graph labélisés
 class Kernel:
@@ -40,7 +41,9 @@ class Kernel:
         m = len(Wx.nonzero()[0])
         px = np.ones((n,1))/self.N
         qx = np.ones((n,1))/self.N
-        #introuvable
+        #https://python-control.readthedocs.io/en/0.8.0/generated/control.dlyap.html
+        #resoudre AXQt - X + C
+        dlyap(A,Q,C)
         
 
     #TODO optimiser tehcnique y
@@ -57,7 +60,7 @@ class Kernel:
          assert M.shape==Wx.shape
          px = np.ones((n,1))/self.N
          qx = np.ones((n,1))/self.N
-         # donner M essentiel
+         # donner M essentiel simplifier
          x,_ = cg(M,px,x0=px,M=np.linalg.inv(M))
          return qx.T@x
      
@@ -90,9 +93,8 @@ class Kernel:
         # print("Px shape after",Px.shape)
 
 
-        #a fixer
+        # matrice singuliere pour graphe staR ?
         if np.linalg.det(Px)==0:
-            print(Px)
             return 
         
         Dx = np.diag(Dx)
