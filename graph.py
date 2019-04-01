@@ -53,13 +53,25 @@ class Database:
         if type == "star":
             if random()<0.5:
                 G = nx.star_graph(len(G.nodes())-n)
+                for (u,v) in G.edges():
+                    #print(np.random.permutation(list(G_orig.edges(data=True)))[0][2])
+                    G.edges[u,v]["label"] = np.random.permutation(list(G_orig.edges(data=True)))[0][2]["label"]
             else:
                 G = nx.star_graph(len(G.nodes())+n)
+                for (u,v) in G.edges():
+                    #print(np.random.permutation(list(G_orig.edges(data=True)))[0][2])
+                    G.edges[u,v]["label"] = np.random.permutation(list(G_orig.edges(data=True)))[0][2]["label"]
         elif type == "ring": 
             if random()<0.5:
                 G = nx.cycle_graph(len(G.nodes())-n)
+                for (u,v) in G.edges():
+                    #print(np.random.permutation(list(G_orig.edges(data=True)))[0][2])
+                    G.edges[u,v]["label"] = np.random.permutation(list(G_orig.edges(data=True)))[0][2]["label"]
             else:
                 G = nx.cycle_graph(len(G.nodes())+n)
+                for (u,v) in G.edges():
+                    #print(np.random.permutation(list(G_orig.edges(data=True)))[0][2])
+                    G.edges[u,v]["label"] = np.random.permutation(list(G_orig.edges(data=True)))[0][2]["label"]
         elif type == "tree":
             if random()<0.5:
                 while n > 0:
@@ -74,7 +86,7 @@ class Database:
                         n -= 1
                         no2 = len(G.nodes())
                         G.add_node(no2)
-                        G.add_edge(no,no2)
+                        G.add_edge(no,no2,label=np.random.permutation(list(G.edges(data=True)))[0][2]["label"])
         else:
             raise NotImplementedError
         return G
@@ -121,16 +133,34 @@ class Database:
             GS = self.gen_graph(typ,nb_nodes,nb_colors)
             if GS == "Error":
                 print("Error")
-            A_ = nx.to_numpy_matrix(GS).T
-            D = np.diagflat(1/np.sum(A_,axis=0))
-            A = A_ @ D
+            if nb_colors == 1:
+                A_ = nx.to_numpy_matrix(GS).T
+                D = np.diagflat(1/np.sum(A_,axis=0))
+                A = A_ @ D
+            else:
+                A = []
+                for i in range(nb_colors):
+                    tmp = nx.Graph((u, v, e) for u,v,e in GS.edges_iter(data=True) if e['label'] == i)
+                    tmp = nx.to_numpy_matrix(tmp).T
+                    D = np.diagflat(1/np.sum(tmp,axis=0))
+                    tmp = tmp @ D
+                    A.append(tmp)
             db_A.append((A,typ))
             for _ in range(nb_altered):
                 G = self.alter_graph_struct(GS, typ, np.random.randint(max(1,int(np.floor(nb_nodes*intensity)))))
                 self.alter_graph_labels(G, np.random.randint(max(1,int(np.floor(nb_nodes*intensity)))))
-                A_ = nx.to_numpy_matrix(G).T
-                D = np.diagflat(1/np.sum(A_,axis=0))
-                A = A_ @ D
+                if nb_colors==1:
+                    A_ = nx.to_numpy_matrix(G).T
+                    D = np.diagflat(1/np.sum(A_,axis=0))
+                    A = A_ @ D
+                else:
+                    A = []
+                    for i in range(nb_colors):
+                        tmp = nx.Graph((u, v, e) for u,v,e in GS.edges_iter(data=True) if e['label'] == i)
+                        tmp = nx.to_numpy_matrix(tmp).T
+                        D = np.diagflat(1/np.sum(tmp,axis=0))
+                        tmp = tmp @ D
+                        A.append(tmp)
                 db_A.append((A,typ))
         #np.random.shuffle(db_A)
         return np.array(db_A)
@@ -151,23 +181,52 @@ class Database:
             ]0;1[ intensity of alteration
 	"""
         db_A = []
+        db_B = [] #sans couleurs
         for typ in self.GRAPH_TYPES:
+            #source graph
+            typ = np.random.choice(self.GRAPH_TYPES)
             GS = self.gen_graph(typ,nb_nodes,nb_colors)
             if GS == "Error":
                 print("Error")
             A_ = nx.to_numpy_matrix(GS).T
             D = np.diagflat(1/np.sum(A_,axis=0))
             A = A_ @ D
-            db_A.append((A,typ))
+            db_B.append(A)
+            if nb_colors >= 1:
+                A = []
+                for i in range(nb_colors):
+                    tmp = nx.Graph(list([(u, v, e) for u,v,e in GS.edges(data=True) if e['label'] == i]))
+                    for n in GS.nodes():
+                        if n not in tmp.nodes():
+                            tmp.add_node(n)
+                    tmp = nx.to_numpy_matrix(tmp).T
+                    D = np.diagflat(1/np.sum(tmp,axis=0))
+                    tmp = tmp @ D
+                    A.append(tmp)
+                    db_A.append((A,typ))
             for _ in range(nb_altered):
                 G = self.alter_graph_struct(GS, typ, np.random.randint(nb_altered_nodes_max))
                 self.alter_graph_labels(G, np.random.randint(nb_altered_nodes_max))
                 A_ = nx.to_numpy_matrix(G).T
                 D = np.diagflat(1/np.sum(A_,axis=0))
                 A = A_ @ D
+                db_B.append(A)
+                if nb_colors >= 1:
+                    A = []
+                    for i in range(nb_colors):
+                        # for u,v,e in GS.edges(data=True):
+                        #     print("e=",e)
+                        tmp = nx.Graph(list([(u, v, e) for u,v,e in G.edges(data=True) if e['label'] == i]))
+                        for n in G.nodes():
+                            if n not in tmp.nodes():
+                                tmp.add_node(n)
+                        tmp = nx.to_numpy_matrix(tmp).T
+                        D = np.diagflat(1/np.sum(tmp,axis=0))
+                        tmp = tmp @ D
+                        A.append(tmp)
                 db_A.append((A,typ))
         #np.random.shuffle(db_A)
-        return np.array(db_A)
+        return np.array(db_A), np.array(db_B)
 
     
     

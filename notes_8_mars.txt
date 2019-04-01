@@ -3,8 +3,6 @@ metrique entre les matrices de gram (distance euclidienne et rang)
 
 A precoditioner aleatoire symetrique définie postive  tester (vecteur aleatoire x : x@x.T
 
-decomposition spectrale A et A'
-symetriser = A+A.T / 2 pour SpecDecomp
 calculer la 23 itérativement (l'évaluer) initialiser avec px ou avec une approximation de la droite de 25 par developpement de taylor par exemple.
  => regarder aussi sur http://numerical.recipes/
  
@@ -13,7 +11,7 @@ calculer la 23 itérativement (l'évaluer) initialiser avec px ou avec une appro
  
  extension décomposition spectrale pour graphes étiquetés
  
- faire tableaux score par méthod eet différence 
+ faire tableaux score par méthode et différence 
  
  afficher graphes avec labels dans rapport
  et expliquer comment nouveaux labels
@@ -42,3 +40,6 @@ FAIT :
  faire des maths pour trouver une condition suffisante sur lambda pour la convergence (faire des remplacements/borner des valeurs)
  et pour k
  
+
+decomposition spectrale A et A'
+symetriser = A+A.T / 2 pour SpecDecomp
