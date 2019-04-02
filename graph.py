@@ -91,9 +91,11 @@ class Database:
             raise NotImplementedError
         return G
     
-    def alter_graph_labels(self, G, n):
+    def alter_graph_labels(self, G_orig, n):
+        G = G_orig.copy()
         for (u,v) in map(tuple,np.random.permutation(G.edges())[:n]):
             G.edges[u,v]["label"]=np.random.randint(n)
+        return G
             
         
     def gen_and_draw(self, type, n, quantif):
@@ -101,7 +103,10 @@ class Database:
         quantif : int
         number of values the label can take
         """
-        nx.draw(self.gen_graph(type,n,quantif))
+        G=self.gen_graph(type,n,quantif)
+        pos=nx.spring_layout(G)
+        nx.draw(G,pos)
+        nx.draw_networkx_edge_labels(G,pos)
         plt.show()
         
     def product_graph(self, X,Y):
@@ -191,7 +196,7 @@ class Database:
             A_ = nx.to_numpy_matrix(GS).T
             D = np.diagflat(1/np.sum(A_,axis=0))
             A = A_ @ D
-            db_B.append(A)
+            db_B.append((A,typ))
             if nb_colors >= 1:
                 A = []
                 for i in range(nb_colors):
@@ -200,17 +205,19 @@ class Database:
                         if n not in tmp.nodes():
                             tmp.add_node(n)
                     tmp = nx.to_numpy_matrix(tmp).T
-                    D = np.diagflat(1/np.sum(tmp,axis=0))
+                    somme = np.sum(tmp,axis=0)
+                    somme[np.where(somme==0)]=1 # to avoid division by zero, anyway column is 0
+                    D = np.diagflat(1/somme)
                     tmp = tmp @ D
                     A.append(tmp)
-                    db_A.append((A,typ))
+                db_A.append((A,typ))
             for _ in range(nb_altered):
                 G = self.alter_graph_struct(GS, typ, np.random.randint(nb_altered_nodes_max))
                 self.alter_graph_labels(G, np.random.randint(nb_altered_nodes_max))
                 A_ = nx.to_numpy_matrix(G).T
                 D = np.diagflat(1/np.sum(A_,axis=0))
                 A = A_ @ D
-                db_B.append(A)
+                db_B.append((A,typ))
                 if nb_colors >= 1:
                     A = []
                     for i in range(nb_colors):
@@ -221,11 +228,14 @@ class Database:
                             if n not in tmp.nodes():
                                 tmp.add_node(n)
                         tmp = nx.to_numpy_matrix(tmp).T
-                        D = np.diagflat(1/np.sum(tmp,axis=0))
+                        somme = np.sum(tmp,axis=0)
+                        somme[np.where(somme==0)]=1
+                        D = np.diagflat(1/somme)
                         tmp = tmp @ D
                         A.append(tmp)
-                db_A.append((A,typ))
+                    db_A.append((A,typ))
         #np.random.shuffle(db_A)
+        assert len(db_A)==len(db_B)
         return np.array(db_A), np.array(db_B)
 
     

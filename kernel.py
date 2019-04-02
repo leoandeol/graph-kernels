@@ -7,14 +7,23 @@ from control import dlyap
 #coder graph labélisés
 class Kernel:
 
-    def __init__(self, lbd, N, M):
+    def __init__(self, lbd, N):
         self.lbd = lbd
         self.N = N
         self.mu = lambda x: pow(self.lbd,x)
 
+    def kron(self, A1, A2):
+        if type(A1)==np.matrix:
+            return np.kron(A1,A2)
+        else:
+            Wx = np.kron(A1[0],A2[0])
+            for i in range(1,len(A1)):
+                Wx = Wx + np.kron(A1[i],A2[i])
+            return Wx
+
     #pourquoi diviser par self.N
     def raw_kernel(self, A1, A2):
-        Wx = np.kron(A1,A2)
+        Wx = self.kron(A1,A2)
         n = Wx.shape[0]
         m = len(Wx.nonzero()[0])
         px = np.ones((n,1))/self.N
@@ -24,7 +33,7 @@ class Kernel:
 
     def inv_kernel(self, A1, A2):
         # (16)
-        Wx = np.kron(A1,A2)
+        Wx = self.kron(A1,A2)
         n = Wx.shape[0]
         m = len(Wx.nonzero()[0])
         px = np.ones((n,1))/self.N
@@ -37,7 +46,7 @@ class Kernel:
         O(n^3)
         for graph with no labels only 
         """
-        n = Wx.shape[0]
+        n = self.shape[0]
         m = len(Wx.nonzero()[0])
         px = np.ones((n,1))/self.N
         qx = np.ones((n,1))/self.N
@@ -53,7 +62,7 @@ class Kernel:
          O(n^3)
          for graph with discrete edge labels
          """
-         Wx = np.kron(A1,A2)
+         Wx = self.kron(A1,A2)
          n = Wx.shape[0]
          I = np.identity(n)
          M = I-self.lbd*Wx
@@ -65,7 +74,7 @@ class Kernel:
          return qx.T@x
      
     def fixed_point_kernel(self, A1, A2):
-        Wx = np.kron(A1,A2)
+        Wx = self.kron(A1,A2)
         n = Wx.shape[0]
         m = len(Wx.nonzero()[0])
         px = np.ones((n,1))/self.N
@@ -81,7 +90,7 @@ class Kernel:
         return k
 
     def spec_decomp_kernel(self, A1, A2):
-        Wx = np.kron(A1,A2)
+        Wx = self.kron(A1,A2)
         #diagonaliser Wx
         #Wx = (Wx + Wx.T)/2
         Dx,Px = np.linalg.eig(Wx)

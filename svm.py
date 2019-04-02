@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn.svm import SVC
 from sklearn.utils import shuffle
 from sklearn.metrics import zero_one_loss
-from sklearn.model_selection import cross_val_score, GridSearchCV, StratifiedKFold
+from sklearn.model_selection import cross_val_score, GridSearchCV, StratifiedKFold, train_test_split
 from kernel import Kernel
 import numpy as np
 from time import time
@@ -14,11 +14,11 @@ class SVM:
     def __init__(self, db, ratio_split, lbd, kernel="raw_kernel"):
         self.n = int(len(db)*ratio_split)
         self.N = np.max(db[:,0].shape[0])
-        self.M = np.max([len(x.nonzero()[0]) for x in db[:,0]])
         self.lbd = lbd
-        self.k = Kernel(self.lbd,self.N,self.M)
+        self.k = Kernel(self.lbd,self.N)
         self.ker = getattr(self.k, kernel)
-        self.X, self.y = shuffle(db[:,0], db[:,1])
+        #self.X, self.y = shuffle(db[:,0], db[:,1])
+        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(db[:,0], db[:,1], test_size=1-ratio_split, random_state=42)
         self.svc = SVC(kernel='precomputed')
 
     def learn(self):
