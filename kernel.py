@@ -46,7 +46,7 @@ class Kernel:
         O(n^3)
         for graph with no labels only 
         """
-        n = self.shape[0]
+        n = Wx.shape[0]
         m = len(Wx.nonzero()[0])
         px = np.ones((n,1))/self.N
         qx = np.ones((n,1))/self.N
@@ -55,7 +55,6 @@ class Kernel:
         dlyap(A,Q,C)
         
 
-    #TODO optimiser tehcnique y
     def conj_grad_kernel(self, A1, A2):
          """ 
          Conjugate Gradient Methods
@@ -69,8 +68,9 @@ class Kernel:
          assert M.shape==Wx.shape
          px = np.ones((n,1))/self.N
          qx = np.ones((n,1))/self.N
-         # donner M essentiel simplifier
-         x,_ = cg(M,px,x0=px,M=np.linalg.inv(M))
+         # donner M essentiel simplifier M=inv(M)
+         v = np.random.randint(0,n,size=(n,1))
+         x,_ = cg(M,px,x0=px,M=v@v.T)
          return qx.T@x
      
     def fixed_point_kernel(self, A1, A2):

@@ -1,22 +1,14 @@
-x0 aleatoire conj grad et faire moyenne et ecart type
+faire moyenne et ecart type
 metrique entre les matrices de gram (distance euclidienne et rang)
-
-A precoditioner aleatoire symetrique définie postive  tester (vecteur aleatoire x : x@x.T
 
 calculer la 23 itérativement (l'évaluer) initialiser avec px ou avec une approximation de la droite de 25 par developpement de taylor par exemple.
  => regarder aussi sur http://numerical.recipes/
  
  faire itérativement les fixed point
- L(lambda)<0 (convergence)
- 
+
  extension décomposition spectrale pour graphes étiquetés
  
- faire tableaux score par méthode et différence 
- 
- afficher graphes avec labels dans rapport
- et expliquer comment nouveaux labels
- 
- comparer efficacité graphes sans labels et meme graphes mais labélisés
+finir sylvester et nearest kronecker product
  
  trouver un exemple reel par exemple base de données de caracteres manuscrits ou directement avoir des graphes
  => par exemple sur mnist : seuil sur intensité, si allumé alors noeud du graphe, arrete si parmis les 8 voisins, label sur le type de voisinage (ou pas), labels invariants par rotation(ACP pour direction principal et si pas vertical faire rotation de l'image ), prendre graphe dual(?).
@@ -34,12 +26,23 @@ calculer la 23 itérativement (l'évaluer) initialiser avec px ou avec une appro
  demander taille finale du rapport et un exemple de rapport
 
 FAIT :
-
+afficher graphes avec labels dans rapport
+et expliquer comment nouveaux labels
+ 
 
  ne pas calculer toutes les valeurs propres fixed point mais juste la plus grande
  faire des maths pour trouver une condition suffisante sur lambda pour la convergence (faire des remplacements/borner des valeurs)
  et pour k
- 
+
+
+A precoditioner aleatoire symetrique définie postive  tester (vecteur aleatoire x : x@x.T
+x0 aleatoire conj grad et 
 
 decomposition spectrale A et A'
 symetriser = A+A.T / 2 pour SpecDecomp
+
+ faire tableaux score par méthode et différence 
+
+ L(lambda)<0 (convergence)
+ 
+ comparer efficacité graphes sans labels et meme graphes mais labélisés
