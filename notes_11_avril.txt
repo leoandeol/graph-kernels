@@ -1,0 +1,33 @@
+latex : sections et pas faire chapitre (mieux pour stage) et format report
+Abstract : demi page (10-15 lignes) : décrire objectif, sujet, et apports du projet avec facteur acceleration tout ça
+section 1 : introduction générale plus étendue : 1 et 1/2 page :donner un aperçu/résumé du rapport : un paragraphe par élément
+section 2 : méthodologie
+sous section 1 : background : graphe, svm, noyaux, donner toutes les définitions.
+sous section 2 : state of the art : graph kernels et acceleration des random walk, donner les complexité, donner des exemples, discuter avantages et inconvenients chacun
+(optionnel : sous section 3 : contributions)
+section 3 : experiences : détailler db, tests, méthodes, les parametres, construction label, donner tableaux, resultats, teps de calculs, précision, discuter tout cela
+section 4 : 1 page ou page et demi : conclusion et discussion
+
+
+calculer différence norme foebenius pour comparer noeuds
+
+verifier si approx ameliore ou empire les resultats
+
+lancer calcul en augmentant nb noeuds et nb graphes d'un ordre de grandeur à la fois : utiliser ssh jussieu
+
+experience : ne pas converge les algos approximés jusqu'au bout et voir cb temps gagné et cb percentage perdu
+
+et donner temps calcul noyau pas svm
+precision : ponderer par cardinal de chaque classe
+peut utilise precision rappel
+
+points fixes : faire varier lambda et montrer différence temps de convergence 
+				verifier si lambda plus haut donne de meilleur accuracy
+			si temps: examiner theoriquement si points fixe converge, si il approche bien le noyau de base (piste ouverte)
+					--> et si possible faire en fonction de l'initialisation
+			essayer de changer d'initialisation (piste ouverte) et de montrer experimentalement que une initialisation est meilleure
+				
+conj grad : verifier converge en i iterations inférieur à k variables : nb entrées matrices
+
+decomp spectr : 
+		essayer de faire separement sur A et A' en cas label

@@ -29,7 +29,7 @@ class SVM:
         #check is matrice dans bon sens
         self.kernel_test = self.k.build_gram_matrix_nonsq(self.X_test, self.X_train.T, self.ker)
         self.y_pred = self.svc.predict(self.kernel_test)
-        return zero_one_loss(self.y_test,self.y_pred)
+        return 1-zero_one_loss(self.y_test,self.y_pred)
 
     def cross_val_score(self, k):
         start = time()

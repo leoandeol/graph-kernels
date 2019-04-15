@@ -3,8 +3,9 @@ developpement sylvester ?
 Conj grad OK
 Fixed points : si lambda trop proche de l'inverse de la valeur propre peut etre tres lent à converger quand la matrice d'adjacence est très dense\
 Spectral decomp probleme vecteurs à gauche non inversibles (surement etoile)?
+
 Nearest kron product approximation : recommendation implementation (https://www.imageclef.org/system/files/CLEF2016_Kronecker_Decomposition.pdf)
-commentaires rapport ? conseils ?
+commentaires rapport ? conseils ? TESTER
 
 Hors sujet:
 thèse ici ou etats unis ?
