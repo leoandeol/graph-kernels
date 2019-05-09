@@ -18,12 +18,13 @@ class SVM:
         self.k = Kernel(self.lbd,self.N)
         self.ker = getattr(self.k, kernel)
         self.X, self.y = shuffle(db[:,0], db[:,1])
-        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(db[:,0], db[:,1], test_size=1-ratio_split, random_state=42)
+        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(db[:,0], db[:,1], train_size=ratio_split, random_state=42)
         self.svc = SVC(kernel='precomputed')
 
     def learn(self):
         self.kernel_train = self.k.build_gram_matrix(self.X_train, self.ker)
         self.svc.fit(self.kernel_train, self.y_train)
+        return self.k.comp_time
 
     def score(self):
         #check is matrice dans bon sens

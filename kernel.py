@@ -3,14 +3,19 @@ from scipy.sparse.linalg import cg
 from scipy.linalg import solve_discrete_lyapunov, eigh
 from scipy.optimize import fixed_point
 from control import dlyap
+from time import time
 
 #coder graph labélisés
 class Kernel:
 
-    def __init__(self, lbd, N):
+    def __init__(self, lbd, N, k=None):
         self.lbd = lbd
         self.N = N
         self.mu = lambda x: pow(self.lbd,x)
+        # k is used in different kernels differently, usually number of loops of algorithms
+        self.k = k
+        # computation time
+        self.comp_time = 0
 
     def kron(self, A1, A2):
         if type(A1)==np.matrix:
@@ -21,14 +26,12 @@ class Kernel:
                 Wx = Wx + np.kron(A1[i],A2[i])
             return Wx
 
-    #pourquoi diviser par self.N
     def raw_kernel(self, A1, A2):
         Wx = self.kron(A1,A2)
         n = Wx.shape[0]
         m = len(Wx.nonzero()[0])
         px = np.ones((n,1))/self.N
         qx = np.ones((n,1))/self.N
-        #diviser par le nombre d'arretes le rapproche du reste et augmente le score?
         return np.sum([self.mu(k) * qx.T @ np.power(Wx,k) @ px for k in range(self.N)])/n
 
     def inv_kernel(self, A1, A2):
@@ -46,6 +49,7 @@ class Kernel:
         O(n^3)
         for graph with no labels only 
         """
+        Wx = self.kron(A1,A2)
         n = Wx.shape[0]
         m = len(Wx.nonzero()[0])
         px = np.ones((n,1))/self.N
@@ -81,9 +85,14 @@ class Kernel:
         qx = np.ones((n,1))/self.N
         #diagonaliser
         Wx = (Wx + Wx.T)/2
+
+
+        
         #on calcule que la valeur propre max
-        self.lbd = 1/(12+abs(eigh(Wx,eigvals_only=True,eigvals=(n-1,n-1))[0]))
+        #self.lbd = 1/(12+abs(eigh(Wx,eigvals_only=True,eigvals=(n-1,n-1))[0]))
         #si lambda trop proche de l'inverse de la valeur propre peut etre tres lent à converger quand la matrice d'adjacence est très dense
+
+        
         func = lambda x: np.asarray(px+(self.lbd*Wx)@x)
         x = fixed_point(func, np.asarray(px),maxiter=1500)
         k = np.real(np.asscalar(qx.T@x))
@@ -119,6 +128,7 @@ class Kernel:
         return k
     
     def build_gram_matrix(self, db, kernel):
+        self.comp_time = time()
         gram = np.empty((len(db),len(db)))
         for i in range(len(db)):
             for j in range(i+1):
@@ -126,6 +136,7 @@ class Kernel:
                 gram[i, j] = ker
                 if i != j:
                     gram[j, i] = ker
+        self.comp_time = time() - self.comp_time
         return gram
 
     #optimiser
