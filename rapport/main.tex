@@ -5,7 +5,7 @@
 \author{\textbf{Léo Andéol}\thanks{leo.andeol@gmail.com}\\ Master DAC, Sorbonne Université\\ Paris, France}
 \date{May 2019}
 
-\usepackage{natbib}
+\usepackage[square,sort,comma,numbers]{natbib}
 \usepackage{graphicx}
 \usepackage{amsmath,amsthm,amssymb}
 \usepackage{mathtools}
@@ -28,8 +28,9 @@
   \mathbb{Z}%
 }
 
+\newtheorem{theorem}{Theorem}
 \theoremstyle{definition}
-\newtheorem{definition}{Definition}[section]
+\newtheorem{definition}{Definition}
 
 \begin{document}
 
@@ -51,17 +52,17 @@
  \todo{introduction générale plus étendue : 1 et 1/2 page :donner un aperçu/résumé du rapport : un paragraphe par élément - ECRIRE A LA FIN}
  \lipsum[1-8]
 \section{Methodology}
- \todo{Est-ce que c'est la bonne expression en anglais ?}
 \subsection{Background}
 sous section 1 : background : graphe, svm, noyaux, donner toutes les définitions.
 \subsubsection{Graphs}
-\todo{Reference pour graphes}
-A graph\cite{graph_wiki} is a type of mathematical structure that represents the connection between object. It is thus composed of vertices (or nodes) and edges. Vertices represent objects and are usually depicted as circles or spheres whereas edges link pairs or vertices. 
+\todo{Reference pour graphes : ???}
+\todo{comment relier les définitions}
+A graph\cite{graph_wiki} is a type of mathematical structure that represents connections between objects. It is thus composed of vertices (or nodes) and edges. Vertices represent objects and are usually depicted as circles or spheres whereas edges link pairs or vertices. 
 \begin{definition}
 	A graph is an ordered pair $G=(V,E)$ where :
 	\begin{itemize}
 		\item $V$ is a set of nodes
-		\item $E \subseteq {(u,v) | (u,v) \in V^2}$
+		\item $E \subseteq \{(u,v) : (u,v) \in V^2\}$
 	\end{itemize}
 \end{definition}
 \begin{figure}[!htb]
@@ -71,12 +72,35 @@ A graph\cite{graph_wiki} is a type of mathematical structure that represents the
 \end{multicols}
 \caption{Two "tree" graphs, resp. unlabeled and labeled}
 \end{figure}
-The edges of the graph can be weighted and can be either oriented or not. We will be focusing on undirected unweighted graphs, thus we have :
+The edges of the graph can be weighted and can be either oriented or not. We will be focusing on undirected unweighted graphs.
 \begin{definition}
-	$\forall (u,v) \in E \implies (v,u)\in E$
+	Let $G=(V,E)$ be a graph, if $G$ is undirected, then we have
+	\begin{itemize}
+		\item $\forall (u,v) \in E \implies (v,u)\in E$
+	\end{itemize}
 \end{definition}
-Both vertices and edges can have labels, which can take various forms : they can be elements of a finite or infinite set (such as integers but also strings), or even continuous (such as $\in \R$).
-Graphs were first used in their modern form to represent the problem of Seven Bridges of Königsberg\cite{konigsberg_wiki}, and have been ever since used to represent maps, and thus path-finding algorithms were developed. Graphs can also be used, with labels, to represent different type of molecules and interactions between them.(parler aussi des réseaux ? des problemes de flots etc ?)\\
+\paragraph{Degree}
+\begin{definition}
+	The degree of a vertex $d(v)$ is the number of vertices it is connected to.
+\end{definition}
+It is ... ?
+\begin{definition}
+	A path
+\end{definition}
+\begin{definition}
+	A cycle
+\end{definition}
+\paragraph{Labels and colors}
+Both vertices and edges can have labels (sometimes called colors), they can take various forms : they can be integers, elements of a finite or infinite set (such as integers but also strings), or even continuous (such as $\in \R$).
+\paragraph{Connectivity}
+Connectivity is another basic concept of graphs. It means that all vertices are accessible from any vertex.
+\begin{definition}
+	Let $G=(V,E)$ be a graph,\\
+	$G$ is connected if and only if there is a path between every pair of vertices
+\end{definition} 
+If a graph is a not connected, and a subgraph induced by it is, then this subgraph is called a connected component.
+\\
+Graphs were first used in their modern form to represent the problem of Seven Bridges of Königsberg (cite), and have been ever since used to represent maps, and thus path-finding algorithms were developed. Graphs can also be used, with labels, to represent different type of molecules and interactions between them.(parler aussi des réseaux ? des problemes de flots etc ?)\\
 During this project, we will focus on undirected graphs which can have any type of labels on their edges only (if it is only on their nodes, the complementary graph can be studied).\\
 We will be comparing graphs in order to find similarities between them, and classify them in different groups. It has been shown(cite) that it can be used effectively on proteins and (?).
 \subsubsection{Support Vector Machines}
@@ -107,45 +131,98 @@ However, if the data weren't linearly separable the algorithm wouldn't be optimi
 \end{equation}
 \subsubsection{Kernels}
 In its dual form, the SVM problem only requires a dot product between the sample vectors. Then, we can use a nonlinear transformation $\phi(x)$ to replace the dot-product $\vec{x_i} \cdot \vec{x_j}$ by $\phi(\vec{x_{i}})\cdot\phi(\vec{x}_{j})$ , effectively augmenting the dimensions of our vectors and thus the expressiveness of our model by enhancing the separability of the data. However, for complex transformations, such as in infinite dimensions, the function $\phi$ isn't defined. But it was found(cite) that the standard dot product can be replaced by another function as long as it is a bilinear positive semi definite form. 
-\begin{equation}
-    \sum\limits_{i=1}^{n}\sum\limits_{i=1}^{n}K(\vec{x_{i}},\vec{x_{j}})c_{i}c_{j} \geq 0 \qquad \forall i \in \{1..n\} \quad c_i \in \R
-\end{equation}
+\begin{definition}
+	A kernel $K$ is positive semi definite if and only if :\\
+    \begin{equation}
+    	\sum\limits_{i=1}^{n}\sum\limits_{i=1}^{n}K(\vec{x_{i}},\vec{x_{j}})c_{i}c_{j} \geq 0 \qquad \forall i \in \{1..n\} \quad c_i \in \R
+    \end{equation}
+\end{definition}
 Thus, the dot product can be replaced by a function $K(x_1,x_2)$ which will indirectly (?) transform the data in larger dimensions, even infinite with the Gaussian kernel(cite) and return the dot product of those transformations, while remaining computable in all cases. This replacement is usually called the "Kernel Trick".\\
 Ever since the foundation of SVMs, the kernel trick became a big focus of the machine learning community as it naturally fits in the algorithm and allows supervised learning on very complex data, and enjoying greater accuracy than most algorithms.
 \subsection{State of the Art}
-sous section 2 : state of the art : graph kernels et acceleration des random walk, donner les complexité, donner des exemples, discuter avantages et inconvenients chacun
+\todo{Mettre explication comme "ici nousallons parler de ça ça " ou pas}
 \subsubsection{Introduction}
-In this chapter we will discuss the advance of research on graph kernels. Graph kernels have been studied since Support Vector Machines started getting popular(cite). Since then, a lot of progress has been made, and several types of kernels have been discovered, such as random walk and graphlet kernels, the two we will be stuyding, but not the only ones. There are also graph kernels that use spanning trees, and several others that are unfortunately usually not semi definite(cite nino).
-\url{R-convolution kernels, rational kernels}\\
-\url{source: https://publikationen.uni-tuebingen.de/xmlui/bitstream/handle/10900/49731/pdf/thesis_all.pdf?sequence=1&isAllowed=y}
-\subsubsection{Graphlets}
-A graphlet(cite) is a subgraph of 3,4 or 5 nodes taken from a much larger graph. The idea of a graphlet kernel is to count all types of graphlets that appear in a graph, and use that count to compare to another graph.\\
+In this chapter we will discuss the advance of research on graph kernels.Graph Kernels are a type of R-convolution kernels\cite{haussler99convolution} applied to graphs, which are kernels that are based on decompositions of complex objects and comparisons of those decompositions.\\
+Graph Kernels have been studied since Support Vector Machines started getting popular\cite{kashima_graphkers_2003}. Since then, a lot of progress has been made, and several types of kernels have been discovered\todo{découverts ou inventés?}, such as random walk\cite{kashima_graphkers_2003} and graphlet\cite{shervashidze_efficient_2009} kernels, the two we will be studying, but not the only ones. There are also graph kernels that use spanning trees, and several others that are unfortunately usually not positive semi-definite\cite{shervashidze_scalable_2012}.
+\subsubsection{Graphlets}\todo{A faire plus tard}
+A graphlet\cite{shervashidze_efficient_2009}\todo{Citer deux fois un seul article ok ou pas?} is a subgraph of 3,4 or 5 nodes taken from a much larger graph. The idea of a graphlet kernel is to count all types of graphlets that appear in a graph, and use that count to compare to another graph.\\
 insert list of graphlets
 \subsubsection{Random walks}
-The state of the art of this type of kernel is mainly defined in Graph Kernels(cite) although there have been several other developments recently (cite). Random walks are a type of rather intuitive algorithms : as its name says, it randomly walks through a graph for a certain time, and we can use these walks to compare graphs as it has been shown(cite). Actually, we will walk through all possible paths in the graph we will compare using a simple trick : by making the adjacency matrix stochastic, we can use it as a markov chain. Moreover, it has also been shown(cite) that performing a walk on two separate graphs at the same time is the same as performing a walk on the product graph. The product graph is in computer science terms the Cartesian product of the two graphs, taking all possible combinations of edges and nodes, but mathematically, the adjacency matrix of a such graph is the result of the Kronecker product of the two graphs(cite) (expliquer?) :
+Graph kernels based on Random Walks have been studied since very early\cite{kashima_graphkers_2003}, several of them were created and were then united\cite{vishwanathan_graph_2010}. Random walks are a type of rather intuitive algorithms : the idea is to randomly walk through a graph and then compare it to random walks in another graph. Actually, all the random walks are computed at the same time by making the adjacency matrix stochastic and using it as a Markov chain. Moreover, it has also been shown\cite{imrich_prodgraphs} that performing a walk on two separate graphs at the same time is the same as performing a walk on the product graph. The product graph is in simpler terms the Cartesian product of the two graphs, taking all possible combinations of nodes and linking those nodes when there is an edge between two specific nodes in both the original graphs. \\
+\begin{definition}
+	Let $G_1=(V_{1},E_{1})$ and $G_2=(V_{2},E_{2})$ be two graphs,\\the product graph
+	$G_\times = (V_{\times},E_{\times})$ is then defined as
+	\begin{itemize}
+		\item $V_{\times} = \{(v,w) : v \in V_{1}, w \in V_{2} \}$
+		\item $E_{\times} = \{((v_1,w_1),(v_2,w_2)) : v_1,v_2 \in V_{1}^2, w_1,w_2 \in V_{2}^2 \}$
+	\end{itemize}
+\end{definition}
+However, technically, the adjacency matrix $W_{\times}$ of a such graph is the result of the Kronecker (tensor) product of the two adjacency matrices $A$ and $A_2$ of the two graphs \cite{imrich_prodgraphs,noauthor_kronecker_2019}:
 \begin{equation}
     W_{\times}=A \otimes A_{2}
 \end{equation}
+We will also need the $vec$ operator that is very linked to the tensor product :
+\begin{definition}
+	Let $A$ be a matrix $n\times n$, $vec(A)$ is the vector obtained by stacking all columns of $A$.
+\end{definition}
+
 \subsubsection{Kernel definition}
+\todo{finir}
+The kernel is defined as follows
+\begin{definition}Let $p_{\times}$ and $q_{\times}$ be respectfully the start and end probability of each node, and let $W_{\times}$ be the adjacency matrix of the product graph of $G$ and $G'$, and finally $\mu(k)$ be a convergent function of $k$.
+	\begin{equation}
+		k(G,G') = \sum\limits_{k=0}^{\infty}\mu(k)q_{\times}^{\top}W_{\times}^{k}p_{\times}
+	\end{equation}
+\end{definition}
 
 \subsubsection{Sylvester Equation}
-A Sylvester equation, also sometimes called Lyapunov equation (a generalized version of it) is a matrix equation of the following shape :
+A Sylvester equation, also sometimes called Lyapunov equation (we will stick to Sylvester here) is a matrix equation of the following shape :
+\begin{definition}
+	Let $A$, $B$, and $C$ be matrices of compatible shapes, then the Sylvester equation is
+	\begin{equation}
+	AX+XB=C
+	\end{equation}
+	And the discrete-time Sylvester Equation is 
+	\begin{equation}
+	AXB+C=X
+	\end{equation}
+	Which can be generalized as
+	\begin{equation}
+		\sum_{i=0}^{d}A_{i}XB_{i}=X
+	\end{equation}
+\end{definition}
+We will be exclusively using the discrete-time Sylvester Equation and its generalization and will be referring to it as Sylvester equation. These equations are solved usually using Schur decompositions in $O(n^3)$ for the basic Sylvester equation and in unknown time for the generalized version\cite{vishwanathan_graph_2010}.\\
+We can use this equation to solve our kernel faster by replacing the $A$ and $B$ matrices by our adjacency matrices $A_1$ and $A_2$, adding $\lambda$, and $C$ by our start probabilities $p_\times$ while vectorizing the whole equation thus obtaining :\todo{colon or not?}
 \begin{equation}
-    AX+XB=C
+	vec(M) = vec(\lambda A_{1}MA_{2}) + p_{\times}
 \end{equation}
-However, there also exist a discrete-time version of it :
+From which we can obtain (where I is the identity matrix)\todo{partie speciale pour notations?}
 \begin{equation}
-    AXB+C=X
+	q_{\times}^{\top}vec(M)=q_{\times}^{\top}(I-\lambda W_{\times})^{-1}p_{\times}
 \end{equation}
-TODO solvable how, what efficiency\\
+Thus, having calculated the inverse kernel by an alternative method. The advantage of this method is that it is very fast, but unfortunately limited to unlabeled graphs, unless there is an implementation for the generalized Sylvester equation. Moreover, compared to the others, this option is very simple and does not require specific parameters, but like many others, suffers when it encounters singular matrices. 
+\todo{donner des exemples = comme quoi}
 
+sous section 2 : state of the art : graph kernels et acceleration des random walk, donner les complexité, donner des exemples, discuter avantages et inconvenients chacun
 \subsubsection{Conjugate Gradient Method}
-Note : Preconditioner random vector : $x \cdot x^{T}$ fonctionne bien\\
-The Conjugate Gradient Method is an optimization algorithm used to find approximate solutions of linear systems that have a positive semi definite matrix. As its name suggests, it is a gradient based (usually) iterative algorithm. The Main idea is 
-\subsubsection{Fixed-Point Iterations}
-si lambda trop proche de l'inverse de la valeur propre peut etre tres lent à converger quand la matrice d'adjacence est très dense\\
-Fixed point consists in ....\\
-proof that $\lambda<|\xi|^{-1}$
+The Conjugate Gradient Method is an optimization algorithm used to find approximate solutions of linear systems that have a positive semi definite matrix. As its name suggests, it is a gradient based (usually) iterative algorithm. The Main idea is  
+assumes as geometric $\mu(k)$ function
+\subsubsection{Fixed Point Iterations}
+\todo{Faire usage de fct paragraph ??}
+A fixed point is a value for which a function, returns that same value :
+\begin{definition}
+	Let $S$ a set and $f$ a map $f : S \implies S$,\\
+	$x \in S$ is a fixed point of $f$ if and only if $x=f(x)$ 
+\end{definition}
+Fixed point iterations is a method of computing a fixed point of a function by applying repeatedly the following equation until $\norm{x_{n+1}-x_{n}}<\epsilon$ where $\epsilon$ is the acceptable level of error.
+\begin{equation}
+	x_{n+1} = f(x_n)
+\end{equation}
+There is also a guarantee of convergence :
+\begin{theorem}
+	In order for the fixed-point iterations to converge, it is necessary that $\lambda<|\xi|^{-1}$ where $\xi$ is the largest eigenvalue of $W_\times$
+\end{theorem}
+\todo{le mettre en appendix?}
 \begin{proof}
   Let $x_0=p_\times$ and $t>>0$
   \begin{align*}
@@ -166,8 +243,15 @@ proof that $\lambda<|\xi|^{-1}$
       \implies \lambda < |\xi_1|^{-1}
       && \qedhere
   \end{align*}
-  Rapidité de la convergence : géométrique avec un ratio $\lambda$1/$\lambda$2???
 \end{proof}
+Since this method requires the computation of $W_\times$, the kernel value can be computed for any type of labeling. For unlabeled graphs, the complexity is $O(kn^3)$ and $O(kdn^3)$ for labeled graphs, where $d$ is the number of labels and $k$ the number of iterations which can be estimated by:
+\begin{equation}
+	k=O\left(\frac{\ln \epsilon}{\ln \lambda + \ln \abs{\xi}}\right)
+\end{equation}
+Finally, the fixed point iterations is more demanding than the others since it has a condition on the value of $\lambda$ and thus assumes as geometric $\mu(k)$ function, and the number of iterations can easily vary a lot\todo{verifier sur graphes}. The only advantage of this method is that it is very simple while still being better than the raw kernel.
+\subsubsection{Spectral Decomposition}
+
+\subsubsection{Nearest Kronecker Product Approximation}
 
 \subsection{Contributions}
 en anglais ça donne ?
@@ -175,7 +259,60 @@ en anglais ça donne ?
 
 
 \section{Experiments}
-experiences : détailler db, tests, méthodes, les parametres, construction label, donner tableaux, resultats, teps de calculs, précision, discuter tout cela
+\todo{experiences : détailler db, tests, méthodes, les parametres, construction label, donner tableaux, resultats, teps de calculs, précision, discuter tout cela}
+A big part of this project consisted in implementing the different algorithms from the main paper that I had studied \cite{vishwanathan_graph_2010}, verifying the results obtained in that article, and making new attempts to accelerate those algorithms while keeping the best accuracy possible.
+\subsection{Implementation}
+Implementing code from the main paper was a challenge in itself. Several problems aren't really documented and finding functions to solve them, or even explanations on how to solve them is sometimes difficult.
+\subsubsection{Graphs}
+The first thing that had to be done was to create a graph database generator, of very simple and standard graphs that had expectable behaviors and could thus be used for tests. Those graphs would also be altered using simple transformations, in order to create different graphs belonging to the same class.\\
+\begin{figure}[!htb]
+	\begin{multicols}{4}
+		\includegraphics[width=\linewidth]{data/generated-graphs/ring_base.png}\par
+		\includegraphics[width=\linewidth]{data/generated-graphs/ring_labels.png}\par
+		\includegraphics[width=\linewidth]{data/generated-graphs/ring_altered_struct.png}\par
+		\includegraphics[width=\linewidth]{data/generated-graphs/ring_altered_labels.png}\par
+	\end{multicols}
+	\caption{Ring graphs, resp. unlabelled, labelled, altered structured, altered labels}
+\end{figure}
+For simplicity, it was decided to only use 3 classes to stay as simple as possible. We studied 3 standard types of graphs : the ring, the star and the tree. A ring graph is a connected graph where each vertex is connected to exactly two vertices, it thus forms one big cycle. A star graph is composed of a central node, and of several other nodes that are all and only connected to the central node, it should look like a star, or perhaps a flower.\todo{Est-ce que je devrais dire ça ?}. Finally, a tree is a famous type of graph : it is a connected graph without any cycles, but here we will be studying a special type of tree, since each vertex is at most of degree 3.\\
+\begin{figure}[!htb]
+	\begin{multicols}{4}
+		\includegraphics[width=\linewidth]{data/generated-graphs/star_base.png}\par
+		\includegraphics[width=\linewidth]{data/generated-graphs/star_labels.png}\par
+		\includegraphics[width=\linewidth]{data/generated-graphs/star_altered_struct.png}\par
+		\includegraphics[width=\linewidth]{data/generated-graphs/star_altered_labels.png}\par
+	\end{multicols}
+	\caption{Star graphs, resp. unlabelled, labelled, altered structured, altered labels}
+\end{figure}
+The database generator works as follows:\todo{verifier si anglais, et c'est ok mettre deux points ?} for each type of graph, it will create a graph of predetermined size with randomly generated edge labels in a certain given interval. Then, for each graph, it will alter it a predefined number of times, and each time will create a new graph that has been both altered on structure and on labels. Alteration on structure involves removing or adding a predefined number of nodes in respect of the type of the graph thus staying in the same class as the source. 
+\begin{enumerate}
+	\item Ring graphs are simply regenerated slightly longer or shorter randomly.
+	\item Star graphs are also regenerated either with more or less nodes, randomly.
+	\item Tree graphs are either expanded by adding randomly leaves anywhere in the graph, or reduced by randomly removing leaves.
+\end{enumerate}
+Alteration on labels will randomly switch a predefined\todo{predefined beaucoup répété, c'est un probleme ?} number of edge labels. Once this is done, the generator will create two databases out of the set of previously generated graphs, one will be made of the adjacency matrix of each graph without looking at labels, and the second one will be an array of adjacency matrices taken from graphs induced by selecting only edges with a specific label, and that for all labels in the label set.
+\begin{figure}[!htb]
+	\begin{multicols}{4}
+		\includegraphics[width=\linewidth]{data/generated-graphs/tree_base.png}\par
+		\includegraphics[width=\linewidth]{data/generated-graphs/tree_labels.png}\par
+		\includegraphics[width=\linewidth]{data/generated-graphs/tree_altered_struct.png}\par
+		\includegraphics[width=\linewidth]{data/generated-graphs/tree_altered_labels.png}\par
+	\end{multicols}
+	\caption{Tree graphs, resp. unlabelled, labelled, altered structured, altered labels}
+\end{figure}
+\subsubsection{Raw Kernel}
+\subsubsection{Inverse Kernel}
+\subsubsection{Sylvester Equation}
+The Sylvester Equation is a good example of poorly documented problems (compared to the others). There are very few resources on the subject, and even less implementation of solvers. We could theoretically use the Sylvester Equation on both labeled and discrete-labeled graphs which are respectfully represented as Sylvester and Generalized Sylvester Equations (involving a sum of matrices), however, the only library available solves the first one, but not the second one. There seems to be confusing terminology\todo{correct ?} since there is a solver for the Generalized Sylvester Equation, but a different one than the one described in our source\cite{vishwanathan_graph_2010}. The same source also mentions a way to solve the generalized version\cite{TODO}, however, this option wasn't explored.  
+\todo{changé ça ?}
+\todo{Rajouter papier à citer}
+\subsubsection{Conjugate Gradient Method}
+Note : Preconditioner random vector : $x \cdot x^{T}$ fonctionne bien\\
+The Conjugate Gradient Method is however very well documented\cite{nesterov_lectures_2018} and there are several libraries implementing this algorithm (we will be using scipy).
+\todo{a faire}
+\subsubsection{Fixed Point Iteration}
+  Rapidité de la convergence : géométrique avec un ratio $\lambda$1/$\lambda$2???
+si lambda trop proche de l'inverse de la valeur propre peut etre tres lent à converger quand la matrice d'adjacence est très dense\\
 \subsubsection{Spectral Decompostion}
 can't inverse Left eigenvectors : 
 \url{https://arxiv.org/pdf/1708.00064.pdf}
@@ -185,46 +322,6 @@ can't inverse Left eigenvectors :
 	\url{http://dx.doi.org/10.1007/978-94-015-8196-7_17}
 	\url{https://mathematica.stackexchange.com/questions/91651/nearest-kronecker-product}
 	
-\subsection{Implementation}
-\subsubsection{Graph Database}
-The first step was to create a graph database generator that we would use to test our algorithms on simple cases with expectable behaviour. I have chosen to focus on 3 types of graphs (todo expand) : ring, star and tree graphs.\\
-The graph generator can create graphs that are either labelled or unlabelled. As for labelled ones, it will simply assign to all edges a random integer between 1 and the given limit during the creation of the database.
-\begin{figure}[!htb]
-\begin{multicols}{4}
-    \includegraphics[width=\linewidth]{data/generated-graphs/ring_base.png}\par
-    \includegraphics[width=\linewidth]{data/generated-graphs/ring_labels.png}\par
-    \includegraphics[width=\linewidth]{data/generated-graphs/ring_altered_struct.png}\par
-    \includegraphics[width=\linewidth]{data/generated-graphs/ring_altered_labels.png}\par
-\end{multicols}
-\caption{Ring graphs, resp. unlabelled, labelled, altered structured, altered labels}
-\end{figure}
-Moreover, the database generator will also alter all generated graphs both structurally and on labels. Concerning labels, some edges are picked in the graph following a limit given by the user and the new label values of those edges are randomly generated in the same set as the original ones.
-\begin{figure}[!htb]
-\begin{multicols}{4}
-    \includegraphics[width=\linewidth]{data/generated-graphs/star_base.png}\par
-    \includegraphics[width=\linewidth]{data/generated-graphs/star_labels.png}\par
-    \includegraphics[width=\linewidth]{data/generated-graphs/star_altered_struct.png}\par
-    \includegraphics[width=\linewidth]{data/generated-graphs/star_altered_labels.png}\par
-\end{multicols}
-\caption{Star graphs, resp. unlabelled, labelled, altered structured, altered labels}
-\end{figure}
-Finally, the structure of generated graphs will be altered depending on their type, but will always keep the same set of labels (except for new edges).
-\begin{enumerate}
-    \item Ring graphs are simply regenerated slightly longer or shorter randomly.
-    \item Star graphs are also regenerated either with more or less nodes, randomly.
-    \item Tree graphs are either expanded by adding randomly leaves anywhere in the graph, or reduced by randomly removing leaves.
-\end{enumerate}
-\begin{figure}[!htb]
-\begin{multicols}{4}
-    \includegraphics[width=\linewidth]{data/generated-graphs/tree_base.png}\par
-    \includegraphics[width=\linewidth]{data/generated-graphs/tree_labels.png}\par
-    \includegraphics[width=\linewidth]{data/generated-graphs/tree_altered_struct.png}\par
-    \includegraphics[width=\linewidth]{data/generated-graphs/tree_altered_labels.png}\par
-\end{multicols}
-\caption{Tree graphs, resp. unlabelled, labelled, altered structured, altered labels}
-\end{figure}
-After having generated the whole database, graphs will be transformed to adjacency matrices since we will only be handling graphs under this form. For unlabelled graphs, it simply returns the adjacency matrix (expliquer ce que c'est ?) and for labelled graphs it returns an array of adjacency graphs, only considering the partial graph of the edges of a particular label at a time.
-\subsubsection{Kernels}
 
 \subsection{Test of the random walk kernel}
 \subsubsection{Accuracy comparison between labelled and unlabelled graphs}

@@ -43,20 +43,21 @@ class Kernel:
         qx = np.ones((n,1))/self.N
         return qx.T @ np.linalg.inv(np.identity(n)-self.lbd*Wx)@px
 
+    #ne fonctionne pas quand matrices singulieres
     def sylv_eq_kernel(self, A1, A2):
         """ 
         Sylvester equation Methods (lyapunov)
         O(n^3)
-        for graph with no labels only 
+        for graph with no labels only : else implement "COMPUTATION OF THE CANONICAL DECOMPOSITION BYMEANS OF A SIMULTANEOUS GENERALIZED SCHURDECOMPOSITION∗"
+        with https://docs.scipy.org/doc/scipy-0.13.0/reference/generated/scipy.linalg.qz.html
         """
-        Wx = self.kron(A1,A2)
-        n = Wx.shape[0]
-        m = len(Wx.nonzero()[0])
-        px = np.ones((n,1))/self.N
-        qx = np.ones((n,1))/self.N
         #https://python-control.readthedocs.io/en/0.8.0/generated/control.dlyap.html
         #resoudre AXQt - X + C
-        dlyap(A,Q,C)
+        n = A1.shape[0]*A2.shape[0]
+        px = np.ones((n,1))/self.N
+        qx = np.ones((n,1))/self.N
+        M = dlyap(A=A1,Q=A2,C=px.reshape((A1.shape[0],A2.shape[0])))
+        return qx.T @ M.reshape((-1,1))
         
 
     def conj_grad_kernel(self, A1, A2):

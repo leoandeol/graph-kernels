@@ -1,19 +1,18 @@
 RAJOUTER ABSTRACT FACTEUR ACCELERATION ET APPORTS PROJETS
-
+calculer l'influence de px
 calculer différence norme foebenius pour comparer noeuds
-
-verifier si approx ameliore ou empire les resultats
 
 lancer calcul en augmentant nb noeuds et nb graphes d'un ordre de grandeur à la fois : utiliser ssh jussieu
 
-experience : ne pas converge les algos approximés jusqu'au bout et voir cb temps gagné et cb percentage perdu
+calculer la 23 itérativement (l'évaluer) initialiser avec px ou avec une approximation de la droite de 25 par developpement de taylor par exemple.
 
-et donner temps calcul noyau pas svm
 precision : ponderer par cardinal de chaque classe
 peut utilise precision rappel
 
-points fixes : faire varier lambda et montrer différence temps de convergence 
-				verifier si lambda plus haut donne de meilleur accuracy
+au moins 4-5 pages etat de l'art 20% rapport
+
+nearest kron product
+
 			si temps: examiner theoriquement si points fixe converge, si il approche bien le noyau de base (piste ouverte)
 					--> et si possible faire en fonction de l'initialisation
 			essayer de changer d'initialisation (piste ouverte) et de montrer experimentalement que une initialisation est meilleure
@@ -34,3 +33,15 @@ sous section 2 : state of the art : graph kernels et acceleration des random wal
 (optionnel : sous section 3 : contributions)
 section 3 : experiences : détailler db, tests, méthodes, les parametres, construction label, donner tableaux, resultats, teps de calculs, précision, discuter tout cela
 section 4 : 1 page ou page et demi : conclusion et discussion
+
+
+points fixes : faire varier lambda et montrer différence temps de convergence 
+				verifier si lambda plus haut donne de meilleur accuracy.
+
+et donner temps calcul noyau pas svm
+
+
+experience : ne pas converge les algos approximés jusqu'au bout et voir cb temps gagné et cb percentage perdu
+
+
+verifier si approx ameliore ou empire les resultats

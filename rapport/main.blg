@@ -3,44 +3,46 @@ Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: main.aux
 The style file: ieeetr.bst
 Database file #1: references.bib
-You've used 2 entries,
+Warning--I didn't find a database entry for "TODO"
+You've used 9 entries,
             1876 wiz_defined-function locations,
-            487 strings with 3674 characters,
-and the built_in function-call counts, 299 in all, are:
-= -- 26
-> -- 8
-< -- 0
-+ -- 4
-- -- 2
-* -- 14
-:= -- 51
-add.period$ -- 3
-call.type$ -- 2
-change.case$ -- 2
+            536 strings with 4923 characters,
+and the built_in function-call counts, 2016 in all, are:
+= -- 204
+> -- 70
+< -- 1
++ -- 28
+- -- 19
+* -- 126
+:= -- 292
+add.period$ -- 14
+call.type$ -- 9
+change.case$ -- 8
 chr.to.int$ -- 0
-cite$ -- 2
-duplicate$ -- 13
-empty$ -- 39
-format.name$ -- 2
-if$ -- 72
+cite$ -- 9
+duplicate$ -- 101
+empty$ -- 207
+format.name$ -- 19
+if$ -- 492
 int.to.chr$ -- 0
-int.to.str$ -- 2
-missing$ -- 2
-newline$ -- 10
-num.names$ -- 2
-pop$ -- 10
+int.to.str$ -- 9
+missing$ -- 7
+newline$ -- 35
+num.names$ -- 9
+pop$ -- 36
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 6
+skip$ -- 62
 stack$ -- 0
-substring$ -- 0
-swap$ -- 1
-text.length$ -- 0
+substring$ -- 104
+swap$ -- 33
+text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 2
-width$ -- 3
-write$ -- 20
+while$ -- 18
+width$ -- 10
+write$ -- 92
+(There was 1 warning)
