@@ -2,36 +2,37 @@
 \contentsline {section}{\numberline {2}Methodology}{4}% 
 \contentsline {subsection}{\numberline {2.1}Background}{4}% 
 \contentsline {subsubsection}{\numberline {2.1.1}Graphs}{4}% 
+\contentsline {paragraph}{Degree}{5}% 
 \contentsline {paragraph}{Labels and colors}{5}% 
-\contentsline {paragraph}{Connexity}{5}% 
-\contentsline {subsubsection}{\numberline {2.1.2}Support Vector Machines}{5}% 
-\contentsline {paragraph}{Margin and support vectors}{5}% 
-\contentsline {subsubsection}{\numberline {2.1.3}Kernels}{6}% 
+\contentsline {paragraph}{Connectivity}{5}% 
+\contentsline {subsubsection}{\numberline {2.1.2}Support Vector Machines}{6}% 
+\contentsline {paragraph}{Margin and support vectors}{6}% 
+\contentsline {subsubsection}{\numberline {2.1.3}Kernels}{7}% 
 \contentsline {subsection}{\numberline {2.2}State of the Art}{7}% 
 \contentsline {subsubsection}{\numberline {2.2.1}Introduction}{7}% 
 \contentsline {subsubsection}{\numberline {2.2.2}Graphlets}{7}% 
-\contentsline {subsubsection}{\numberline {2.2.3}Random walks}{7}% 
+\contentsline {subsubsection}{\numberline {2.2.3}Random walks}{8}% 
 \contentsline {subsubsection}{\numberline {2.2.4}Kernel definition}{8}% 
 \contentsline {subsubsection}{\numberline {2.2.5}Sylvester Equation}{8}% 
 \contentsline {subsubsection}{\numberline {2.2.6}Conjugate Gradient Method}{9}% 
 \contentsline {subsubsection}{\numberline {2.2.7}Fixed Point Iterations}{9}% 
-\contentsline {subsubsection}{\numberline {2.2.8}Spectral Decomposition}{10}% 
-\contentsline {subsubsection}{\numberline {2.2.9}Nearest Kronecker Product Approximation}{10}% 
-\contentsline {subsection}{\numberline {2.3}Contributions}{10}% 
-\contentsline {section}{\numberline {3}Experiments}{10}% 
+\contentsline {subsubsection}{\numberline {2.2.8}Spectral Decomposition}{11}% 
+\contentsline {subsubsection}{\numberline {2.2.9}Nearest Kronecker Product Approximation}{11}% 
+\contentsline {subsection}{\numberline {2.3}Contributions}{11}% 
+\contentsline {section}{\numberline {3}Experiments}{11}% 
 \contentsline {subsection}{\numberline {3.1}Implementation}{11}% 
 \contentsline {subsubsection}{\numberline {3.1.1}Graphs}{11}% 
 \contentsline {subsubsection}{\numberline {3.1.2}Raw Kernel}{12}% 
 \contentsline {subsubsection}{\numberline {3.1.3}Inverse Kernel}{12}% 
 \contentsline {subsubsection}{\numberline {3.1.4}Sylvester Equation}{12}% 
-\contentsline {subsubsection}{\numberline {3.1.5}Conjugate Gradient Method}{12}% 
+\contentsline {subsubsection}{\numberline {3.1.5}Conjugate Gradient Method}{13}% 
 \contentsline {subsubsection}{\numberline {3.1.6}Fixed Point Iteration}{13}% 
 \contentsline {subsubsection}{\numberline {3.1.7}Spectral Decompostion}{13}% 
 \contentsline {subsubsection}{\numberline {3.1.8}Nearest Kronecker Product}{13}% 
 \contentsline {subsection}{\numberline {3.2}Test of the random walk kernel}{13}% 
 \contentsline {subsubsection}{\numberline {3.2.1}Accuracy comparison between labelled and unlabelled graphs}{13}% 
-\contentsline {subsubsection}{\numberline {3.2.2}Efficiency of alternate methods}{13}% 
-\contentsline {subsubsection}{\numberline {3.2.3}Experiments on a biology dataset}{13}% 
+\contentsline {subsubsection}{\numberline {3.2.2}Efficiency of alternate methods}{14}% 
+\contentsline {subsubsection}{\numberline {3.2.3}Experiments on a biology dataset}{14}% 
 \contentsline {subsection}{\numberline {3.3}Improvements}{14}% 
 \contentsline {section}{\numberline {4}Conclusion and Future Work}{14}% 
 \contentsline {section}{\numberline {A}Appendix}{14}% 
