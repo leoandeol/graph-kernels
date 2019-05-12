@@ -16,7 +16,7 @@ class SVM:
         self.lbd = lbd
         self.k = Kernel(self.lbd)
         self.ker = getattr(self.k, kernel)
-        self.X, self.y = shuffle(db[:,0], db[:,1])
+        self.X, self.y = db[:,0], db[:,1]#shuffle(db[:,0], db[:,1])
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(db[:,0], db[:,1], train_size=ratio_split, random_state=42)
         self.svc = SVC(kernel='precomputed')
 

@@ -93,7 +93,7 @@ class Kernel:
 
         if self.lbd >= 1/abs(eigh(Wx,eigvals_only=True,eigvals=(n-1,n-1))[0]):
             print("Cannot converge")
-            return -1
+            raise ValueError()
 
         
         func = lambda x: np.asarray(px+(self.lbd*Wx)@x)
@@ -186,7 +186,7 @@ class Kernel:
         for i in range(len(X)):
             for j in range(len(Z)):
                 A = X[i]
-                B = Y[j]
+                B = Z[j]
                 ker = kernel(A,B)
                 gram[i, j] = ker
         gram -= np.ones(gram.shape)*np.min(gram)
