@@ -248,7 +248,7 @@ class Database:
             pk.dump(db,f)
             
     def import_db(self, path):
-        self.loaded = true
+        self.loaded = True
         self.path = path
         with open(path,"rb") as f:
             return pk.load(f)

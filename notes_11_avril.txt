@@ -6,11 +6,6 @@ lancer calcul en augmentant nb noeuds et nb graphes d'un ordre de grandeur à la
 
 calculer la 23 itérativement (l'évaluer) initialiser avec px ou avec une approximation de la droite de 25 par developpement de taylor par exemple.
 
-precision : ponderer par cardinal de chaque classe
-peut utilise precision rappel
-
-au moins 4-5 pages etat de l'art 20% rapport
-
 nearest kron product
 
 			si temps: examiner theoriquement si points fixe converge, si il approche bien le noyau de base (piste ouverte)
@@ -45,3 +40,5 @@ experience : ne pas converge les algos approximés jusqu'au bout et voir cb temp
 
 
 verifier si approx ameliore ou empire les resultats
+
+au moins 4-5 pages etat de l'art 20% rapport
