@@ -1,0 +1,65 @@
+difference matrices de gram montrer et montrer les images
+faire courbes pour comparer complexité et expliquer pk pareil au debut et apres diff augmente
+evacuer rapidement les graphiques qui font varier les perf en fct de leur parametres
+les graphiques les plus concluants : croissance temps de calcul par rapport taille de la base
+dire comment calculées svm et matrices de gram 
+dire que classe de meme poids et accuracy testée
+rajouter barres de stddev calcul accuracy
+faire label vs nolabel fct taille bd
+faire accuracy fct taille du train set en gardant la taille du test set fixe : generer une seule fois la bd
+pour accuracy en regenerant bd, faire des groupes de barres
+echelle log sur absisse taille des données
+comparer evolution noyaux entre eux
+Montrer quand est-ce que le noyau ne marche pas bien : sur quelles données
+FIxed point = aller au dela du nombre d'itérations
+et montrer nombre d'itérations plutot que temps de calcul et multiplier par le nombre d'une itération, tracer une ligne apres la borne, et continuer apres sans garantie de convergence, reduire nb iterations et faire sur crossval
+numpy gpu
+Faire matrice de confusion entre classes et heatmap
+tester plusieurs C pour utiliser le meilleur
+Commenter les equations dans le rapport (optionnel)
+
+slides principaux pour la presentation et slides annexes
+base MUTAG et PTC faire tourner deux jours comme dans l'article
+VRAIMENT se renseigner et comprendre le but et l'utilité dtoutes les equations : processus de diffusion : regarder les deux matrices d'adjacence, permet de modéliser la similarité (comme faire un filtrage sur les noyaux comme convolution?)
+donner ma compréhension des eéquations
+Rappeller en quelques lignes la résolution des méthodes
+pas citer wikipedia mais les références de wikipedia : tutorial on graph theory
+citer libsvm et les autres libs
+eviter citer wikipedia et un autre etudiant
+citer libs, tout ce qui est lu pour svm et tout
+transitions : apres avoir introduit les graphes, nous allons etudier comment les exploiter pour la classification avec les svm puis noyaux puis noyaux de graphes
+bien definir toutes les variables des equations
+1 page max pour graphes et pas abuser des définitions : definir sous forme de bullet points : propriétés
+Expliquer ce qu'est un classifieur 
+Faire la connexion entre nos variables et les graphes
+parler du fait qu'on a des données non vectorielles
+3 premieres parties dans sota fusionner et faire un gros parapgraphe et pas lister les familles de méthodes : comment les méthodes operent : differentes sous methodes (ex methode avaec labels, methode avec orienté ou pas)
+faire synthese à la fin de méthodologie, y'a énormément de configurations possibles, synthetiser ça
+donner un nom à la base synthétique et donner des statistiques sur les données
+experiments on synthetic data  ... on real data
+préciser "toy data"
+décrire les métriques utilisées et donner leurs équations
+subsection "databases and metrics", subsection "Evaluation Protocols" subsection "performances"
+rappeler qu'on fait que random walk
+trouver un cas ou matrices de gram difference
+accelerer mais avec une perte : comparer nearest kron product et comparer les matrices de gram
+titres très parlants peu de sous sections
+
+
+estimate square of adjacency matrix ?
+
+diapo = décrire le probleme (pédagogiquement) pour accrocher les gens et bien expliquer mon but et quelles sont les motivations réeelles
+quelle direction de travail?
+Motiver avec exemple ou illustration 
+graphes ex classif reseaux sociaux, ptroteines,  avec images, rappeller donneés non vectorielles
+produit de graphe et produit de kronecker
+labels
+Donner notations et parlerprobleme de classification
+probleme = temps de calcul (sans parler des noyaux)
+présenter rapidement svm et noyaux 
+												2 min intro 2 min classif/svm 5-6 min noyaux de graphes 4-5 min exp et conc
+noyaux sur graphes								
+Récapituler complexités et inconvénients/avantages
+
+diapos annexes
+diapos transitions avec autres sections ombrées
