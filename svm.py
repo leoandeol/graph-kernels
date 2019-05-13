@@ -13,12 +13,11 @@ class SVM:
 
     def __init__(self, db, ratio_split, lbd, kernel="raw_kernel"):
         self.n = int(len(db)*ratio_split)
-        self.N = np.max(db[:,0].shape[0])
         self.lbd = lbd
-        self.k = Kernel(self.lbd,self.N)
+        self.k = Kernel(self.lbd)
         self.ker = getattr(self.k, kernel)
-        self.X, self.y = shuffle(db[:,0], db[:,1])
-        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(db[:,0], db[:,1], train_size=ratio_split, random_state=42)
+        self.X, self.y = db[:,0], db[:,1]#shuffle(db[:,0], db[:,1])
+        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(db[:,0], db[:,1], train_size=ratio_split, random_state=42, stratify=db[:,1])
         self.svc = SVC(kernel='precomputed')
 
     def learn(self):

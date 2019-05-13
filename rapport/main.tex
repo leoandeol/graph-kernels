@@ -252,7 +252,8 @@ Finally, the fixed point iterations is more demanding than the others since it h
 \subsubsection{Spectral Decomposition}
 
 \subsubsection{Nearest Kronecker Product Approximation}
-
+\url{https://mathematica.stackexchange.com/questions/91651/nearest-kronecker-product}
+\url{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.42.1924&rep=rep1&type=pdf}\cite{VanLoan1993}
 \subsection{Contributions}
 en anglais ça donne ?
 
@@ -303,16 +304,18 @@ Alteration on labels will randomly switch a predefined\todo{predefined beaucoup 
 \subsubsection{Raw Kernel}
 \subsubsection{Inverse Kernel}
 \subsubsection{Sylvester Equation}
-The Sylvester Equation is a good example of poorly documented problems (compared to the others). There are very few resources on the subject, and even less implementation of solvers. We could theoretically use the Sylvester Equation on both labeled and discrete-labeled graphs which are respectfully represented as Sylvester and Generalized Sylvester Equations (involving a sum of matrices), however, the only library available solves the first one, but not the second one. There seems to be confusing terminology\todo{correct ?} since there is a solver for the Generalized Sylvester Equation, but a different one than the one described in our source\cite{vishwanathan_graph_2010}. The same source also mentions a way to solve the generalized version\cite{TODO}, however, this option wasn't explored.  
+The Sylvester Equation is a good example of poorly documented problems (compared to the others). There are very few resources on the subject, and even less implementation of solvers. We could theoretically use the Sylvester Equation on both labeled and discrete-labeled graphs which are respectfully represented as Sylvester and Generalized Sylvester Equations (involving a sum of matrices), however, the only library available solves the first one, but not the second one. There seems to be confusing terminology\todo{correct ?} since there is a solver for the Generalized Sylvester Equation, but a different one than the one described in our source\cite{vishwanathan_graph_2010}. The same source also mentions a way to solve the generalized version\cite{lathauwer2004}, however, this option wasn't explored.  
 \todo{changé ça ?}
 \todo{Rajouter papier à citer}
 \subsubsection{Conjugate Gradient Method}
 Note : Preconditioner random vector : $x \cdot x^{T}$ fonctionne bien\\
 The Conjugate Gradient Method is however very well documented\cite{nesterov_lectures_2018} and there are several libraries implementing this algorithm (we will be using scipy).
 \todo{a faire}
-\subsubsection{Fixed Point Iteration}
-  Rapidité de la convergence : géométrique avec un ratio $\lambda$1/$\lambda$2???
+\subsubsection{Fixed Point Iterations}
+Rapidité de la convergence : géométrique avec un ratio $\lambda$1/$\lambda$2???
 si lambda trop proche de l'inverse de la valeur propre peut etre tres lent à converger quand la matrice d'adjacence est très dense\\
+The Fixed Point Iterations method was very easy to implement and gave rapidly good results, however there is a constraint on the lambda(the geometric factor) used in the kernel as we have proved. Experiments showed that a lambda very close to the constraint increases significantly the time of computation to convergence.\todo{image}
+
 \subsubsection{Spectral Decompostion}
 can't inverse Left eigenvectors : 
 \url{https://arxiv.org/pdf/1708.00064.pdf}
@@ -360,6 +363,59 @@ Même score, car donne même matrice ???
 \url{https://ls11-www.cs.tu-dortmund.de/staff/morris/graphkerneldatasets} 
 \url{http://members.cbio.mines-paristech.fr/~nshervashidze/code/}
 enzymes
+
+\subsection{Comparison of kernels}
+\subsubsection{Label use}
+Comparison using labels and no labels
+\subsubsection{Comparison of their gram matrices}
+The algorithms approximate the kernel using very different techniques, thus the gram matrices obtained from the kernels were similar in appearance, but had significant differences of scale. It was then decided to normalize very simply the gram matrices so they could be more easily compared.
+\begin{equation}
+	M = (M - min(M) )/max(M)
+\end{equation}
+\begin{figure}[!htb]
+	\begin{multicols}{2}
+		\includegraphics[width=\linewidth]{data/gram/gram.png}\par
+		\includegraphics[width=\linewidth]{data/gram/gram2.png}\par
+	\end{multicols}
+	\caption{Two gram matrices computed using the Inverse Kernel on different datasets}
+\end{figure}
+Afterwards, in order to verify all the algorithms gave similar results, it was decided to compute the Frobenius norm of the difference of two gram matrices (divided by the size of the matrix, thus giving the mean standard deviation). The following results were obtained and were satisfying.
+\begin{table}[!htb]
+\begin{center}
+\begin{tabular}{|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|}
+	\hline
+	& Raw\newline kernel & Inverse\newline Kernel & Sylvester\newline Equation & Conjugate\newline Gradients & Fixed\newline points & Spectral\newline Decomp. \\
+	\hline
+	Raw. & 0 & 1.1e-4 & 9.8e-5 & 8.9e-5 & 1.0e-4 & 1.0e-04  \\
+	\hline
+	Inv. & - & 0 & 2.1e-5 & 7.9e-5 & 4.0e-6 & 6.8e-6 \\
+	\hline
+	Syl. & - & - & 0 & 8.0e-5 & 1.7e-5 & 1.4e-5  \\
+	\hline
+	Con. & - & - & - & 0 & 7.9e-5 & 7.9e-5  \\
+	\hline
+	Fix. & - & - & - & - & 0 & 2.8e-6 \\
+	\hline
+	Spe. & - & - & - & - & - & 0 \\
+	\hline
+\end{tabular}
+\end{center}
+\caption {Approximate standard deviation of matrix entries (?)}
+\label{tab:frobenius_norm_diff} 
+\end{table}
+\todo{correct nom ?}
+Indeed, the 
+
+\subsubsection{Complexity and Accuracy}
+
+\subsubsection{title}
+
+\subsection{Individual kernel analysis ?}
+\todo{mettre ici les images variations degré d'approximation}
+\subsection{Nearest Kronecker product ?}
+
+\subsection{On molecules}
+
 \subsection{Improvements}
 
 \section{Conclusion and Future Work}

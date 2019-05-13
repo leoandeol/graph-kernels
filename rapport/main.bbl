@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{graph_wiki}
 Wikipedia, ``Graph theory - {Wikipedia},'' 2019.
@@ -37,6 +37,17 @@ W.~Imrich and S.~Klavžar, {\em Product graphs}.
 \bibitem{noauthor_kronecker_2019}
 Wikipedia, ``Kronecker product,'' Mar. 2019.
 \newblock Page Version ID: 887195556.
+
+\bibitem{VanLoan1993}
+C.~F. Van~Loan and N.~Pitsianis, {\em Approximation with Kronecker Products},
+  pp.~293--314.
+\newblock Dordrecht: Springer Netherlands, 1993.
+
+\bibitem{lathauwer2004}
+L.~De~Lathauwer, B.~De~Moor, and J.~Vandewalle, ``Computation of the canonical
+  decomposition by means of a simultaneous generalized schur decomposition,''
+  {\em SIAM Journal on Matrix Analysis and Applications}, vol.~26, no.~2,
+  pp.~295--327, 2004.
 
 \bibitem{nesterov_lectures_2018}
 Y.~Nesterov, {\em Lectures on {Convex} {Optimization}}.
