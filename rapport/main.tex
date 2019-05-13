@@ -36,10 +36,7 @@
 
 \maketitle
 \begin{abstract}
-	\todo{ reecrire une fois rapport fini : Rajouter apport projet et facteur acceleration}\\
-	Nowadays the world is turning to a new era where data is the most valuable resource, and we are working on algorithms to exploit those the best way possible. Most research is currently focused on the so-called "big data", huge quantities of data which are very sparse and of poor quality. However, there also exist structured databases of good quality, in the form of graphs, which is the one we will be studying. Graphs can be very useful in various fields, but is mostly known for its use in biology, as it can be used to represent proteins or other types of molecules.\\
-	I chose to work on Support Vector Machines(cite qui/quand), a well known and powerful algorithm of machine learning. It is a perfect fit for studying graphs and learning to compare them because the algorithm allows through an elegant trick the use of several types of structured data.\\
-	The goal of this project is to implement a working algorithm and its improvements, test it on different types of data and try to improve it.
+	The problem of having a framework to classify graphs is becoming increasingly important in the era of data. The issue has been tackled since the beginning of the millennium and there have been significant progress. This report introduces all necessary knowledge to understand the topic and then reviews different graph kernels while focusing on a random walk kernel and its optimization. Some experiments are then conducted to verify the information given by the state of the art, and some attempts are made to accelerate the different methods to compute the kernel.  
 \end{abstract}
 
 \newpage
@@ -50,13 +47,17 @@
 
 \section{Introduction}
  \todo{introduction générale plus étendue : 1 et 1/2 page :donner un aperçu/résumé du rapport : un paragraphe par élément - ECRIRE A LA FIN}
- \lipsum[1-8]
+ \paragraph{}Nowadays the world is turning to a new era where data is the most valuable resource, and we are working on algorithms to exploit those the best way possible. Most research is currently focused on the so-called "big data", huge quantities of data which are very sparse and of poor quality. However, there also exist structured databases of good quality, in the form of graphs, which is the one we will be studying. Graphs can be very useful in various fields, but is partly known for its use in biology, as it can be used to represent proteins or other types of molecules.
+ \paragraph{}Classification of such graphs is an important problem of pattern recognition which affects a lot of sectors such as medicine, biology, and more. It was studied since the start of the millennium and significant progress was made : several methods were discovered and gave good results but met a big issue, the complexity of those methods. Since then, the main objective of research on this topic has been to either find more computationally efficient algorithms, or to find methods to accelerate the ones already in use.
+ \paragraph{}The first part of this report will introduce all the necessary background knowledge that is graphs as already mentioned, but also Support Vector Machines (SVMs) which is the classification algorithm we will be using and kernels which are transformations of data usually used to increase the accuracy of SVMs. However, graphs being non-vector data, kernels have also the objective of becoming a metric of comparison between two instances of graphs. Thus, the main principles of graph kernels will be introduced as well as their definitions. Afterwards, the different methods used to improve the computation complexity of the kernel will be introduced together with their own complexities, advantages and disadvantages.
+
+\paragraph{}The second part of this report will be focused on the technical side and experiments conducted during the project. A synthetic graph database made of toy data was required to conduct simple and quick experiments on to verify the claims made in the main publication studied, in different cases such as labeled and unlabeled graphs, or varying the size of either the database of the graph studied. Different challenges and problems met during the implementation will be explained, as well as their solution, if one has been found. Then, the main subject of this part will be discussed : the accuracy and computation time of different methods, estimation of their complexities and different attempts to approximate those methods. Finally, an experiment on a real database of proteins\todo{voir si j'en fait plus} is conducted, and the results analyzed.
+ 
 \section{Methodology}
 \subsection{Background}
 sous section 1 : background : graphe, svm, noyaux, donner toutes les définitions.
 \subsubsection{Graphs}
-\todo{Reference pour graphes : ???}
-\todo{comment relier les définitions}
+\todo{Revoir toutes les refs}
 A graph\cite{graph_wiki} is a type of mathematical structure that represents connections between objects. It is thus composed of vertices (or nodes) and edges. Vertices represent objects and are usually depicted as circles or spheres whereas edges link pairs or vertices. 
 \begin{definition}
 	A graph is an ordered pair $G=(V,E)$ where :
