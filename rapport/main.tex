@@ -55,17 +55,14 @@
  
 \section{Methodology}
 \subsection{Background}
-sous section 1 : background : graphe, svm, noyaux, donner toutes les définitions.
 \subsubsection{Graphs}
 \todo{Revoir toutes les refs}
-A graph\cite{graph_wiki} is a type of mathematical structure that represents connections between objects. It is thus composed of vertices (or nodes) and edges. Vertices represent objects and are usually depicted as circles or spheres whereas edges link pairs or vertices. 
-\begin{definition}
-	A graph is an ordered pair $G=(V,E)$ where :
-	\begin{itemize}
-		\item $V$ is a set of nodes
-		\item $E \subseteq \{(u,v) : (u,v) \in V^2\}$
-	\end{itemize}
-\end{definition}
+\paragraph{Definition}
+A graph(cite) is a type of mathematical structure that represents connections between objects. It is more precisely an ordered pair $G=(V,E)$ of two sets: vertices $V$ (or nodes) and edges $E$ that connect two vertices together.
+\begin{equation}
+	E \subseteq \{(u,v) : (u,v) \in V^2\}
+\end{equation}
+Vertices represent objects and are usually depicted as circles or spheres whereas edges link pairs or vertices. 
 \begin{figure}[!htb]
 \begin{multicols}{2}
     \includegraphics[width=\linewidth]{data/graphs/big_graph_no_label.png}\par
@@ -73,37 +70,18 @@ A graph\cite{graph_wiki} is a type of mathematical structure that represents con
 \end{multicols}
 \caption{Two "tree" graphs, resp. unlabeled and labeled}
 \end{figure}
-The edges of the graph can be weighted and can be either oriented or not. We will be focusing on undirected unweighted graphs.
-\begin{definition}
-	Let $G=(V,E)$ be a graph, if $G$ is undirected, then we have
-	\begin{itemize}
-		\item $\forall (u,v) \in E \implies (v,u)\in E$
-	\end{itemize}
-\end{definition}
-\paragraph{Degree}
-\begin{definition}
-	The degree of a vertex $d(v)$ is the number of vertices it is connected to.
-\end{definition}
-It is ... ?
-\begin{definition}
-	A path
-\end{definition}
-\begin{definition}
-	A cycle
-\end{definition}
-\paragraph{Labels and colors}
-Both vertices and edges can have labels (sometimes called colors), they can take various forms : they can be integers, elements of a finite or infinite set (such as integers but also strings), or even continuous (such as $\in \R$).
-\paragraph{Connectivity}
-Connectivity is another basic concept of graphs. It means that all vertices are accessible from any vertex.
-\begin{definition}
-	Let $G=(V,E)$ be a graph,\\
-	$G$ is connected if and only if there is a path between every pair of vertices
-\end{definition} 
-If a graph is a not connected, and a subgraph induced by it is, then this subgraph is called a connected component.
-\\
-Graphs were first used in their modern form to represent the problem of Seven Bridges of Königsberg (cite), and have been ever since used to represent maps, and thus path-finding algorithms were developed. Graphs can also be used, with labels, to represent different type of molecules and interactions between them.(parler aussi des réseaux ? des problemes de flots etc ?)\\
-During this project, we will focus on undirected graphs which can have any type of labels on their edges only (if it is only on their nodes, the complementary graph can be studied).\\
-We will be comparing graphs in order to find similarities between them, and classify them in different groups. It has been shown(cite) that it can be used effectively on proteins and (?).
+\paragraph{Properties} Graphs have a lot of properties that will be used in the rest of this project and will be introduced here
+\begin{itemize}
+	\item A graph if undirected if and only if : $\forall (u,v) \in E \implies (v,u)\in E$
+	\item The degree of a vertex $d(v)$ is the number of vertices it is connected to, or the number of distinct edges connected to it.
+	\item A path is a sequence of connected edges linking distinct vertices.
+	\item A cycle is a path where the first and last vertex is the same.
+	\item A graph can have labels (sometimes called colors) either on its vertices or edges (or both). they can take various forms such as being integers, more generally elements of a finite or infinite set and even continuous (such as $\in \R$). 
+	\item A graph is said to be connected if all vertices are connected by a path with any other vertex.
+	\item A dual graph $G'=(V',E')$ of a graph $G=(V,E)$ is composed of a set of vertices $V'$ of a new vertex for each unique $e\in E$ and a set of edges $E'$ where there is an edge $(u,v)\in V'^2$if and only if there was a vertex connecting the two former edges u and v together.
+\end{itemize} We will be focusing on undirected unlabeled graphs, and undirected graphs labeled by finite sets. However, we will only study edge-labeled graphs thus if a graph if node-labeled, simply taking its dual graph will do.
+\paragraph{History} Graphs were first used in their modern form to represent the problem of Seven Bridges of Königsberg (cite), and have been ever since used to represent maps, and thus path-finding algorithms were developed. They have also been used to represent flow problems, scheduling problems, networking routing and many others(cite). Graphs can also be used, with labels, to represent different types of molecules and interactions between them, or more simply to represent molecules by considering atoms as vertices and bonds as edges.\\
+In the next part we will be introducing Support Vector Machines which is the algorithm used in this project to classify new unknown graphs into known categories. It has been shown(cite) that it can be used effectively on proteins and enzymes.
 \subsubsection{Support Vector Machines}
 Support Vector Machines (SVM) are a type of machine learning algorithms discovered in the early 90s(cite). It was originally a classification algorithm however it has been expanded since to regression and clustering too. It is especially powerful and widely used for two main reasons :
 \paragraph{Margin and support vectors}
