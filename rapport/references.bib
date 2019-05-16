@@ -156,33 +156,13 @@
 	file = {Springer Full Text PDF:/home/leo/Zotero/storage/FPFKUMYJ/Cortes and Vapnik - 1995 - Support-vector networks.pdf:application/pdf}
 }
 
-@phdthesis{shervashidze_scalable_2012,
-	type = {Dissertation},
-	title = {Scalable graph kernels},
-	copyright = {http://tobias-lib.uni-tuebingen.de/doku/lic\_mit\_pod.php?la=de},
-	url = {https://publikationen.uni-tuebingen.de/xmlui/handle/10900/49731},
-	abstract = {Graph-structured data are becoming more and more abundant in many fields of science and engineering, such as social network analysis, molecular biology, chemistry, computer vision, or program verification. To exploit these data, one needs data analysis and machine learning methods that are able to efficiently handle large-scale graph data sets. Successfully applying machine learning and data analysis methods to graphs requires the ability to efficiently compare and represent graphs. Standard solutions to these problems are either NP-hard, not expressive enough, or difficult to adapt to a problem at hand.
-	
-	Graph kernels have attracted considerable interest in the machine learning community in the last decade as a promising solution to the above-mentioned issues. Despite significant progress in the design and improvement of graph kernels in the past few years, existing graph kernels do not measure up to the current needs of machine learning on large, labeled graphs: Even the most efficient existing kernels need O(n{\textasciicircum}3) runtime to compare a pair of graphs with n nodes, or cannot take into account node and edge labels. Our primary goal in this thesis is the design of efficient and expressive kernels for machine learning on graphs.
-	
-	We first focus on the design of generic graph kernels that can be applied to graphs with or without labels. Our main contributions to this end are the following: 
-	
-	First, we speed up the exact computation of graphlet kernels from O(n{\textasciicircum}k) to O(nd{\textasciicircum}\{k-1\}) for a pair of graphs, where n is the size of the graphs, k is the size of considered graphlets, and d is the maximum degree in the given graphs.
-	
-	Second, we define a new kernel on graphs, the Weisfeiler-Lehman subtree kernel, which is the first graph kernel scaling linearly in the number of edges in the given graph set. In our experiments on benchmark graph data sets from chemoinformatics and bioinformatics, the Weisfeiler-Lehman subtree kernel gracefully scales up to large graphs, outperforms all existing graph kernels in speed, and yields highly competitive performance in graph classification.
-	
-	Third, we generalize the Weisfeiler-Lehman subtree kernel to a family of kernels that includes many known graph kernels as special cases. This generalization enables existing graph kernels to take into account more information about the graph topology, and thereby become more expressive.
-	
-	In the last part of this thesis, we present two examples of applications: Based on our previous contributions, we propose specialized node kernels for pixel classification in remote sensing images, and graph kernels for chemical shift prediction in structural bioinformatics. Our kernels make it possible for the first time to take advantage of the rich graph structure in these applications.
-	
-	The Weisfeiler-Lehman kernels we propose here now allow graph kernels to scale to large, labeled graphs. They open the door to manifold applications of graph kernels in numerous domains which deal with graphs whose size and attributes could not be handled by graph kernels before.},
-	language = {en},
-	urldate = {2019-03-25},
-	school = {Universität Tübingen},
-	author = {Shervashidze, Nino},
-	year = {2012},
-	file = {Full Text PDF:/home/leo/Zotero/storage/UUZHRWXS/Shervashidze - 2012 - Scalable graph kernels.pdf:application/pdf;Snapshot:/home/leo/Zotero/storage/UCQGF9DU/49731.html:text/html}
+@phdthesis{shervashidze2012scalable,
+	title={Scalable graph kernels},
+	author={Shervashidze, Nino},
+	year={2012},
+	school={Universit{\"a}t T{\"u}bingen}
 }
+
 
 @article{barrett_inverse_2017,
 	title = {The inverse eigenvalue problem of a graph: {Multiplicities} and minors},
@@ -200,22 +180,6 @@
 	file = {Barrett et al. - 2017 - The inverse eigenvalue problem of a graph Multipl.pdf:/home/leo/Zotero/storage/2989F8QY/Barrett et al. - 2017 - The inverse eigenvalue problem of a graph Multipl.pdf:application/pdf}
 }
 
-
-@misc{noauthor_kronecker_2019,
-	title = {Kronecker product},
-	copyright = {Creative Commons Attribution-ShareAlike License},
-	url = {https://en.wikipedia.org/w/index.php?title=Kronecker_product&oldid=887195556},
-	abstract = {In mathematics, the Kronecker product, denoted by ⊗, is an operation on two matrices of arbitrary size resulting in a block matrix. It is a generalization of the outer product (which is denoted by the same symbol) from vectors to matrices, and gives the matrix of the tensor product with respect to a standard choice of basis. The Kronecker product should not be confused with the usual matrix multiplication, which is an entirely different operation.
-	The Kronecker product is named after Leopold Kronecker, even though there is little evidence that he was the first to define and use it. Indeed, in the past the Kronecker product was sometimes called the Zehfuss matrix, after Johann Georg Zehfuss who in 1858 described the matrix operation we now know as the Kronecker product.},
-	language = {en},
-	urldate = {2019-05-08},
-	journal = {Wikipedia},
-	author = {Wikipedia},
-	month = mar,
-	year = {2019},
-	note = {Page Version ID: 887195556},
-	file = {Snapshot:/home/leo/Zotero/storage/FLG3A3UU/index.html:text/html}
-}
 
 @article{dobson_distinguishing_2003,
 	title = {Distinguishing enzyme structures from non-enzymes without alignments},
@@ -275,38 +239,15 @@
 	year = 1999
 }
 
-@book{imrich_prodgraphs,
-	title = {Product graphs},
-	author = {Imrich, Wilfried and Klavžar, Sandi},
-	issn = {0-471-37039-8},
-	year = {2000},
-	date = {2000-01-01},
-	pages = {xvi+358},
-	publisher = {Wiley-Interscience, New York},
-	series = {Wiley-Interscience Series in Discrete Mathematics and Optimization},
-	note = {Structure and recognition, With a foreword by Peter Winkler},
-	keywords = {},
-	pubstate = {published},
-	tppubtype = {book}
+@incollection{van1993approximation,
+	title={Approximation with Kronecker products},
+	author={Van Loan, Charles F and Pitsianis, Nikos},
+	booktitle={Linear algebra for large scale and real-time applications},
+	pages={293--314},
+	year={1993},
+	publisher={Springer}
 }
 
-@Inbook{VanLoan1993,
-	author="Van Loan, C. F.
-	and Pitsianis, N.",
-	editor="Moonen, Marc S.
-	and Golub, Gene H.
-	and De Moor, Bart L. R.",
-	title="Approximation with Kronecker Products",
-	bookTitle="Linear Algebra for Large Scale and Real-Time Applications",
-	year="1993",
-	publisher="Springer Netherlands",
-	address="Dordrecht",
-	pages="293--314",
-	abstract="Let A be an m-by-n matrix with m = m1m2 and n = n1n2. We consider the problem of finding {\%} MathType!MTEF!2!1!+-{\%} feaaguart1ev2aaatCvAUfeBSjuyZL2yd9gzLbvyNv2CaerbuLwBLn{\%} hiov2DGi1BTfMBaeXatLxBI9gBaerbd9wDYLwzYbItLDharqqtubsr{\%} 4rNCHbGeaGqiVu0Je9sqqrpepC0xbbL8F4rqqrFfpeea0xe9Lq-Jc9{\%} vqaqpepm0xbba9pwe9Q8fs0-yqaqpepae9pg0FirpepeKkFr0xfr-x{\%} fr-xb9adbaqaaeGaciGaaiaabeqaamaabaabaaGcbaGaamOqaiabgI{\%} Giolabl2riHoaaCaaaleqabaGaamyBamaaBaaameaacaaIXaaabeaa{\%} liabgEna0kaad6gadaWgaaadbaGaaGymaaqabaaaaOGaaGjbVlaadg{\%} gacaWGUbGaamizaiaaysW7caWGdbGaaGjbVlabgIGiolaaysW7cqWI{\%} DesOdaahaaWcbeqaaiaad2gadaWgaaadbaGaaGOmaaqabaWccqGHxd{\%} aTcaWGUbWaaSbaaWqaaiaaikdaaeqaaaaakiaaysW7caWGZbGaam4B{\%} aiaaysW7caWG0bGaamiAaiaadggacaWG0bGaaGjbVlaacYhacaGG8b{\%} GaaGjbVlaadgeacqGHsislcaWGcbGaey4LIqSaam4qaiaaysW7caGG{\%} 8bGaaiiFaiaaysW7daWgaaWcbaGaamOraaqabaaaaa!6BBE!{\$}{\$}B {\backslash}in {\{}{\backslash}mathbb{\{}R{\}}^{\{}{\{}m{\_}1{\}} {\backslash}times {\{}n{\_}1{\}}{\}}{\}}{\backslash};and{\backslash};C{\backslash}; {\backslash}in {\backslash};{\{}{\backslash}mathbb{\{}R{\}}^{\{}{\{}m{\_}2{\}} {\backslash}times {\{}n{\_}2{\}}{\}}{\}}{\backslash};so{\backslash};that{\backslash};||{\backslash};A - B {\backslash}otimes C{\backslash};||{\{}{\backslash};{\_}F{\}}{\$}{\$}is minimized. This problem can be solved by computing the largest singular value and associated singular vectors of a permuted version of A. If A is symmetric, definite, non-negative, or banded, then the minimizing B and C are similarly structured. The idea of using Kronecker product preconditioned is briefly discussed.",
-	isbn="978-94-015-8196-7",
-	doi="10.1007/978-94-015-8196-7_17",
-	url="https://doi.org/10.1007/978-94-015-8196-7_17"
-}
 
 @article{lathauwer2004,
 	author = {De Lathauwer, L. and De Moor, B. and Vandewalle, J.},
@@ -328,4 +269,34 @@
 	}
 	
 }
+@book{bondy1976graph,
+	title={Graph theory with applications},
+	author={Bondy, John Adrian and Murty, Uppaluri Siva Ramachandra and others},
+	volume={290},
+	year={1976},
+	publisher={Citeseer}
+}
+
+@article{weichsel1962kronecker,
+	title={The Kronecker product of graphs},
+	author={Weichsel, Paul M},
+	journal={Proceedings of the American mathematical society},
+	volume={13},
+	number={1},
+	pages={47--52},
+	year={1962},
+	publisher={JSTOR}
+}
+
+@article{freund1999large,
+	title={Large margin classification using the perceptron algorithm},
+	author={Freund, Yoav and Schapire, Robert E},
+	journal={Machine learning},
+	volume={37},
+	number={3},
+	pages={277--296},
+	year={1999},
+	publisher={Springer}
+}
+
 

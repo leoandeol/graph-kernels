@@ -2,7 +2,7 @@
 \usepackage[utf8]{inputenc}
 
 \title{Graph Kernels and Support Vector Machines for Pattern Recognition}
-\author{\textbf{Léo Andéol}\thanks{leo.andeol@gmail.com}\\ Master DAC, Sorbonne Université\\ Paris, France}
+\author{\textbf{Léo Andéol}\thanks{leo.andeol@gmail.com}\\ Master DAC, Sorbonne Université\\ Paris, France\\\\ \footnotesize Supervised by: Prof. Hichem Sahbi}
 \date{May 2019}
 
 \usepackage[square,sort,comma,numbers]{natbib}
@@ -47,18 +47,18 @@
 
 \section{Introduction}
  \todo{introduction générale plus étendue : 1 et 1/2 page :donner un aperçu/résumé du rapport : un paragraphe par élément - ECRIRE A LA FIN}
- \paragraph{}Nowadays the world is turning to a new era where data is the most valuable resource, and we are working on algorithms to exploit those the best way possible. Most research is currently focused on the so-called "big data", huge quantities of data which are very sparse and of poor quality. However, there also exist structured databases of good quality, in the form of graphs, which is the one we will be studying. Graphs can be very useful in various fields, but is partly known for its use in biology, as it can be used to represent proteins or other types of molecules.
- \paragraph{}Classification of such graphs is an important problem of pattern recognition which affects a lot of sectors such as medicine, biology, and more. It was studied since the start of the millennium and significant progress was made : several methods were discovered and gave good results but met a big issue, the complexity of those methods. Since then, the main objective of research on this topic has been to either find more computationally efficient algorithms, or to find methods to accelerate the ones already in use.
- \paragraph{}The first part of this report will introduce all the necessary background knowledge that is graphs as already mentioned, but also Support Vector Machines (SVMs) which is the classification algorithm we will be using and kernels which are transformations of data usually used to increase the accuracy of SVMs. However, graphs being non-vector data, kernels have also the objective of becoming a metric of comparison between two instances of graphs. Thus, the main principles of graph kernels will be introduced as well as their definitions. Afterwards, the different methods used to improve the computation complexity of the kernel will be introduced together with their own complexities, advantages and disadvantages.
+ \paragraph{}Nowadays the world is shifting towards a new era where data is the most valuable resource, and researchers are working on algorithms to exploit it the best possible way. Most research is currently focused on the so-called "big data", huge quantities of data which are very sparse and of poor quality. However, there also exist structured databases of good quality, in the form of graphs, this very form being the one studied throughout this project. Graphs can be very useful in various fields, but are partly known for their use in biology, as they can be used to represent proteins or other types of molecules.
+ \paragraph{}Classification of such graphs is an important problem of pattern recognition which affects a lot of sectors such as medicine, biology, and more. It was studied since the beginning of the millennium and significant progress has been made : several methods were discovered and gave good results but met a big issue, the complexity of these methods. Indeed, they do not scale well to large graphs as their complexity tends to be several times polynomial. Since then, the main objective of research on this topic has been to either find more computationally efficient algorithms, or to find methods to accelerate the ones already in use.
+ \paragraph{}The first part of this report will introduce all the necessary background knowledge which are graphs as already mentioned, but also Support Vector Machines (SVMs) which is a powerful classification algorithm, and kernels which are transformations of data usually used to increase the accuracy of SVMs. However, graphs being non-vector data, kernels have also the purpose of becoming a metric of comparison between two instances of graphs. Thus, the main principles of graph kernels will be introduced as well as their definitions. Afterwards, the different methods used to improve the computation complexity of the kernel will be introduced together with their own complexities, advantages and disadvantages.
 
-\paragraph{}The second part of this report will be focused on the technical side and experiments conducted during the project. A synthetic graph database made of toy data was required to conduct simple and quick experiments on to verify the claims made in the main publication studied, in different cases such as labeled and unlabeled graphs, or varying the size of either the database of the graph studied. Different challenges and problems met during the implementation will be explained, as well as their solution, if one has been found. Then, the main subject of this part will be discussed : the accuracy and computation time of different methods, estimation of their complexities and different attempts to approximate those methods. Finally, an experiment on a real database of proteins\todo{voir si j'en fait plus} is conducted, and the results analyzed.
+\paragraph{}The second part of this report will be focused on the technical side and experiments conducted during the project. A synthetic graph database made of toy data was required to conduct simple and quick experiments. Indeed, it was made in order to verify the claims made in the main publication studied thanks to easy control on matters such as labeled and unlabeled graphs, and variations of the size of either the database or the graphs inside of it. Different challenges and problems met during the implementation will be explained, as well as their solution, if one has been found. Then, the main subject of this part will be discussed : the accuracy and computation time of different methods, estimation of their complexities and different attempts to approximate those methods. Finally, an experiment on a real database of proteins\todo{voir si j'en fait plus} is conducted, and the results analyzed.
  
 \section{Methodology}
 \subsection{Background}
 \subsubsection{Graphs}
 \todo{Revoir toutes les refs}
 \paragraph{Definition}
-A graph(cite) is a type of mathematical structure that represents connections between objects. It is more precisely an ordered pair $G=(V,E)$ of two sets: vertices $V$ (or nodes) and edges $E$ that connect two vertices together.
+A graph\cite{bondy1976graph} is a type of mathematical structure that represents connections between objects. It is more precisely an ordered pair $G=(V,E)$ of two sets: vertices $V$ (or nodes) and edges $E$ that connect two vertices together.
 \begin{equation}
 	E \subseteq \{(u,v) : (u,v) \in V^2\}
 \end{equation}
@@ -73,61 +73,94 @@ Vertices represent objects and are usually depicted as circles or spheres wherea
 \paragraph{Properties} Graphs have a lot of properties that will be used in the rest of this project and will be introduced here
 \begin{itemize}
 	\item A graph if undirected if and only if : $\forall (u,v) \in E \implies (v,u)\in E$
+	\item $\abs{V}$ is the number of vertices and $\abs{E}$ the number of edges
 	\item The degree of a vertex $d(v)$ is the number of vertices it is connected to, or the number of distinct edges connected to it.
 	\item A path is a sequence of connected edges linking distinct vertices.
 	\item A cycle is a path where the first and last vertex is the same.
 	\item A graph can have labels (sometimes called colors) either on its vertices or edges (or both). they can take various forms such as being integers, more generally elements of a finite or infinite set and even continuous (such as $\in \R$). 
 	\item A graph is said to be connected if all vertices are connected by a path with any other vertex.
 	\item A dual graph $G'=(V',E')$ of a graph $G=(V,E)$ is composed of a set of vertices $V'$ of a new vertex for each unique $e\in E$ and a set of edges $E'$ where there is an edge $(u,v)\in V'^2$if and only if there was a vertex connecting the two former edges u and v together.
-\end{itemize} We will be focusing on undirected unlabeled graphs, and undirected graphs labeled by finite sets. However, we will only study edge-labeled graphs thus if a graph if node-labeled, simply taking its dual graph will do.
+\end{itemize} Our methods are focused on undirected unlabeled graphs, and undirected graphs labeled by finite sets. Moreover, only edge-labeled graphs will be studied thus if a graph if node-labeled, simply taking its dual graph will do.
+\paragraph{Adjacency Matrix} The adjacency matrix of an undirected graph represents the presence or absence of an edge between two specific vertices. It is defined as the matrix $A$ of dimension $\abs{V}\times\abs{V}$ where entries are given by
+\begin{equation}
+	A_{i,j}=\left\{
+	\begin{matrix}
+	1 & \mbox{if } i \neq j \mbox{ and } (i,j) \in E \\
+	0 & \mbox{otherwise}
+	\end{matrix}
+	\right.
+\end{equation}
+
 \paragraph{History} Graphs were first used in their modern form to represent the problem of Seven Bridges of Königsberg (cite), and have been ever since used to represent maps, and thus path-finding algorithms were developed. They have also been used to represent flow problems, scheduling problems, networking routing and many others(cite). Graphs can also be used, with labels, to represent different types of molecules and interactions between them, or more simply to represent molecules by considering atoms as vertices and bonds as edges.\\
-In the next part we will be introducing Support Vector Machines which is the algorithm used in this project to classify new unknown graphs into known categories. It has been shown(cite) that it can be used effectively on proteins and enzymes.
+The next part will introduce Support Vector Machines, the algorithm used in this project to classify new unknown graphs into known categories. It has been shown(cite) that it can be used effectively on proteins and enzymes.
+
 \subsubsection{Support Vector Machines}
-Support Vector Machines (SVM) are a type of machine learning algorithms discovered in the early 90s(cite). It was originally a classification algorithm however it has been expanded since to regression and clustering too. It is especially powerful and widely used for two main reasons :
+Support Vector Machines (SVMs)\cite{burges_tutorial_1998} are a type of machine learning algorithms discovered in the early 90s\cite{cortes_support-vector_1995}. It was originally a classification algorithm however it has been expanded since to regression and clustering too. 
+\paragraph{Classification}
+Classification is one of the two problems of supervised learning that aims to automatically recognize and classify observations $\vec{x}$, such as recognizing handwritten digits. It can be split into two tasks where the first task is to learn from training data how to decide in which class (or group) to classify an example from its attributes and the second is to predict the class of new examples. All of that, while minimizing errors. This problem can be formalized as\todo{Parler de la theorie de l'apprentissage ? risque structurel etc ? et dire quelle loss on utilise ou pas ?}
+\begin{definition}
+	Classification is the problem of finding the best function $f :  \R^d \longrightarrow \{0..k\}$ among a set of functions $F$ while minimizing a risk function $R$
+	\begin{equation}
+		f\star = \mbox{argmin}_f R(f)
+	\end{equation}
+	 where $k$ is the number of classes of the problem and $d$ the number of features of data 
+\end{definition}
+SVMs are especially powerful at this task and widely used for the two following reasons.
 \paragraph{Margin and support vectors}
-The Support Vector Machines were based on the model of the Perceptron (cite), another classification algorithm that tried to find an hyperplane that discriminates the two sets.\\
-The main issue with the Perceptron is that it had no formal guarantee to find an optimal hyperplane, and more often than not would not find it. Moreover, if the data weren't linearly separable, the algorithm would not converge.\\
-In order to tackle theses issues, the SVM offered three fixes. \\
-First, they added a margin in the loss function in order to not only classify well the data samples, but also with the maximum certainty, i.e. as far from the decision boundary as possible.\\
+The Support Vector Machines are based on the model of the Perceptron\cite{freund1999large}, another classification algorithm that tried to find an hyperplane that discriminates the two sets.The main issue with the Perceptron is that it had no formal guarantee to find an optimal hyperplane, and more often than not would not find it. Moreover, if the data weren't linearly separable, the algorithm would not converge.\\
+In order to tackle theses issues, the SVM offered three fixes. First, a margin was added in the loss $L$ function in order to not only classify well the data samples, but also with the maximum certainty, i.e. as far from the decision boundary as possible.
 \begin{equation}
-    L(y,x,w) = \max(0,-y*x \cdot w) \implies L(y,x,w) = \max(0,1-y*x\cdot w)
+    L(y_i ,\vec{x}_i,w) = \max(0,-y_i \vec{x}_i \cdot w + w_{0}) \implies L(y_i ,\vec{x}_i,w) = \max(0,1-y_i \vec{x}_i\cdot \vec{w} + w_{0})
 \end{equation}
-Then, seeing this solution wasn't enough, as there was still an infinity of possible solutions, it was proven that the margin between points and the decision boundary was inversely proportional to the norm of the weights.\\
+Where $x$ is the features vector of an instance, $y$ its class and $\vec{w}$ and $w_{0}$ respectfully the weight vector and bias calculated by the algorithm.
+Then, seeing this solution wasn't enough, as there was still an infinity of possible solutions, it was proven that the margin $\gamma$ between points and the decision boundary was inversely proportional to the norm of the weights.\\
 \begin{equation}
-\gamma = \frac{y_{i}(x_{i} \cdot w + w_{0})}{\norm{w}}
+\gamma_i = \frac{y_{i}(\vec{x}_{i} \cdot \vec{w} + w_{0})}{\norm{\vec{w}}}
 \end{equation}
-These two fixes gave us the first version the SVM, the hard-margin SVM :\\ 
+These two fixes gave us the first version the SVM, the hard-margin SVM\\ 
 \begin{equation}
-    \min \frac{1}{2}\norm{w}^{2} \quad
-\textup{s.t.}\quad y_{i}(x_{i} \cdot w + w_{0}) \geq 1 \quad \forall i \in \{1..n\}
+    \min \frac{1}{2}\norm{\vec{w}}^{2} \quad
+\textup{s.t.}\quad y_{i}(\vec{x}_{i} \cdot \vec{w} + w_{0}) \geq 1 \quad \forall i \in \{1..n\}
 \end{equation}
 However, if the data weren't linearly separable the algorithm wouldn't be optimizable since the quadratic programming problem requires all points to be correctly classified. Then, a new term $\xi$ was introduced as an error tolerance, as well as a factor $C$ that would determine the balance between error tolerance and weights minimization.\\
 \begin{equation}
 \begin{array}{ll@{}ll}
-\text{min}  & \frac{1}{2}\norm{w}^{2}+C\sum\limits_{i=1}^{n}\xi_{i} &\\
-\text{s.t.}& \forall i \in \{1..n\} & y_{i}(x_{i} \cdot w + w_{0}) \geq 1-\xi_{i}
+\text{min}  & \frac{1}{2}\norm{\vec{w}}^{2}+C\sum\limits_{i=1}^{n}\xi_{i} &\\
+\text{s.t.}& \forall i \in \{1..n\} & y_{i}(\vec{x}_{i} \cdot \vec{w} + w_{0}) \geq 1-\xi_{i}
 \end{array}
 \end{equation}
+Then, the next section will introduce the second advantage of SVMs.
 \subsubsection{Kernels}
-In its dual form, the SVM problem only requires a dot product between the sample vectors. Then, we can use a nonlinear transformation $\phi(x)$ to replace the dot-product $\vec{x_i} \cdot \vec{x_j}$ by $\phi(\vec{x_{i}})\cdot\phi(\vec{x}_{j})$ , effectively augmenting the dimensions of our vectors and thus the expressiveness of our model by enhancing the separability of the data. However, for complex transformations, such as in infinite dimensions, the function $\phi$ isn't defined. But it was found(cite) that the standard dot product can be replaced by another function as long as it is a bilinear positive semi definite form. 
+In its dual form, the SVM problem only requires a dot product between the sample vectors. 
+\begin{equation}
+	\begin{array}{ll@{}ll}
+	\text{max} & \sum\limits_{i=1}^{n} \alpha_i - \frac{1}{2} \sum\limits_{j=1}^{n}\sum\limits_{i=1}^{n}\alpha_{i}\alpha_{j}y_{i}y_{j}\vec{x_{i}}^{\top}\vec{x_{j}}\\
+	\text{s.t.} & \forall i\qquad 0 \leq \alpha_{i} \leq C\\
+	& \qquad \;\; \sum\limits_{i=1}^{n} \alpha_{i}y_{i}=0
+	\end{array}
+\end{equation}
+Where $n$ is the number of instances.
+Then, a nonlinear transformation $\phi(x)$ can be used to replace the dot-product $\vec{x}_i \cdot \vec{x}_j$ by $\phi(\vec{x_{i}})\cdot\phi(\vec{x}_{j})$ , effectively augmenting the size of our vectors and thus the expressiveness of our model by enhancing the separability of the data. However, for complex transformations, such as in infinite dimensions, the function $\phi$ isn't defined. But it was found that the standard dot product can be replaced by another function as long as it is a bilinear positive semi definite form. 
 \begin{definition}
-	A kernel $K$ is positive semi definite if and only if :\\
+	A kernel $K$ is positive semi definite if and only if\\
     \begin{equation}
     	\sum\limits_{i=1}^{n}\sum\limits_{i=1}^{n}K(\vec{x_{i}},\vec{x_{j}})c_{i}c_{j} \geq 0 \qquad \forall i \in \{1..n\} \quad c_i \in \R
     \end{equation}
 \end{definition}
-Thus, the dot product can be replaced by a function $K(x_1,x_2)$ which will indirectly (?) transform the data in larger dimensions, even infinite with the Gaussian kernel(cite) and return the dot product of those transformations, while remaining computable in all cases. This replacement is usually called the "Kernel Trick".\\
-Ever since the foundation of SVMs, the kernel trick became a big focus of the machine learning community as it naturally fits in the algorithm and allows supervised learning on very complex data, and enjoying greater accuracy than most algorithms.
+Thus, the dot product can be replaced by a function $K(x_1,x_2)$ which will indirectly map the data to higher dimensions, even infinite with the RBF kernel and return the dot product of those transformations, while remaining computable in all cases. This replacement is usually called the Kernel Trick.
+Ever since the foundation of SVMs, the kernel trick became a big focus of the machine learning community as it naturally fits in the algorithm and allows supervised learning on very complex data, and enjoying greater accuracy than most algorithms.\todo{Est-ce qu'il faut rentrer dans le détail ? rajouter quoi?}\\
+The fact that the dot product can be replaced by a function without specifying the map $\phi$ is the reason why the Kernel Trick became a big focus of research. In particular, it will be possible to make a kernel for non vector data such as graphs, as shown in the next section. 
 \subsection{State of the Art}
-\todo{Mettre explication comme "ici nousallons parler de ça ça " ou pas}
-\subsubsection{Introduction}
-In this chapter we will discuss the advance of research on graph kernels.Graph Kernels are a type of R-convolution kernels\cite{haussler99convolution} applied to graphs, which are kernels that are based on decompositions of complex objects and comparisons of those decompositions.\\
-Graph Kernels have been studied since Support Vector Machines started getting popular\cite{kashima_graphkers_2003}. Since then, a lot of progress has been made, and several types of kernels have been discovered\todo{découverts ou inventés?}, such as random walk\cite{kashima_graphkers_2003} and graphlet\cite{shervashidze_efficient_2009} kernels, the two we will be studying, but not the only ones. There are also graph kernels that use spanning trees, and several others that are unfortunately usually not positive semi-definite\cite{shervashidze_scalable_2012}.
+This section will review the state of the art kernels for graphs. Particular attention will be given to one
+\subsubsection{Graph Kernels}
+This section will discuss the advance of research on graph kernels. Graph Kernels are a type of R-convolution kernels\cite{haussler99convolution} applied to graphs, which are kernels that are based on decompositions of complex objects and comparisons of those decompositions.\\
+Graph Kernels have been studied since Support Vector Machines started getting popular\cite{kashima_graphkers_2003}. Since then, a lot of progress has been made, and several types of kernels have been discovered\todo{découverts ou inventés?}, such as random walk\cite{kashima_graphkers_2003} and graphlet\cite{shervashidze_efficient_2009} kernels, the two we will be studying, but not the only ones. There are also graph kernels that use spanning trees, and several others that are unfortunately usually not positive semi-definite\cite{shervashidze2012scalable}.
 \subsubsection{Graphlets}\todo{A faire plus tard}
 A graphlet\cite{shervashidze_efficient_2009}\todo{Citer deux fois un seul article ok ou pas?} is a subgraph of 3,4 or 5 nodes taken from a much larger graph. The idea of a graphlet kernel is to count all types of graphlets that appear in a graph, and use that count to compare to another graph.\\
 insert list of graphlets
 \subsubsection{Random walks}
-Graph kernels based on Random Walks have been studied since very early\cite{kashima_graphkers_2003}, several of them were created and were then united\cite{vishwanathan_graph_2010}. Random walks are a type of rather intuitive algorithms : the idea is to randomly walk through a graph and then compare it to random walks in another graph. Actually, all the random walks are computed at the same time by making the adjacency matrix stochastic and using it as a Markov chain. Moreover, it has also been shown\cite{imrich_prodgraphs} that performing a walk on two separate graphs at the same time is the same as performing a walk on the product graph. The product graph is in simpler terms the Cartesian product of the two graphs, taking all possible combinations of nodes and linking those nodes when there is an edge between two specific nodes in both the original graphs. \\
+Graph kernels based on Random Walks have been studied since very early\cite{kashima_graphkers_2003}, several of them were created and were then united\cite{vishwanathan_graph_2010}. Random walks are a type of rather intuitive algorithms : the idea is to randomly walk through a graph and then compare it to random walks in another graph. Actually, all the random walks are computed at the same time by making the adjacency matrix stochastic by dividing each column of the matrix by its sum (normalizing it) and using it as a Markov chain.\\
+ Moreover, it has also been shown\cite{imrich_prodgraphs} that performing a walk on two separate graphs at the same time is the same as performing a walk on the product graph. The product graph is in simpler terms the Cartesian product of the two graphs, taking all possible combinations of nodes and linking those nodes when there is an edge between two specific nodes in both the original graphs. \\
 \begin{definition}
 	Let $G_1=(V_{1},E_{1})$ and $G_2=(V_{2},E_{2})$ be two graphs,\\the product graph
 	$G_\times = (V_{\times},E_{\times})$ is then defined as
@@ -136,7 +169,7 @@ Graph kernels based on Random Walks have been studied since very early\cite{kash
 		\item $E_{\times} = \{((v_1,w_1),(v_2,w_2)) : v_1,v_2 \in V_{1}^2, w_1,w_2 \in V_{2}^2 \}$
 	\end{itemize}
 \end{definition}
-However, technically, the adjacency matrix $W_{\times}$ of a such graph is the result of the Kronecker (tensor) product of the two adjacency matrices $A$ and $A_2$ of the two graphs \cite{imrich_prodgraphs,noauthor_kronecker_2019}:
+However, technically, the adjacency matrix $W_{\times}$ of a such graph is the result of the Kronecker (tensor) product of the two adjacency matrices $A$ and $A_2$ of the two graphs \cite{weichsel1962kronecker}
 \begin{equation}
     W_{\times}=A \otimes A_{2}
 \end{equation}
@@ -155,7 +188,7 @@ The kernel is defined as follows
 \end{definition}
 
 \subsubsection{Sylvester Equation}
-A Sylvester equation, also sometimes called Lyapunov equation (we will stick to Sylvester here) is a matrix equation of the following shape :
+A Sylvester equation, also sometimes called Lyapunov equation (we will stick to Sylvester here) is a matrix equation of the following shape 
 \begin{definition}
 	Let $A$, $B$, and $C$ be matrices of compatible shapes, then the Sylvester equation is
 	\begin{equation}
@@ -171,7 +204,7 @@ A Sylvester equation, also sometimes called Lyapunov equation (we will stick to 
 	\end{equation}
 \end{definition}
 We will be exclusively using the discrete-time Sylvester Equation and its generalization and will be referring to it as Sylvester equation. These equations are solved usually using Schur decompositions in $O(n^3)$ for the basic Sylvester equation and in unknown time for the generalized version\cite{vishwanathan_graph_2010}.\\
-We can use this equation to solve our kernel faster by replacing the $A$ and $B$ matrices by our adjacency matrices $A_1$ and $A_2$, adding $\lambda$, and $C$ by our start probabilities $p_\times$ while vectorizing the whole equation thus obtaining :\todo{colon or not?}
+We can use this equation to solve our kernel faster by replacing the $A$ and $B$ matrices by our adjacency matrices $A_1$ and $A_2$, adding $\lambda$, and $C$ by our start probabilities $p_\times$ while vectorizing the whole equation thus obtaining
 \begin{equation}
 	vec(M) = vec(\lambda A_{1}MA_{2}) + p_{\times}
 \end{equation}
@@ -188,7 +221,7 @@ The Conjugate Gradient Method is an optimization algorithm used to find approxim
 assumes as geometric $\mu(k)$ function
 \subsubsection{Fixed Point Iterations}
 \todo{Faire usage de fct paragraph ??}
-A fixed point is a value for which a function, returns that same value :
+A fixed point is a value for which a function, returns that same value 
 \begin{definition}
 	Let $S$ a set and $f$ a map $f : S \implies S$,\\
 	$x \in S$ is a fixed point of $f$ if and only if $x=f(x)$ 
@@ -197,7 +230,7 @@ Fixed point iterations is a method of computing a fixed point of a function by a
 \begin{equation}
 	x_{n+1} = f(x_n)
 \end{equation}
-There is also a guarantee of convergence :
+There is also a guarantee of convergence 
 \begin{theorem}
 	In order for the fixed-point iterations to converge, it is necessary that $\lambda<|\xi|^{-1}$ where $\xi$ is the largest eigenvalue of $W_\times$
 \end{theorem}
@@ -223,7 +256,7 @@ There is also a guarantee of convergence :
       && \qedhere
   \end{align*}
 \end{proof}
-Since this method requires the computation of $W_\times$, the kernel value can be computed for any type of labeling. For unlabeled graphs, the complexity is $O(kn^3)$ and $O(kdn^3)$ for labeled graphs, where $d$ is the number of labels and $k$ the number of iterations which can be estimated by:
+Since this method requires the computation of $W_\times$, the kernel value can be computed for any type of labeling. For unlabeled graphs, the complexity is $O(kn^3)$ and $O(kdn^3)$ for labeled graphs, where $d$ is the number of labels and $k$ the number of iterations which can be estimated by
 \begin{equation}
 	k=O\left(\frac{\ln \epsilon}{\ln \lambda + \ln \abs{\xi}}\right)
 \end{equation}
@@ -232,7 +265,7 @@ Finally, the fixed point iterations is more demanding than the others since it h
 
 \subsubsection{Nearest Kronecker Product Approximation}
 \url{https://mathematica.stackexchange.com/questions/91651/nearest-kronecker-product}
-\url{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.42.1924&rep=rep1&type=pdf}\cite{VanLoan1993}
+\url{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.42.1924&rep=rep1&type=pdf}\cite{van1993approximation}
 \subsection{Contributions}
 en anglais ça donne ?
 
