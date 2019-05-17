@@ -141,7 +141,7 @@ However, if the data were not linearly separable the algorithm would not be opti
 \end{equation}
 Then, the next section will introduce the second advantage of SVMs.
 \subsubsection{Kernels}
-In its dual form, the SVM problem only requires a dot product between the sample vectors. 
+In its dual form, the SVM problem only requires a dot product between the observations' vectors. 
 \begin{equation}
 	\begin{array}{ll@{}ll}
 	\text{max} & \sum\limits_{i=1}^{n} \alpha_i - \frac{1}{2} \sum\limits_{j=1}^{n}\sum\limits_{i=1}^{n}\alpha_{i}\alpha_{j}y_{i}y_{j}\vec{x_{i}}^{\top}\vec{x_{j}}\\
@@ -157,7 +157,17 @@ Then, a nonlinear transformation $\phi(x)$ can be used to replace the dot-produc
     	\sum\limits_{i=1}^{n}\sum\limits_{i=1}^{n}\kappa(\vec{x_{i}},\vec{x_{j}})c_{i}c_{j} \geq 0 \qquad \forall i \in \{1..n\} \quad c_i \in \R
     \end{equation}
 \end{definition}
-Thus, the dot product can be replaced by a function $K(x_1,x_2)$ which will indirectly map the data to higher dimensions, even infinite with the RBF kernel and return the dot product of those transformations, while remaining computable in all cases. This replacement is usually called the Kernel Trick.
+Thus, the dot product can be replaced by a function $K(x_1,x_2)$ which will indirectly map the data to higher dimensions like the polynomial kernel\ref{eq:pol}, even infinite with the RBF kernel\ref{eq:rbf} and return the dot product of those transformations, while remaining computable in all cases. This replacement is usually called the Kernel Trick. For example, the polynomial kernel is defined as follows
+\begin{equation}
+	\label{eq:pol}
+	\kappa(\vec{x_{i}},\vec{x_{j}})=(\vec{x_{i}}^{\top}\vec{x_{k}}+c)^d
+\end{equation}
+where $d$ is the degree of the polynomial and $c$ the constant bias. Another example, the RBF kernel is defined as follows
+\begin{equation}
+	\label{eq:rbf}
+	\kappa(\vec{x_{i}},\vec{x_{j}})={e}^{-\frac{\norm{\vec{x_{i}}-\vec{x_{j}}}^{2}}{2\sigma^{2}}}
+\end{equation}
+where $\sigma$ is an hyperparameter.
 Ever since the foundation of SVMs, the kernel trick became a big focus of the machine learning community as it naturally fits in the algorithm and allows supervised learning on very complex data, and enjoying greater accuracy than most algorithms.\todo{Est-ce qu'il faut rentrer dans le détail ? rajouter quoi?}\\
 The fact that the dot product can be replaced by a function without specifying the map $\phi$ is the reason why the Kernel Trick became a big focus of research. In particular, it will be possible to make a kernel for non vector data such as graphs, as shown in the next section. 
 \subsection{State of the Art}
@@ -174,9 +184,9 @@ A graphlet is a non-empty graph of $k=3$, $4$ or $5$ nodes. The idea of the grap
 		\kappa(G,G_{2})=\vec{f}_{G}^{\top}\vec{f}_{G_2}
 	\end{equation}
 \end{definition}
-However the complexity of this calculating a vector $\vec{f}_G$ is $O(n^k)$ where $n=\abs{V}$ and is thus computationally extremely expensive. In order to address this issue, a sampling method was introduced. Indeed, if enough samples are drawn, the Law of Large numbers indicates that the sampled distribution will converge to the actual (theoretical) distribution. However a bound has been found on the complexity of such sampling\cite{weissman2003inequalities} allowing better precision.
+However the complexity of computing this vector $\vec{f}_G$ is $O(n^k)$ where $n=\abs{V}$ and is thus computationally extremely expensive. In order to address this issue, a sampling method was introduced. Indeed, if enough samples are drawn, the Law of Large numbers indicates that the sampled distribution will converge to the actual (theoretical) distribution. However a bound has been found on the complexity of such sampling\cite{weissman2003inequalities} allowing better precision.
 \subsubsection{Random walks}
-Graph kernels based on Random Walks have been studied since very early\cite{kashima_graphkers_2003}, several of them were created and were then united\cite{vishwanathan_graph_2010}. Random walks are a type of rather intuitive algorithms : the idea is to randomly walk through a graph and then compare it to random walks in another graph. Actually, all the random walks are computed at the same time by making the adjacency matrix stochastic by dividing each column of the matrix by its sum (normalizing it) and using it as a Markov chain.\\
+Graph kernels based on Random Walks have been studied since kernels started to be used on SVMs\cite{kashima_graphkers_2003}, several of them were discovered and then united\cite{vishwanathan_graph_2010}. Random walks are a type of rather intuitive algorithms : the idea is to randomly walk through a graph and then compare it to random walks in another graph. Actually, all the random walks are computed at the same time by making the adjacency matrix stochastic by dividing each column of the matrix by its sum (normalizing it) and using it as a Markov chain.\\
 Moreover, it has also been shown\cite{imrich2000product} that performing a walk on two separate graphs at the same time is the same as performing a walk on the product graph. The product graph is in simpler terms the Cartesian product of the two graphs, taking all possible combinations of nodes and linking those nodes when there is an edge between two specific nodes in both the original graphs. \\
 \begin{definition}
 	Let $G_1=(V_{1},E_{1})$ and $G_2=(V_{2},E_{2})$ be two graphs,\\the product graph
@@ -207,9 +217,9 @@ Where $d$ is the size of the label set and $A_x^{(l)}$ the adjacency matrix of $
 The $vec$ operator will also be used as it is very linked to the tensor product. It is the vector obtained by stacking all columns of $A$.
 
 \paragraph{Kernel definition}
-The idea of the kernel is to perform random walks simultaneously on two graphs in order to compare the walks they have in common. As shown above, that can be achieve by simply performing a random walk on the product graph. 
+The idea of the kernel is to perform random walks simultaneously on two graphs in order to compare the walks they have in common. As shown above, that can be achieved by simply performing a random walk on the product graph.
 By making the adjacency matrix stochastic, and computing the $k$-th power of the matrix $W_\times$, the probabilities obtained are the ones of walks in common (starting and ending at the two same nodes) between the two graphs of length $k$.
-By taking into account the start $p_\times$ and end $q_\times$ probabilities, the sum of paths of all possible length can be calculated. Moreover using a power series $\mu(k)$ helps de-emphasizing longer walks and makes the sum converge. 
+By taking into account the start $p_\times$ and end $q_\times$ probabilities, the sum of walks of all possible lengths can be calculated. Moreover using a power series $\mu(k)$ helps de-emphasizing longer walks and makes the sum converge. 
 \begin{definition}Let $p_{\times}$ and $q_{\times}$ be respectively the start and end probability of each node, and let $W_{\times}$ be the adjacency matrix of the product graph of $G$ and $G'$, and finally $\mu(k)$ be a convergent function of $k$.
 	\begin{equation}
 		\kappa(G,G') = \sum\limits_{k=0}^{\infty}\mu(k)q_{\times}^{\top}W_{\times}^{k}p_{\times}
@@ -249,21 +259,21 @@ From which the following can be obtained (where I is the identity matrix)
 \end{equation}
 Thus, having calculated the inverse kernel by an alternative method. The advantage of this method is that it is very fast, but unfortunately limited to unlabeled graphs, unless there is an implementation for the generalized Sylvester equation. Moreover, compared to the others, this option is very simple and does not require specific parameters, but like many others, suffers when it encounters singular matrices. 
 \paragraph{Conjugate Gradient Method}
-The Conjugate Gradient Method\cite{nesterov_lectures_2018} is an optimization algorithm used to find approximate solutions of linear systems that have a positive semi definite matrix. As its name suggests, it is a gradient based iterative algorithm. The Main idea is that normal gradient descent only takes into account the gradient at the current step of the algorithm, and depending on the step size may cancel progress made in the previous step.
+The Conjugate Gradient Method\cite{nesterov_lectures_2018} is an optimization algorithm used to find approximate solutions of linear systems that have a positive semi definite matrix. As its name suggests, it is a gradient based iterative algorithm. The main idea is that normal gradient descent only takes into account the gradient at the current step of the algorithm, and depending on the step size may cancel progress made in the previous step.
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[height=0.3\textheight]{data/sota/conj_grad.png}
 	\caption{Conjugate gradient (red) compared to Gradient Descent (green)}
 	\label{fig:conj_grad}
 \end{figure} 
-The Conjugate Gradient method was introduced as a fix for that issue. The idea of the algorithm is to keep the former gradients in order improve the convergence speed by making the new gradient orthogonal to all the former one through the Gram-Schmidt process, at each step. Thus, unless there are approximation errors, the algorithm guarantees converge in $n$ steps, being the number of dimensions of the problem, here the size of our graph.\\
+The Conjugate Gradient method was introduced as a fix for that issue. The idea of the algorithm is to keep former gradients in order improve the convergence speed by making the new gradient orthogonal to all former ones through the Gram-Schmidt process, at each step. Thus, unless there are approximation errors, the algorithm guarantees convergence in $n$ steps, being the number of dimensions of the problem, here the size of our graph.\\
 However, this algorithm has limitations, it can only be used to solve linear systems of equations as $Ax=b$ under the constraint that $A$ is symmetric positive definite.
 In our case, this algorithm can be used to solve the following problem 
 \begin{equation}
 	(I-\lambda W_{\times}x=p_{\times}
 \end{equation}
 And the kernel value can be obtained by computing $q_{\times}^{\top}x$. The complexity of that method is $O(rn^3)$ for unlabeled graphs and $O(rdn^3)$ for labeled graphs where $r$ is the effective rank of the matrix $W_{\times}$. It is important to note that this kernel also assumes a geometric $\mu(k)$ function. \\
-This method is thus more slow than the Sylvester Equation, however it is easily applied to labeled graphs, which is its main advantage.
+This method is thus slower than the Sylvester Equation, however it is easily applied to labeled graphs, which is its main advantage.
 \paragraph{Fixed Point Iterations}
 A fixed point is a value for which a function, returns that same value 
 \begin{definition}
@@ -332,6 +342,7 @@ This method is more particular as it is not a new way to compute the kernel, but
 However this method also brings its own set of drawbacks. Since it required the Kronecker product of each couple of adjacency matrices to be computed, the previous advantage of the Spectral Decomposition (only computing once the eigendecomposition for each adjacency matrix) is lost as the obtained matrices are unique for each $W_\times$.
 
 \subsubsection{Digest}
+tableau cocher avantages inconvenients
 \todo{remplir}
 
 

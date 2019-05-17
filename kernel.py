@@ -79,7 +79,7 @@ class Kernel:
          qx = np.ones((n,1))/n
          # donner M essentiel simplifier M=inv(M)
          v = np.random.randint(0,n,size=(n,1))
-         x,_ = cg(M,px,x0=px,M=v@v.T,maxiter=self.k)
+         x,_ = cg(M,px,x0=px,M=v@v.T)#T,maxiter=self.k)
          return qx.T@x
      
     def fixed_point_kernel(self, A1, A2):

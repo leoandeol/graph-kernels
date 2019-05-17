@@ -55,15 +55,60 @@
   \tableofcontents[currentsection]
 \end{frame}
 \begin{frame}{Motivation}
-\begin{block}{Test}
-test tzt  z 
-\end{block}
+
 \begin{itemize}
-    \item Le contexte économique actuel entre le Brexit, l'essoufflement économique en zone Euro et le coup de frein en Chine a obligé l'OCDE à réviser ses prévisions à la baisse concernant le PIB.
-    \pause
-    \item Le rapport publié le 6 mars 2019 indique que le PIB devrait passer de 3,6\% en 2018 à 3,3\%
-pour 2019 et 3,4\% en 2020.
-\end{itemize} 
+	\item A lot of data can be represented as graphs such as proteins
+	\item Being able to compare them would be useful (classification, clustering)
+\end{itemize}
+
+\begin{figure}
+	\includegraphics[width=\linewidth]{data/ecoli.png}
+\caption{A fragment of a protein transformed into a graph\cite{vishwanathan_graph_2010}}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Current Methods}
+\begin{block}{Support Vector Machine}
+SVMs are models used in classification introduced about 25 years ago. They have several advantages
+\begin{itemize}
+	\item Great accuracy
+	\item Great capacity of generalization
+	\item Allows the use of kernels in its dual form
+\end{itemize}
+\end{block}
+
+\begin{block}{Kernels}
+	The kernel trick can replace the dot product while implicitly projecting data to a feature space and combine very well with the SVMs
+\begin{itemize}
+	\item Computes data projection faster implicitly (ex. RBF kernel)
+	\item Improve the accuracy of SVM by making linear separation easier
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Objective}
+\begin{itemize}
+	\item These methods are adapted to \textbf{vector data}
+	\item Graphs and their adjacency matrices aren't and vectorizing implies a loss of information
+	\item A \textbf{new} type of kernel is required
+\end{itemize}
+\begin{figure}
+	\begin{multicols}{2}
+		\includegraphics[width=\linewidth]{data/graphs/big_graph_no_label.png}
+		$\begin{pmatrix}
+		0 & 1 & 0 & 0 & 1 & 0 & 0 & 0 \\ 
+		0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\
+		0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+		0 & 0 & 1 & 0 & 0 & 0 & 1 & 0 \\
+		0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+		1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 \\
+		0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+		0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\
+		\end{pmatrix}$
+	\end{multicols}
+\caption{A tree graph and an adjacency matrix}
+\end{figure}
 \end{frame}
 
 
@@ -71,14 +116,85 @@ pour 2019 et 3,4\% en 2020.
 \begin{frame}{Summary}
   \tableofcontents[currentsection]
 \end{frame}
-\begin{frame}{Frame}
+\begin{frame}{Background : graphs}
+\begin{definition}
+	A graph\cite{bondy1976graph} is a type of mathematical structure that represents connections between objects. It is more precisely an ordered pair $G=(V,E)$ of two sets: vertices $V$ (or nodes) and edges $E$ that connect two vertices together.
+	\begin{equation*}
+	E \subseteq \{(u,v) : (u,v) \in V^2\}
+	\end{equation*}
+\end{definition}
+\begin{block}{Properties}
+	\begin{multicols}{2}
+		\begin{itemize}
+			\item Undirected
+			\item Labeled or not
+			\item Degree
+			\item Path and Cycle
+		\end{itemize}
+		\begin{itemize}
+			\item Connected
+			\item Tree
+			\item Subgraph
+			\item Dual Graph
+		\end{itemize}
+	\end{multicols}
+\end{block}
+\end{frame}
+\begin{frame}{Background : support vector machines}
+	SVM
+\end{frame}
+\begin{frame}{Background : kernels}
+	\begin{definition}
+		In its dual form, the SVM problem only requires a dot product between the observations' vectors. 
+		\begin{equation*}
+		\text{max} \sum\limits_{i=1}^{n} \alpha_i - \frac{1}{2} 
+		\end{equation*}
+		This means the vectors can be mapped to higher dimensions with a function $\phi$. Moreover, even the dot product itself can be replaced by a function $\kappa$ without explicitly specifying the map $\phi$ as long as the function is positive semi definite.
+		\begin{equation*}
+		\kappa(\vec{x_{i}},\vec{x_{j}})={e}^{-\frac{\norm{\vec{x_{i}}-\vec{x_{j}}}^{2}}{2\sigma^{2}}}
+		\end{equation*}
+		\centering
+		An example of kernel : the RBF kernel
+	\end{definition}
+\end{frame}
+\begin{frame}{Graph Kernels}
     
 \end{frame}
-\begin{frame}{Frame}
+\begin{frame}{Graphlets}
     
 \end{frame}
-\begin{frame}{Frame}
-    
+\begin{frame}{Random walks}
+	\begin{definition}
+		kernel def
+	\end{definition}
+\end{frame}
+\begin{frame}{Acceleration methods}
+Cas particulier
+\begin{block}{Inverse Kernel}
+	inv ker 
+\end{block}
+On va vouloir accelerer machin
+ce kernel va être l'objectif de plusieurs méthodes
+\end{frame}
+\begin{frame}{Sylvester Equation}
+	content...
+\end{frame}
+\begin{frame}{Conjugate Gradient}
+	content...
+\end{frame}
+\begin{frame}{Fixed Point}
+content...
+\end{frame}
+\begin{frame}{Spectral Decomposition}
+content...
+\end{frame}
+\begin{frame}{Nearest Kronecker Product Approximation}
+\begin{itemize}
+	\item The idea is to approximate two matrices $S$ and $T$ such that $\norm{W_\times - A\otimes B}_F$ is minimized.
+	\item Labeled-graph kernel computation can be turned into into an unlabeled one with some loss in accuracy, but gain in computation time.
+	\item Computed in $O(dn^2)$ time 
+	\item All methods such as Spectral Decomposition can then be applied
+\end{itemize}
 \end{frame}
 
 
@@ -90,8 +206,24 @@ pour 2019 et 3,4\% en 2020.
     
 \end{frame}
 
-\begin{frame}{Conclusion}
-    
+\section{Conclusion}
+\begin{frame}[plain]{Conclusion}
+conclu
 \end{frame}
+
+\renewcommand\bibsection{\subsection{\refname}}
+\begin{frame}[plain]{References}
+\nocite{bondy1976graph,borgwardt_protein_2005,imrich2000product,burges_tutorial_1998,vapnik_statistical_1998,nesterov_lectures_2018,shervashidze_efficient_2009}
+\bibliographystyle{ieeetr}
+\footnotesize
+\bibliography{references}
+\end{frame}
+
+\appendix
+\section[]{Appendix}
+\begin{frame}[plain]{??}
+??
+\end{frame}
+
 
 \end{document}

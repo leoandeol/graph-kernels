@@ -27,20 +27,21 @@ Rappeller en quelques lignes la résolution des méthodes
 --citer libsvm et les autres libs
 --eviter citer wikipedia et un autre etudiant
 --citer libs, tout ce qui est lu pour svm et tout
-transitions : apres avoir introduit les graphes, nous allons etudier comment les exploiter pour la classification avec les svm puis noyaux puis noyaux de graphes
-bien definir toutes les variables des equations
+--transitions : apres avoir introduit les graphes, nous allons etudier comment les exploiter pour la classification avec les svm puis noyaux puis noyaux de graphes
+--bien definir toutes les variables des equations
 --1 page max pour graphes et pas abuser des définitions : definir sous forme de bullet points : propriétés
 --Expliquer ce qu'est un classifieur 
 --Faire la connexion entre nos variables et les graphes
-parler du fait qu'on a des données non vectorielles
-3 premieres parties dans sota fusionner et faire un gros parapgraphe et pas lister les familles de méthodes : comment les méthodes operent : differentes sous methodes (ex methode avaec labels, methode avec orienté ou pas)
+--parler du fait qu'on a des données non vectorielles
+--3 premieres parties dans sota fusionner et faire un gros parapgraphe et pas lister les familles de méthodes :
+comment les méthodes operent : differentes sous methodes (ex methode avaec labels, methode avec orienté ou pas)
 faire synthese à la fin de méthodologie, y'a énormément de configurations possibles, synthetiser ça
 donner un nom à la base synthétique et donner des statistiques sur les données
 experiments on synthetic data  ... on real data
-préciser "toy data"
+--préciser "toy data"
 décrire les métriques utilisées et donner leurs équations
 subsection "databases and metrics", subsection "Evaluation Protocols" subsection "performances"
-rappeler qu'on fait que random walk
+--rappeler qu'on fait que random walk
 trouver un cas ou matrices de gram difference
 accelerer mais avec une perte : comparer nearest kron product et comparer les matrices de gram
 titres très parlants peu de sous sections
