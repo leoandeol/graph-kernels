@@ -60,7 +60,8 @@
  \paragraph{}The first part of this report will introduce all the necessary background knowledge which are graphs as already mentioned, but also Support Vector Machines (SVMs) which is a powerful classification algorithm, and kernels which are transformations of data usually used to increase the accuracy of SVMs. However, graphs being non-vector data, kernels have also the purpose of becoming a metric of comparison between two instances of graphs. Thus, the main principles of graph kernels will be introduced as well as their definitions. Afterwards, the different methods used to improve the computation complexity of the kernel will be introduced together with their own complexities, advantages and disadvantages.
 
 \paragraph{}The second part of this report will be focused on the technical side and experiments conducted during the project. A synthetic graph database made of toy data was required to conduct simple and quick experiments. Indeed, it was made in order to verify the claims made in the main publication studied thanks to easy control on matters such as labeled and unlabeled graphs, and variations of the size of either the database or the graphs inside of it. Different challenges and problems met during the implementation will be explained, as well as their solution, if one has been found. Then, the main subject of this part will be discussed : the accuracy and computation time of different methods, estimation of their complexities and different attempts to approximate those methods. Finally, an experiment on a real database of proteins\todo{voir si j'en fait plus} is conducted, and the results analyzed.
- 
+
+\newpage
 \section{Methodology}
 \subsection{Background}
 \subsubsection{Graphs}
@@ -175,7 +176,8 @@ This section will review the state of the art kernels for graphs. Particular att
 \subsubsection{Graph Kernels}
 Graph Kernels are a type of R-convolution kernels\cite{haussler99convolution} applied to graphs, which are kernels that are based on decompositions of complex objects and comparisons of those decompositions.\\
 Graph Kernels have been studied since Support Vector Machines started getting popular\cite{kashima_graphkers_2003}. Since then, a lot of progress has been made, and several types of kernels have been discovered, such as random walk and graphlet\cite{shervashidze_efficient_2009} kernels, the two main families of kernels (and the ones studied in this section), but not the only ones.
-There are also graph kernels that use subtrees\cite{ramon2003expressivity}, shortest paths\cite{borgwardt2005shortest} and several others that are unfortunately usually  either too complex to compute or not positive semi-definite\cite{shervashidze2012scalable}. However it has been shown\cite{schlkopf_learning_2001} that in some cases non positive semi definite kernels can still be used efficiently either by using them as a dissimilarity measure. They can also be artificially made positive semi definite.\todo{developper plus les autres graphes?}
+There are also graph kernels that use subtrees\cite{ramon2003expressivity}, shortest paths\cite{borgwardt2005shortest} and several others that are unfortunately usually  either too complex to compute or not positive semi-definite\cite{shervashidze2012scalable}. However it has been shown\cite{schlkopf_learning_2001} that in some cases non positive semi definite kernels can still be used efficiently either by using them as a dissimilarity measure. They can also be artificially made positive semi definite.\todo{developper plus les autres graphes? }
+\todo{comment les méthodes operent : differentes sous methodes (ex methode avaec labels, methode avec orienté ou pas) $\implies$ partie déjà assez longue ?}
 \subsubsection{Graphlets}
 A graphlet is a non-empty graph of $k=3$, $4$ or $5$ nodes. The idea of the graphlet kernel $\kappa$ is to generate a set $S$ all possible graphlets of a certain size $k$ and calculate for each of them the frequency of occurrence in a certain graph $G=(V,E)$ to build a vector $\vec{f}_G$ of size $\abs{S}$. The kernel is then defined as follows
 \begin{definition}
@@ -185,9 +187,9 @@ A graphlet is a non-empty graph of $k=3$, $4$ or $5$ nodes. The idea of the grap
 	\end{equation}
 \end{definition}
 However the complexity of computing this vector $\vec{f}_G$ is $O(n^k)$ where $n=\abs{V}$ and is thus computationally extremely expensive. In order to address this issue, a sampling method was introduced. Indeed, if enough samples are drawn, the Law of Large numbers indicates that the sampled distribution will converge to the actual (theoretical) distribution. However a bound has been found on the complexity of such sampling\cite{weissman2003inequalities} allowing better precision.
-\subsubsection{Random walks}
+\subsubsection{Random Walks}
 Graph kernels based on Random Walks have been studied since kernels started to be used on SVMs\cite{kashima_graphkers_2003}, several of them were discovered and then united\cite{vishwanathan_graph_2010}. Random walks are a type of rather intuitive algorithms : the idea is to randomly walk through a graph and then compare it to random walks in another graph. Actually, all the random walks are computed at the same time by making the adjacency matrix stochastic by dividing each column of the matrix by its sum (normalizing it) and using it as a Markov chain.\\
-Moreover, it has also been shown\cite{imrich2000product} that performing a walk on two separate graphs at the same time is the same as performing a walk on the product graph. The product graph is in simpler terms the Cartesian product of the two graphs, taking all possible combinations of nodes and linking those nodes when there is an edge between two specific nodes in both the original graphs. \\
+Moreover, it has also been shown\cite{imrich2000product} that performing a walk on two separate graphs at the same time is the same as performing a walk on the product graph. The product graph is in simpler terms a subset of the Cartesian product of the two graphs, taking all possible combinations of nodes and linking those nodes when there is an edge between two specific nodes in both the original graphs. \\
 \begin{definition}
 	Let $G_1=(V_{1},E_{1})$ and $G_2=(V_{2},E_{2})$ be two graphs,\\the product graph
 	$G_\times = (V_{\times},E_{\times})$ is then defined as
@@ -196,6 +198,15 @@ Moreover, it has also been shown\cite{imrich2000product} that performing a walk 
 		\item $E_{\times} = \{((v_1,w_1),(v_2,w_2)) : v_1,v_2 \in V_{1}^2, w_1,w_2 \in V_{2}^2 \}$
 	\end{itemize}
 \end{definition}
+For example, on very simple graphs, the following result is obtained
+\begin{figure}
+	\begin{multicols}{3}
+		\includegraphics[width=\linewidth]{data/prod_graph/g1.png}
+		\includegraphics[width=\linewidth]{data/prod_graph/g2.png}
+		\includegraphics[width=\linewidth]{data/prod_graph/gx.png}
+	\end{multicols}
+	\caption{A graph $G_1$, a graph $G_2$ and the product graph $G_1 \otimes G_2$}
+\end{figure}
 
 However, technically, the adjacency matrix $W_{\times}$ of a such graph is the result of the Kronecker (tensor) product of the two adjacency matrices $A$ and $A_2$ of the two graphs \cite{weichsel1962kronecker}
 \begin{equation}
@@ -347,13 +358,17 @@ tableau cocher avantages inconvenients
 
 
 
-
+\newpage
 \section{Experiments}
 \todo{experiences : détailler db, tests, méthodes, les parametres, construction label, donner tableaux, resultats, teps de calculs, précision, discuter tout cela}
-A big part of this project consisted in implementing the different algorithms from the main paper that I had studied \cite{vishwanathan_graph_2010}, verifying the results obtained in that article, and making new attempts to accelerate those algorithms while keeping the best accuracy possible.
-\subsection{Implementation}
+A big part of this project consisted in implementing the different methods used to compute the random walk kernel\cite{vishwanathan_graph_2010}, verifying the results obtained in that article, and making new attempts to accelerate those algorithms while keeping the best accuracy possible.
+\subsection{Databases and Metrics}
+\todo{Donner métrique utilisée et son equation}
 Implementing code from the main paper was a challenge in itself. Several problems aren't really documented and finding functions to solve them, or even explanations on how to solve them is sometimes difficult.
 \subsubsection{Graphs}
+\todo{DOnner nom BD et donner des statistiques dessus}
+\todo{Experiments on synthetic data...on real data}
+\todo{rappeller toy data}
 The first thing that had to be done was to create a graph database generator, of very simple and standard graphs that had expectable behaviors and could thus be used for tests. Those graphs would also be altered using simple transformations, in order to create different graphs belonging to the same class.\\
 \begin{figure}[!htb]
 	\begin{multicols}{4}
@@ -390,33 +405,38 @@ Alteration on labels will randomly switch a predefined\todo{predefined beaucoup 
 	\end{multicols}
 	\caption{Tree graphs, resp. unlabeled, labeled, altered structured, altered labels}
 \end{figure}
-\subsubsection{Raw Kernel}
-\subsubsection{Inverse Kernel}
-\subsubsection{Sylvester Equation}
+\subsection{Evaluation Protocols}
+\todo{Rappeller résolution des méthodes}
+\paragraph{Support Vector Machines}
+\paragraph{Raw Kernel}
+N iter
+\paragraph{Inverse Kernel}
+\paragraph{Sylvester Equation}
 The Sylvester Equation is a good example of poorly documented problems (compared to the others). There are very few resources on the subject, and even less implementation of solvers. We could theoretically use the Sylvester Equation on both labeled and discrete-labeled graphs which are respectively represented as Sylvester and Generalized Sylvester Equations (involving a sum of matrices), however, the only library available solves the first one, but not the second one. There seems to be confusing terminology since there is a solver for the Generalized Sylvester Equation, but a different one than the one described in the studied source\cite{vishwanathan_graph_2010}. The same source also mentions a way to solve the generalized version\cite{lathauwer2004}, however, this option was not explored.  
 \todo{changé ça ?}
 \todo{Rajouter papier à citer}
-\subsubsection{Conjugate Gradient Method}
+\paragraph{Conjugate Gradient Method}
 Note : Preconditioner random vector : $x \cdot x^{T}$ fonctionne bien\\
 The Conjugate Gradient Method is however very well documented\cite{nesterov_lectures_2018} and there are several libraries implementing this algorithm (we will be using scipy).
 \todo{a faire}
-\subsubsection{Fixed Point Iterations}
+\paragraph{Fixed Point Iterations}
 Rapidité de la convergence : géométrique avec un ratio $\lambda$1/$\lambda$2???
 si lambda trop proche de l'inverse de la valeur propre peut etre tres lent à converger quand la matrice d'adjacence est très dense\\
 The Fixed Point Iterations method was very easy to implement and gave rapidly good results, however there is a constraint on the lambda(the geometric factor) used in the kernel as we have proved. Experiments showed that a lambda very close to the constraint increases significantly the time of computation to convergence.\todo{image}
 
-\subsubsection{Spectral Decompostion}
+\paragraph{Spectral Decompostion}
 can't inverse Left eigenvectors : 
 \url{https://arxiv.org/pdf/1708.00064.pdf}
-\subsubsection{Nearest Kronecker Product}
-\url{https://www.sciencedirect.com/science/article/pii/S0377042700003939?via%3Dihub}
+\paragraph{Nearest Kronecker Product}
+\url{https://www.sciencedirect.com/science/article/pii/S0377042700003939?via\%3Dihub}
 	\url{https://www.imageclef.org/system/files/CLEF2016_Kronecker_Decomposition.pdf}
 	\url{http://dx.doi.org/10.1007/978-94-015-8196-7_17}
 	\url{https://mathematica.stackexchange.com/questions/91651/nearest-kronecker-product}
 	
 
-\subsection{Test of the random walk kernel}
-\subsubsection{Accuracy comparison between labelled and unlabelled graphs}
+\subsection{Performance}
+\subsubsection{Performance on synthetic data}
+\paragraph{Accuracy comparison between labeled and unlabeled graphs}
 Même score, car donne même matrice ???
 \begin{table}[!htb]
 \begin{center}
@@ -433,7 +453,7 @@ Même score, car donne même matrice ???
 \caption {Time and Accuracy of learning resp. for unlabelled and labelled graphs} \label{tab:lab_vs_nolab} 
 \end{table}
 
-\subsubsection{Efficiency of alternate methods}
+\paragraph{Efficiency of alternate methods}
 \begin{table}[!htb]
 \begin{center}
 \begin{tabular}{|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|}
@@ -448,15 +468,14 @@ Même score, car donne même matrice ???
 \end{center}
 \caption {Time and Accuracy of learning for the raw kernel and other methods} \label{tab:kernel_comparison} 
 \end{table}
-\subsubsection{Experiments on a biology dataset}
+\paragraph{Experiments on a biology dataset}
 \url{https://ls11-www.cs.tu-dortmund.de/staff/morris/graphkerneldatasets} 
 \url{http://members.cbio.mines-paristech.fr/~nshervashidze/code/}
 enzymes
 
-\subsection{Comparison of kernels}
-\subsubsection{Label use}
+\paragraph{Label use}
 Comparison using labels and no labels
-\subsubsection{Comparison of their gram matrices}
+\paragraph{Comparison of their gram matrices}
 The algorithms approximate the kernel using very different techniques, thus the gram matrices obtained from the kernels were similar in appearance, but had significant differences of scale. It was then decided to normalize very simply the gram matrices so they could be more easily compared.
 \begin{equation}
 	M = (M - min(M) )/max(M)
@@ -495,26 +514,24 @@ Afterwards, in order to verify all the algorithms gave similar results, it was d
 \todo{correct nom ?}
 Indeed, the 
 
-\subsubsection{Complexity and Accuracy}
+\paragraph{Complexity and Accuracy}
 
-\subsubsection{title}
-
-\subsection{Individual kernel analysis ?}
+\paragraph{Individual kernel analysis ?}
 \todo{mettre ici les images variations degré d'approximation}
-\subsection{Nearest Kronecker product ?}
+\paragraph{Nearest Kronecker product ?}
 
-\subsection{On molecules}
+\subsubsection{Performance on real datasets}
 
 \subsection{Improvements}
 
+\newpage
 \section{Conclusion and Future Work}
 experiences : détailler db, tests, méthodes, les parametres, construction label, donner tableaux, resultats, teps de calculs, précision, discuter tout cela
 section 4 : 1 page ou page et demi : conclusion et discussion
 
-
+\newpage
 \appendix
 \section{Appendix}
-\section{Annex 1}
 
 \section{Acknowledgements}
 This work was done during the first year of my master.

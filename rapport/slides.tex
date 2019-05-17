@@ -57,7 +57,7 @@
 \begin{frame}{Motivation}
 
 \begin{itemize}
-	\item A lot of data can be represented as graphs such as proteins
+	\item A lot of data can be represented as graphs such as proteins or social networks
 	\item Being able to compare them would be useful (classification, clustering)
 \end{itemize}
 
@@ -91,7 +91,8 @@ SVMs are models used in classification introduced about 25 years ago. They have 
 \begin{itemize}
 	\item These methods are adapted to \textbf{vector data}
 	\item Graphs and their adjacency matrices aren't and vectorizing implies a loss of information
-	\item A \textbf{new} type of kernel is required
+	\item New types of kernels were discovered
+	\item However, the complexity is a big problem, these kernels have to be accelerated
 \end{itemize}
 \begin{figure}
 	\begin{multicols}{2}
@@ -163,7 +164,24 @@ SVMs are models used in classification introduced about 25 years ago. They have 
 \begin{frame}{Graphlets}
     
 \end{frame}
-\begin{frame}{Random walks}
+\begin{frame}{Random Walks}
+\begin{block}{Random Walks}
+	A random walk is a path obtained from a chosen vertex, randomly picking an edge to follow iteratively, until the trail reaches a certain length.
+	Comparing common random walks between graphs is an acceptable metric.
+\end{block}
+\begin{block}{Product graph}
+It has been shown\cite{imrich2000product} that computing random walks on two separate graphs is equivalent to computing it on the product graph of the two. The product graph is computed using the Kronecker (or tensor) product $\otimes$
+\end{block}
+\begin{figure}
+\begin{multicols}{3}
+\includegraphics[width=1.5cm]{data/prod_graph/g1.png}
+\includegraphics[width=1.5cm]{data/prod_graph/g2.png}
+\includegraphics[width=1.5cm]{data/prod_graph/gx.png}
+\end{multicols}
+\caption{A graph $G_1$, a graph $G_2$ and the product graph $G_1 \otimes G_2$}
+\end{figure}
+\end{frame}
+\begin{frame}{Random Walk}
 	\begin{definition}
 		kernel def
 	\end{definition}

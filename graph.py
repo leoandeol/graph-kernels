@@ -189,7 +189,6 @@ class Database:
         db_B = [] #sans couleurs
         for typ in self.GRAPH_TYPES:
             #source graph
-            typ = np.random.choice(self.GRAPH_TYPES)
             GS = self.gen_graph(typ,nb_nodes,nb_colors)
             if GS == "Error":
                 print("Error")

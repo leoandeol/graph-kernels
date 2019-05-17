@@ -1,5 +1,4 @@
-import numpy as np; np.random.seed(1)#probleme double graine ?
-from scipy.sparse.linalg import cg
+import numpy as np; np.random.seed(1)
 from scipy.linalg import solve_discrete_lyapunov, eigh
 from scipy.optimize import fixed_point
 from control import dlyap
@@ -25,6 +24,43 @@ class Kernel:
             for i in range(1,len(A1)):
                 Wx = Wx + np.kron(A1[i],A2[i])
             return Wx
+
+    def conjugate_grad(self,A, b, x=None):
+        """
+        Description
+        -----------
+        Solve a linear equation Ax = b with conjugate gradient method.
+        Parameters
+        ----------
+        A: 2d numpy.array of positive semi-definite (symmetric) matrix
+        b: 1d numpy.array
+        x: 1d numpy.array of initial point
+        Returns
+        -------
+        1d numpy.array x such that Ax = b
+        Source : https://gist.github.com/sfujiwara/b135e0981d703986b6c2
+        """
+        n = len(b)
+        if x is None:
+            x = np.ones(n)
+        r = np.dot(A, x) - b
+        p = - r
+        r_k_norm = np.dot(r.T, r)
+        for i in range(self.k):
+            Ap = np.dot(A, p)
+            alpha = r_k_norm / np.dot(p.T, Ap)
+            alpha = np.asscalar(alpha)
+            x += alpha * p
+            r += alpha * Ap
+            r_kplus1_norm = np.dot(r.T, r)
+            beta = r_kplus1_norm / r_k_norm
+            beta = np.asscalar(beta)
+            r_k_norm = r_kplus1_norm
+            if r_kplus1_norm < 1e-5:
+                #print('Itr:', i+1)
+                break
+            p = beta * p - r
+        return x
 
     def raw_kernel(self, A1, A2):
         Wx = self.kron(A1,A2)
@@ -61,7 +97,7 @@ class Kernel:
         px = np.ones((n,1))/n
         qx = np.ones((n,1))/n
         M = dlyap(A=self.lbd*A1,Q=A2,C=px.reshape((A1.shape[0],A2.shape[0])))
-        return qx.T @ M.reshape((-1,1))
+        return -1*np.asscalar(qx.T @ M.reshape((-1,1)))
         
 
     def conj_grad_kernel(self, A1, A2):
@@ -79,7 +115,8 @@ class Kernel:
          qx = np.ones((n,1))/n
          # donner M essentiel simplifier M=inv(M)
          v = np.random.randint(0,n,size=(n,1))
-         x,_ = cg(M,px,x0=px,M=v@v.T)#T,maxiter=self.k)
+         #x,_ = cg(M,px,x0=px,M=v@v.T,maxiter=self.k)
+         x = self.conjugate_grad(M,px,px)
          return qx.T@x
      
     def fixed_point_kernel(self, A1, A2):
