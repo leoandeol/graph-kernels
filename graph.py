@@ -170,7 +170,7 @@ class Database:
         #np.random.shuffle(db_A)
         return np.array(db_A)
 
-    def gen_database_test(self, nb_altered, nb_nodes, nb_colors, nb_altered_nodes_max):
+    def gen_database_test(self, nb_altered, nb_nodes, nb_colors, nb_altered_nodes_max, lap=False):
         """ Generates a database of graphs
 	    Parameters
 	    ----------
@@ -193,7 +193,10 @@ class Database:
             GS = self.gen_graph(typ,nb_nodes,nb_colors)
             if GS == "Error":
                 print("Error")
-            A_ = nx.to_numpy_matrix(GS).T
+            if lap:
+                A_ = nx.laplacian_matrix(GS).toarray().T
+            else :
+                A_ = nx.to_numpy_matrix(GS).T
             D = np.diagflat(1/np.sum(A_,axis=0))
             A = A_ @ D
             db_B.append((A,typ))
@@ -204,6 +207,11 @@ class Database:
                     for n in GS.nodes():
                         if n not in tmp.nodes():
                             tmp.add_node(n)
+                    
+                    if lap:
+                        tmp = nx.laplacian_matrix(tmp).toarray().T
+                    else :
+                        tmp = nx.to_numpy_matrix(tmp).T
                     tmp = nx.to_numpy_matrix(tmp).T
                     somme = np.sum(tmp,axis=0)
                     somme[np.where(somme==0)]=1 # to avoid division by zero, anyway column is 0
@@ -214,7 +222,10 @@ class Database:
             for _ in range(nb_altered):
                 G = self.alter_graph_struct(GS, typ, np.random.randint(nb_altered_nodes_max))
                 self.alter_graph_labels(G, np.random.randint(nb_altered_nodes_max))
-                A_ = nx.to_numpy_matrix(G).T
+                if lap:
+                        A_ = nx.laplacian_matrix(G).toarray().T
+                    else :
+                        A_ = nx.to_numpy_matrix(G).T
                 D = np.diagflat(1/np.sum(A_,axis=0))
                 A = A_ @ D
                 db_B.append((A,typ))
@@ -227,7 +238,10 @@ class Database:
                         for n in G.nodes():
                             if n not in tmp.nodes():
                                 tmp.add_node(n)
-                        tmp = nx.to_numpy_matrix(tmp).T
+                        if lap:
+                            tmp = nx.laplacian_matrix(tmp).toarray().T
+                        else :
+                            tmp = nx.to_numpy_matrix(tmp).T
                         somme = np.sum(tmp,axis=0)
                         somme[np.where(somme==0)]=1
                         D = np.diagflat(1/somme)
