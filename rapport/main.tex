@@ -80,17 +80,17 @@ Vertices represent objects and are usually depicted as circles or spheres wherea
 \end{figure}
 \paragraph{Properties} Graphs have a lot of properties that will be used in the rest of this project and will be introduced here
 \begin{itemize}
-	\item A graph if undirected if and only if : $\forall (u,v) \in E \implies (v,u)\in E$
+	\item A graph is undirected if and only if : $\forall (u,v) \in E \implies (v,u)\in E$
 	\item $\abs{V}$ is the number of vertices and $\abs{E}$ the number of edges
 	\item The degree of a vertex $d(v)$ is the number of vertices it is connected to, or the number of distinct edges connected to it.
 	\item A path is a sequence of connected edges linking distinct vertices.
 	\item A cycle is a path where the first and last vertex is the same.
-	\item A graph can have labels (sometimes called colors) either on its vertices or edges (or both). they can take various forms such as being integers, more generally elements of a finite or infinite set and even continuous (such as $\in \R$). 
+	\item A graph can have labels (sometimes called colors) either on its vertices or edges (or both). They can take various forms such as being integers, more generally elements of a finite or infinite set and even continuous (such as $\in \R$). 
 	\item A graph is said to be connected if all vertices are connected by a path with any other vertex.
 	\item A graph is said to be a tree if it is connected and doesn't have any cycle.
 	\item A dual graph $G'=(V',E')$ of a graph $G=(V,E)$ is composed of a set of vertices $V'$ of a new vertex for each unique $e\in E$ and a set of edges $E'$ where there is an edge $(u,v)\in V'^2$if and only if there was a vertex connecting the two former edges u and v together.
 	\item A subgraph $G'=(V',E')$ of a graph $G=(V,E)$ is that graph restricted to a subset of nodes $V' \in V$ while keeping all the edges with those vertices $E' = \{(u,v) : (u,v) \in E \land (u,v) \in V'^{2}\} \subseteq E$
-\end{itemize} Our methods are focused on undirected unlabeled graphs, and undirected graphs labeled by finite sets. Moreover, only edge-labeled graphs will be studied thus if a graph if node-labeled, simply taking its dual graph will do.
+\end{itemize} These methods are focused on undirected unlabeled graphs, and undirected graphs labeled by finite sets. Moreover, only edge-labeled graphs will be studied, thus if a graph is node-labeled, simply taking its dual graph will do.
 \paragraph{Adjacency Matrix} The adjacency matrix of an undirected graph represents the presence or absence of an edge between two specific vertices. It is defined as the matrix $A$ of dimension $\abs{V}\times\abs{V}$ where entries are given by
 \begin{equation}
 	A_{i,j}=\left\{
@@ -101,8 +101,8 @@ Vertices represent objects and are usually depicted as circles or spheres wherea
 	\right.
 \end{equation}
 
-\paragraph{History} Graphs were first used in their modern form to represent the problem of Seven Bridges of Königsberg (cite), and have been ever since used to represent maps, and thus path-finding algorithms were developed. They have also been used to represent flow problems, scheduling problems, networking routing and many others(cite). Graphs can also be used, with labels, to represent different types of molecules and interactions between them, or more simply to represent molecules by considering atoms as vertices and bonds as edges.\\
-The next part will introduce Support Vector Machines, the algorithm used in this project to classify new unknown graphs into known categories. It has been shown(cite) that it can be used effectively on proteins and enzymes.
+\paragraph{History} Graphs were first used in their modern form to represent the problem of Seven Bridges of Königsberg, and have been ever since used to represent maps, and thus path-finding algorithms were developed. They have also been used to represent flow problems, scheduling problems, networking routing and many others. Graphs can also be used, with labels, to represent different types of molecules and interactions between them, or more simply to represent molecules by considering atoms as vertices and bonds as edges.\\
+The next part will introduce Support Vector Machines, the algorithm used in this project to classify new unknown graphs into known categories. It has been shown\cite{borgwardt_protein_2005} that it can be used effectively on proteins and enzymes.
 
 \subsubsection{Support Vector Machines}
 Support Vector Machines (SVMs)\cite{burges_tutorial_1998} are a type of machine learning algorithms discovered in the early 90s\cite{cortes_support-vector_1995}. It was originally a classification algorithm however it has been expanded since to regression and clustering too. 
@@ -117,13 +117,13 @@ Classification is one of the two problems of supervised learning that aims to au
 \end{definition}
 SVMs are especially powerful at this task and widely used for the two following reasons.
 \paragraph{Margin and support vectors}
-The Support Vector Machines are based on the model of the Perceptron\cite{freund1999large}, another classification algorithm that tried to find an hyperplane that discriminates the two sets.The main issue with the Perceptron is that it had no formal guarantee to find an optimal hyperplane, and more often than not would not find it. Moreover, if the data weren't linearly separable, the algorithm would not converge.\\
-In order to tackle theses issues, the SVM offered three fixes. First, a margin was added in the loss $L$ function in order to not only classify well the data samples, but also with the maximum certainty, i.e. as far from the decision boundary as possible.
+The Support Vector Machines are based on the model of the Perceptron\cite{freund1999large}, another classification algorithm that tried to find an hyperplane that discriminates the two sets. The main issue with the Perceptron is that it has no formal guarantee to find an optimal hyperplane, and usually would not find it. Moreover, if the data were not linearly separable, the algorithm would not converge.\\
+In order to tackle these issues, the SVM offered three fixes. First, a margin was added in the loss $L$ function in order to not only properly classify the data samples, but also with the maximum certainty, i.e. as far as possible from the decision boundary.
 \begin{equation}
     L(y_i ,\vec{x}_i,w) = \max(0,-y_i \vec{x}_i \cdot w + w_{0}) \implies L(y_i ,\vec{x}_i,w) = \max(0,1-y_i \vec{x}_i\cdot \vec{w} + w_{0})
 \end{equation}
-Where $x$ is the features vector of an instance, $y$ its class and $\vec{w}$ and $w_{0}$ respectively the weight vector and bias calculated by the algorithm.
-Then, seeing this solution wasn't enough, as there was still an infinity of possible solutions, it was proven that the margin $\gamma$ between points and the decision boundary was inversely proportional to the norm of the weights.\\
+Where $\vec{x}$ is the feature vector of an instance, $y$ its class and $\vec{w}$ and $w_{0}$ respectively the weight vector and bias calculated by the algorithm.
+Then, seeing this solution was not enough, as there was still an infinity of possible solutions, it was proven that the margin $\gamma$ between points and the decision boundary was inversely proportional to the norm of the weight vector $\norm{\vec{w}}$.\\
 \begin{equation}
 \gamma_i = \frac{y_{i}(\vec{x}_{i} \cdot \vec{w} + w_{0})}{\norm{\vec{w}}}
 \end{equation}
@@ -132,7 +132,7 @@ These two fixes gave us the first version the SVM, the hard-margin SVM\\
     \min \frac{1}{2}\norm{\vec{w}}^{2} \quad
 \textup{s.t.}\quad y_{i}(\vec{x}_{i} \cdot \vec{w} + w_{0}) \geq 1 \quad \forall i \in \{1..n\}
 \end{equation}
-However, if the data weren't linearly separable the algorithm wouldn't be optimizable since the quadratic programming problem requires all points to be correctly classified. Then, a new term $\xi$ was introduced as an error tolerance, as well as a factor $C$ that would determine the balance between error tolerance and weights minimization.\\
+However, if the data were not linearly separable the algorithm would not be optimizable since the quadratic programming problem requires all points to be correctly classified. Then, a new term $\xi$ was introduced as an error tolerance, as well as a factor $C$ that would determine the balance between error tolerance and minimization of the weight vector's norm $\norm{\vec{w}}$.\\
 \begin{equation}
 \begin{array}{ll@{}ll}
 \text{min}  & \frac{1}{2}\norm{\vec{w}}^{2}+C\sum\limits_{i=1}^{n}\xi_{i} &\\
@@ -150,7 +150,7 @@ In its dual form, the SVM problem only requires a dot product between the sample
 	\end{array}
 \end{equation}
 Where $n$ is the number of instances.
-Then, a nonlinear transformation $\phi(x)$ can be used to replace the dot-product $\vec{x}_i \cdot \vec{x}_j$ by $\phi(\vec{x_{i}})\cdot\phi(\vec{x}_{j})$ , effectively augmenting the size of our vectors and thus the expressiveness of our model by enhancing the separability of the data. However, for complex transformations, such as in infinite dimensions, the function $\phi$ isn't defined. But it was found that the standard dot product can be replaced by another function as long as it is a bilinear positive semi definite form. 
+Then, a nonlinear transformation $\phi(x)$ can be used to replace the dot-product $\vec{x}_i \cdot \vec{x}_j$ by $\phi(\vec{x_{i}})\cdot\phi(\vec{x}_{j})$ , effectively augmenting the size of vectors from the observation space into a larger feature space and thus the expressiveness of the model by enhancing the separability of the data. However, for complex transformations, such as in infinite dimensions, the function $\phi$ is not defined. But it was found that the standard dot product can be replaced by another function as long as it is a bilinear positive semi definite form. 
 \begin{definition}
 	A kernel $K$ is positive semi definite if and only if\\
     \begin{equation}
@@ -167,7 +167,7 @@ Graph Kernels are a type of R-convolution kernels\cite{haussler99convolution} ap
 Graph Kernels have been studied since Support Vector Machines started getting popular\cite{kashima_graphkers_2003}. Since then, a lot of progress has been made, and several types of kernels have been discovered, such as random walk and graphlet\cite{shervashidze_efficient_2009} kernels, the two main families of kernels (and the ones studied in this section), but not the only ones.
 There are also graph kernels that use subtrees\cite{ramon2003expressivity}, shortest paths\cite{borgwardt2005shortest} and several others that are unfortunately usually  either too complex to compute or not positive semi-definite\cite{shervashidze2012scalable}. However it has been shown\cite{schlkopf_learning_2001} that in some cases non positive semi definite kernels can still be used efficiently either by using them as a dissimilarity measure. They can also be artificially made positive semi definite.\todo{developper plus les autres graphes?}
 \subsubsection{Graphlets}
-A graphlet is a non-empty graph of $k=3$, $4$ or $5$ nodes. The idea of the graphlet kernel $\kappa$ is to generate a set $S$ all possibles graphlets of a certain size $k$ and calculate for each of them the frequency of occurrence in a certain graph $G=(V,E)$ to build a vector $\vec{f}_G$ of size $\abs{S}$. The kernel is then defined as follows
+A graphlet is a non-empty graph of $k=3$, $4$ or $5$ nodes. The idea of the graphlet kernel $\kappa$ is to generate a set $S$ all possible graphlets of a certain size $k$ and calculate for each of them the frequency of occurrence in a certain graph $G=(V,E)$ to build a vector $\vec{f}_G$ of size $\abs{S}$. The kernel is then defined as follows
 \begin{definition}
 	Let $G$ and $G_2$ be two graphs, $\vec{f}_G$ and $\vec{f}_{G_2}$ the frequency vectors of respectively $G$ and $G_2$, then the kernel $\kappa$ is defined as
 	\begin{equation}
@@ -221,7 +221,7 @@ There is a specific case of the kernel following provided a power series is used
 \begin{equation}
 	\kappa(G_1,G_2)=q_{\times}^{\top}(I-\lambda W_\times)^{-1}p_{\times}
 \end{equation}
-It can also be computed in $O(n^6)$ however in practice the hidden factor is much lower which makes it a better option for very small graphs and databases and the accuracy much better since there isn't any tradeoff on the number of iterations. Moreover, it will inspire some of the following methods.
+It can also be computed in $O(n^6)$ however in practice the hidden factor is much lower which makes it a better option for very small graphs and databases and the accuracy much better since there is not any tradeoff on the number of iterations. Moreover, it will inspire some of the following methods.
 \paragraph{Sylvester Equation}
 A Sylvester equation, also sometimes called Lyapunov equation is a matrix equation of the following shape 
 \begin{definition}
@@ -238,12 +238,12 @@ A Sylvester equation, also sometimes called Lyapunov equation is a matrix equati
 		\sum_{i=0}^{d}A_{i}XB_{i}=X
 	\end{equation}
 \end{definition}
-We will be exclusively using the discrete-time Sylvester Equation and its generalization and will be referring to it as Sylvester equation. These equations are solved usually using Schur decompositions in $O(n^3)$ for the basic Sylvester equation and in unknown time for the generalized version\cite{vishwanathan_graph_2010}.\\
-We can use this equation to solve our kernel faster if we assume a geometric function $\mu(k)=\lambda^k$ with $\lambda$ an hyperparameter. It can be achieved by replacing the $A$ and $B$ matrices by our adjacency matrices $A_1$ and $A_2$, adding $\lambda$, and $C$ by our start probabilities $p_\times$ while vectorizing the whole equation thus obtaining
+Only the discrete-time Sylvester and its generalization will be used in this method and will be referred to as the Sylvester equation. These equations are solved usually using Schur decompositions in $O(n^3)$ for the basic Sylvester equation and in unknown time for the generalized version\cite{vishwanathan_graph_2010}.\\
+This equation can be used to solve our kernel faster assuming a geometric function $\mu(k)=\lambda^k$ with $\lambda$ an hyperparameter. It can be achieved by replacing the $A$ and $B$ matrices by our adjacency matrices $A_1$ and $A_2$, adding $\lambda$, and $C$ by our start probabilities $p_\times$ while vectorizing the whole equation thus obtaining
 \begin{equation}
 	vec(M) = vec(\lambda A_{1}MA_{2}) + p_{\times}
 \end{equation}
-From which we can obtain (where I is the identity matrix)
+From which the following can be obtained (where I is the identity matrix)
 \begin{equation}
 	q_{\times}^{\top}vec(M)=q_{\times}^{\top}(I-\lambda W_{\times})^{-1}p_{\times}
 \end{equation}
@@ -289,7 +289,7 @@ There is also a guarantee of convergence
       &= \lambda W_{\times}(p_{\times}-\lambda W_{\times} x_{t-2} - p_{\times} + \lambda W_{\times}(\lambda W_{\times} x_{t-2} +p_{\times}) \\
       &= \lambda W_{\times} ( \lambda W_{\times} (\lambda W_{\times} x_{t-2}+p_{\times}-x_{t-2})) \\
       &= (\lambda W_{\times})^2(\lambda W_{\times} x_{t-2}+p_{\times} - x_{t-2}) & \\
-      \text{We find a pattern}\\
+      \text{A pattern is found}\\
       \implies x_{t+1}-x_t &= (\lambda W_{\times})^t (\lambda W_{\times} x_0 + p_{\times} - x_0) & \\
       \text{And because } x_0 = p_{\times}\\
       &= (\lambda W_{\times})^{t+1} p_{\times}\\
@@ -377,12 +377,12 @@ Alteration on labels will randomly switch a predefined\todo{predefined beaucoup 
 		\includegraphics[width=\linewidth]{data/generated-graphs/tree_altered_struct.png}\par
 		\includegraphics[width=\linewidth]{data/generated-graphs/tree_altered_labels.png}\par
 	\end{multicols}
-	\caption{Tree graphs, resp. unlabelled, labelled, altered structured, altered labels}
+	\caption{Tree graphs, resp. unlabeled, labeled, altered structured, altered labels}
 \end{figure}
 \subsubsection{Raw Kernel}
 \subsubsection{Inverse Kernel}
 \subsubsection{Sylvester Equation}
-The Sylvester Equation is a good example of poorly documented problems (compared to the others). There are very few resources on the subject, and even less implementation of solvers. We could theoretically use the Sylvester Equation on both labeled and discrete-labeled graphs which are respectively represented as Sylvester and Generalized Sylvester Equations (involving a sum of matrices), however, the only library available solves the first one, but not the second one. There seems to be confusing terminology\todo{correct ?} since there is a solver for the Generalized Sylvester Equation, but a different one than the one described in our source\cite{vishwanathan_graph_2010}. The same source also mentions a way to solve the generalized version\cite{lathauwer2004}, however, this option wasn't explored.  
+The Sylvester Equation is a good example of poorly documented problems (compared to the others). There are very few resources on the subject, and even less implementation of solvers. We could theoretically use the Sylvester Equation on both labeled and discrete-labeled graphs which are respectively represented as Sylvester and Generalized Sylvester Equations (involving a sum of matrices), however, the only library available solves the first one, but not the second one. There seems to be confusing terminology since there is a solver for the Generalized Sylvester Equation, but a different one than the one described in the studied source\cite{vishwanathan_graph_2010}. The same source also mentions a way to solve the generalized version\cite{lathauwer2004}, however, this option was not explored.  
 \todo{changé ça ?}
 \todo{Rajouter papier à citer}
 \subsubsection{Conjugate Gradient Method}

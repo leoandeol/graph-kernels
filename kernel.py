@@ -79,7 +79,7 @@ class Kernel:
          qx = np.ones((n,1))/n
          # donner M essentiel simplifier M=inv(M)
          v = np.random.randint(0,n,size=(n,1))
-         x,_ = cg(M,px,x0=px,M=v@v.T)
+         x,_ = cg(M,px,x0=px,M=v@v.T,maxiter=self.k)
          return qx.T@x
      
     def fixed_point_kernel(self, A1, A2):
@@ -91,13 +91,24 @@ class Kernel:
         #diagonaliser
         Wx = (Wx + Wx.T)/2
 
-        if self.lbd >= 1/abs(eigh(Wx,eigvals_only=True,eigvals=(n-1,n-1))[0]):
-            print("Cannot converge")
-            raise ValueError()
+        # if self.lbd >= 1/abs(eigh(Wx,eigvals_only=True,eigvals=(n-1,n-1))[0]):
+        #     print("Cannot converge")
+        #     raise ValueError()
 
         
         func = lambda x: np.asarray(px+(self.lbd*Wx)@x)
-        x = fixed_point(func, np.asarray(px),maxiter=1500)
+        #x = fixed_point(func, np.asarray(px),maxiter=1500)
+
+        x0 = np.asarray(px)
+        itera = self.k if self.k is not None else 1000
+        last = -99999999999
+        x = x0
+        for i in range(itera):
+            last = x
+            x = func(x)
+            if np.linalg.norm(x-last)<=1e-7:
+                break
+        
         k = np.real(np.asscalar(qx.T@x))
         return k
 

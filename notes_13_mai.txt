@@ -11,9 +11,9 @@ pour accuracy en regenerant bd, faire des groupes de barres
 echelle log sur absisse taille des données
 comparer evolution noyaux entre eux
 Montrer quand est-ce que le noyau ne marche pas bien : sur quelles données
-FIxed point = aller au dela du nombre d'itérations
-et montrer nombre d'itérations plutot que temps de calcul et multiplier par le nombre d'une itération, tracer une ligne apres la borne, et continuer apres sans garantie de convergence, reduire nb iterations et faire sur crossval
-numpy gpu
+--FIxed point = aller au dela du nombre d'itérations
+--et montrer nombre d'itérations plutot que temps de calcul et multiplier par le nombre d'une itération, tracer une ligne apres la borne, et continuer apres sans garantie de convergence, reduire nb iterations et faire sur crossval
+--numpy gpu
 Faire matrice de confusion entre classes et heatmap
 tester plusieurs C pour utiliser le meilleur
 Commenter les equations dans le rapport (optionnel)
@@ -23,15 +23,15 @@ base MUTAG et PTC faire tourner deux jours comme dans l'article
 VRAIMENT se renseigner et comprendre le but et l'utilité dtoutes les equations : processus de diffusion : regarder les deux matrices d'adjacence, permet de modéliser la similarité (comme faire un filtrage sur les noyaux comme convolution?)
 donner ma compréhension des eéquations
 Rappeller en quelques lignes la résolution des méthodes
-pas citer wikipedia mais les références de wikipedia : tutorial on graph theory
-citer libsvm et les autres libs
-eviter citer wikipedia et un autre etudiant
-citer libs, tout ce qui est lu pour svm et tout
+--pas citer wikipedia mais les références de wikipedia : tutorial on graph theory
+--citer libsvm et les autres libs
+--eviter citer wikipedia et un autre etudiant
+--citer libs, tout ce qui est lu pour svm et tout
 transitions : apres avoir introduit les graphes, nous allons etudier comment les exploiter pour la classification avec les svm puis noyaux puis noyaux de graphes
 bien definir toutes les variables des equations
-1 page max pour graphes et pas abuser des définitions : definir sous forme de bullet points : propriétés
-Expliquer ce qu'est un classifieur 
-Faire la connexion entre nos variables et les graphes
+--1 page max pour graphes et pas abuser des définitions : definir sous forme de bullet points : propriétés
+--Expliquer ce qu'est un classifieur 
+--Faire la connexion entre nos variables et les graphes
 parler du fait qu'on a des données non vectorielles
 3 premieres parties dans sota fusionner et faire un gros parapgraphe et pas lister les familles de méthodes : comment les méthodes operent : differentes sous methodes (ex methode avaec labels, methode avec orienté ou pas)
 faire synthese à la fin de méthodologie, y'a énormément de configurations possibles, synthetiser ça

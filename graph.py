@@ -194,7 +194,7 @@ class Database:
             if GS == "Error":
                 print("Error")
             if lap:
-                A_ = nx.laplacian_matrix(GS).toarray().T
+                A_ = nx.normalized_laplacian_matrix(GS).T
             else :
                 A_ = nx.to_numpy_matrix(GS).T
             D = np.diagflat(1/np.sum(A_,axis=0))
@@ -209,10 +209,9 @@ class Database:
                             tmp.add_node(n)
                     
                     if lap:
-                        tmp = nx.laplacian_matrix(tmp).toarray().T
+                        tmp = nx.normalized_laplacian_matrix(tmp).T
                     else :
                         tmp = nx.to_numpy_matrix(tmp).T
-                    tmp = nx.to_numpy_matrix(tmp).T
                     somme = np.sum(tmp,axis=0)
                     somme[np.where(somme==0)]=1 # to avoid division by zero, anyway column is 0
                     D = np.diagflat(1/somme)
@@ -223,10 +222,12 @@ class Database:
                 G = self.alter_graph_struct(GS, typ, np.random.randint(nb_altered_nodes_max))
                 self.alter_graph_labels(G, np.random.randint(nb_altered_nodes_max))
                 if lap:
-                        A_ = nx.laplacian_matrix(G).toarray().T
-                    else :
-                        A_ = nx.to_numpy_matrix(G).T
-                D = np.diagflat(1/np.sum(A_,axis=0))
+                    A_ = nx.normalized_laplacian_matrix(G).T
+                else :
+                    A_ = nx.to_numpy_matrix(G).T
+                somme = np.sum(A_,axis=0)
+                somme[np.where(somme==0)]=1 # to avoid division by zero, anyway column is 0
+                D = np.diagflat(1/somme)
                 A = A_ @ D
                 db_B.append((A,typ))
                 if nb_colors >= 1:
@@ -239,7 +240,7 @@ class Database:
                             if n not in tmp.nodes():
                                 tmp.add_node(n)
                         if lap:
-                            tmp = nx.laplacian_matrix(tmp).toarray().T
+                            tmp = nx.normalized_laplacian_matrix(tmp).T
                         else :
                             tmp = nx.to_numpy_matrix(tmp).T
                         somme = np.sum(tmp,axis=0)

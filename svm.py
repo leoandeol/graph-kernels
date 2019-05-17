@@ -11,10 +11,10 @@ from time import time
 
 class SVM:
 
-    def __init__(self, db, ratio_split, lbd, kernel="raw_kernel"):
+    def __init__(self, db, ratio_split, lbd, kernel="raw_kernel", k=None):
         self.n = int(len(db)*ratio_split)
         self.lbd = lbd
-        self.k = Kernel(self.lbd)
+        self.k = Kernel(self.lbd,k)
         self.ker = getattr(self.k, kernel)
         self.X, self.y = db[:,0], db[:,1]#shuffle(db[:,0], db[:,1])
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(db[:,0], db[:,1], train_size=ratio_split, random_state=42, stratify=db[:,1])
