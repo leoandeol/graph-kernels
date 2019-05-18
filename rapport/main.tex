@@ -532,7 +532,7 @@ Pas de sens, grandit à la meme vitesse = taille de bd au carré ?
 \end{figure}
 
 \paragraph{Comparison of methods depending on number of nodes}
-todo
+In order to verify the complexity of the different methods and compare their efficiency their accuracy and computation time was calculated on synthetic databases with graphs of varying sizes. The databases were generated independently so the different entries cannot be compared exactly, but being generated following the same precise rules, the deviation is not too large.
 \begin{figure}[!htb]
 	\begin{multicols}{2}
 		\includegraphics[width=\linewidth]{data/nb_nodes/acc.png}\par
@@ -540,12 +540,14 @@ todo
 	\end{multicols}
 \caption{Accuracy and Computation time of different methods depending on the size of graphs}
 \end{figure}
+Concerning the accuracy, the conjecture made earlier is verified in most cases : the fixed point method, except on the largest graphs, gives among the best scores. It can be also noted that the raw kernel method is rarely beaten, only twice by the fixed point kernel only. Surprising the inverse method performs in average worst, all the other methods approximating it giving better results.\\
+On the other hand, computation time. It is important to remind that in this case some methods (fixed point, conjugate gradient) were implemented entirely for this project, while the Spectral Decomposition and Inverse methods used tools to compute eigenvalues and inverses, and finally the Sylvester Equation solver was taken from a library based in Fortran. Fortran being much faster than python, it creates a bias in this graph, however it is not an issue since we will only look at the evolution of curves, not their actual values.\todo{arranger point fixe et finir}
 \paragraph{Nearest Kronecker product}
 En implémentation\todo{finir}
 
 \subsubsection{Performance on real datasets}
 This implementation was also tested on two real databases being PROTEINS and ENZYMES
-
+TABLEAU
 
 \section{Conclusion and Future Work}
 experiences : détailler db, tests, méthodes, les parametres, construction label, donner tableaux, resultats, teps de calculs, précision, discuter tout cela
@@ -556,7 +558,7 @@ section 4 : 1 page ou page et demi : conclusion et discussion
 \section{Appendix}
 Proofs ?
 
-\section*{Acknowledgements}
+\section*{Acknowledgments}
 This work was done during the first year of my master's at Sorbonne Université. I would really like to thank Professor Sahbi for all the time he dedicated to me, and for his extraordinary and expert coaching on this project. This project taught me a lot and made me closer to becoming a researcher, while also making me a more mature person.
 \todo{Mettre ces listes ou pas ?}
 \listoffigures
