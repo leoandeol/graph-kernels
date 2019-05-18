@@ -473,17 +473,19 @@ En travail\\
 First of all the different methods will be tested with synthetic data to verify claims made in the article. Then, the methods will be applied to real world problems. 
 \subsubsection{Performance on synthetic data}
 \paragraph{Gram Matrices}
-The algorithms approximate the kernel using very different techniques, thus the gram matrices obtained from the kernels were similar in appearance, but had significant differences of scale. It was then decided to normalize very simply the gram matrices so they could be more easily compared.\todo{Comparer différences}
+The algorithms approximate the kernel using very different techniques, thus the gram matrices obtained from the kernels were similar in appearance, but had significant differences of scale. It was then decided to normalize very simply the gram matrices so they could be more easily compared.
 \begin{equation}
 M = (M - min(M) )/max(M)
 \end{equation}
 \begin{figure}[!htb]
-	\begin{multicols}{2}
-		\includegraphics[width=\linewidth]{data/gram/gram.png}\par
-		\includegraphics[width=\linewidth]{data/gram/gram2.png}\par
+	\begin{multicols}{3}
+		\includegraphics[width=\linewidth]{data/gram/gram3.png}\par
+		\includegraphics[width=\linewidth]{data/gram/gram4.png}\par
+		\includegraphics[width=\linewidth]{data/gram/gram5.png}\par
 	\end{multicols}
-	\caption{Two gram matrices computed using the Inverse Kernel on different datasets}
+	\caption{A gram matrix computed with the raw method, another with the fixed point method, and the difference between the two}
 \end{figure}
+It can be seen that the two matrices are indeed very similar, but locally there can be big differences. The difference matrix shows that the fixed point kernel has higher values on the three diagonal blocks in average, and in average also, less in the outer parts of the matrix. Since in this example the data is ordered by class, it shows that the fixed point method gives in average higher values to graphs of the same class and smaller values to graphs of different classes than the raw method. It can be conjecture that the fixed point method will give a better accuracy, which is verified empirically in another paragraph.
 Afterwards, in order to verify all the algorithms gave similar results, it was decided to compute the Frobenius norm of the difference of two gram matrices (divided by the size of the matrix, thus giving the mean standard deviation). The following results were obtained and were satisfying.
 \begin{table}[!htb]
 	\begin{center}
