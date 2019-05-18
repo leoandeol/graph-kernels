@@ -210,7 +210,10 @@ class Kernel:
         return k
     
     def build_gram_matrix(self, db, kernel):
-        self.N = np.max([x.shape[0] for x in db])
+        try:
+            self.N = np.max([x.shape[0] for x in db])
+        except:
+            self.N = np.max([x[0].shape[0] for x in db])
         self.comp_time = time()
         gram = np.empty((len(db),len(db)))
         for i in range(len(db)):

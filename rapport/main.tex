@@ -59,7 +59,7 @@
  \paragraph{}Classification of such graphs is an important problem of pattern recognition which affects a lot of sectors such as medicine, biology, and more. It was studied since the beginning of the millennium and significant progress has been made : several methods were discovered and gave good results but met a big issue, the complexity of these methods. Indeed, they do not scale well to large graphs as their complexity tends to be several times polynomial. Since then, the main objective of research on this topic has been to either find more computationally efficient algorithms, or to find methods to accelerate the ones already in use.
  \paragraph{}The first part of this report will introduce all the necessary background knowledge which are graphs as already mentioned, but also Support Vector Machines (SVMs) which is a powerful classification algorithm, and kernels which are transformations of data usually used to increase the accuracy of SVMs. However, graphs being non-vector data, kernels have also the purpose of becoming a metric of comparison between two instances of graphs. Thus, the main principles of graph kernels will be introduced as well as their definitions. Afterwards, the different methods used to improve the computation complexity of the kernel will be introduced together with their own complexities, advantages and disadvantages.
 
-\paragraph{}The second part of this report will be focused on the technical side and experiments conducted during the project. A synthetic graph database made of toy data was required to conduct simple and quick experiments. Indeed, it was made in order to verify the claims made in the main publication studied thanks to easy control on matters such as labeled and unlabeled graphs, and variations of the size of either the database or the graphs inside of it. Different challenges and problems met during the implementation will be explained, as well as their solution, if one has been found. Then, the main subject of this part will be discussed : the accuracy and computation time of different methods, estimation of their complexities and different attempts to approximate those methods. Finally, an experiment on a real database of proteins\todo{voir si j'en fait plus} is conducted, and the results analyzed.
+\paragraph{}The second part of this report will be focused on the technical side and experiments conducted during the project. A synthetic graph database made of toy data was required to conduct simple and quick experiments. Indeed, it was made in order to verify the claims made in the main publication studied thanks to easy control on matters such as labeled and unlabeled graphs, and variations of the size of either the database or the graphs inside of it. Different challenges and problems met during the implementation will be explained, as well as their solution, if one has been found. Then, the main subject of this part will be discussed : the accuracy and computation time of different methods, estimation of their complexities and different attempts to approximate those methods. Finally, an experiment on real datasets of enzymes and proteins is conducted, and the results analyzed.\todo{garder sommaire ? en général il n'y en a pas}
 
 \newpage
 \section{Methodology}
@@ -89,9 +89,9 @@ Vertices represent objects and are usually depicted as circles or spheres wherea
 	\item A graph can have labels (sometimes called colors) either on its vertices or edges (or both). They can take various forms such as being integers, more generally elements of a finite or infinite set and even continuous (such as $\in \R$). 
 	\item A graph is said to be connected if all vertices are connected by a path with any other vertex.
 	\item A graph is said to be a tree if it is connected and doesn't have any cycle.
-	\item A dual graph $G'=(V',E')$ of a graph $G=(V,E)$ is composed of a set of vertices $V'$ of a new vertex for each unique $e\in E$ and a set of edges $E'$ where there is an edge $(u,v)\in V'^2$if and only if there was a vertex connecting the two former edges u and v together.
+	\item A line graph $G'=(V',E')$ of a graph $G=(V,E)$ is composed of a set of vertices $V'$ of a new vertex for each unique $e\in E$ and a set of edges $E'$ where there is an edge $(u,v)\in V'^2$if and only if there was a vertex connecting the two former edges u and v together.
 	\item A subgraph $G'=(V',E')$ of a graph $G=(V,E)$ is that graph restricted to a subset of nodes $V' \in V$ while keeping all the edges with those vertices $E' = \{(u,v) : (u,v) \in E \land (u,v) \in V'^{2}\} \subseteq E$
-\end{itemize} These methods are focused on undirected unlabeled graphs, and undirected graphs labeled by finite sets. Moreover, only edge-labeled graphs will be studied, thus if a graph is node-labeled, simply taking its dual graph will do.
+\end{itemize} These methods are focused on undirected unlabeled graphs, and undirected graphs labeled by finite sets. Moreover, only edge-labeled graphs will be studied, thus if a graph is node-labeled, simply taking its line graph will do.
 \paragraph{Adjacency Matrix} The adjacency matrix of an undirected graph represents the presence or absence of an edge between two specific vertices. It is defined as the matrix $A$ of dimension $\abs{V}\times\abs{V}$ where entries are given by
 \begin{equation}
 	A_{i,j}=\left\{
@@ -176,7 +176,7 @@ This section will review the state of the art kernels for graphs. Particular att
 \subsubsection{Graph Kernels}
 Graph Kernels are a type of R-convolution kernels\cite{haussler99convolution} applied to graphs, which are kernels that are based on decompositions of complex objects and comparisons of those decompositions.\\
 Graph Kernels have been studied since Support Vector Machines started getting popular\cite{kashima_graphkers_2003}. Since then, a lot of progress has been made, and several types of kernels have been discovered, such as random walk and graphlet\cite{shervashidze_efficient_2009} kernels, the two main families of kernels (and the ones studied in this section), but not the only ones.
-There are also graph kernels that use subtrees\cite{ramon2003expressivity}, shortest paths\cite{borgwardt2005shortest} and several others that are unfortunately usually  either too complex to compute or not positive semi-definite\cite{shervashidze2012scalable}. However it has been shown\cite{schlkopf_learning_2001} that in some cases non positive semi definite kernels can still be used efficiently either by using them as a dissimilarity measure. They can also be artificially made positive semi definite.\todo{developper plus les autres graphes? }
+There are also graph kernels that use subtrees\cite{ramon2003expressivity}, shortest paths\cite{borgwardt2005shortest} and several others that are unfortunately usually  either too complex to compute or not positive semi-definite\cite{shervashidze2012scalable}. However it has been shown\cite{schlkopf_learning_2001} that in some cases non positive semi definite kernels can still be used efficiently either by using them as a dissimilarity measure. They can also be artificially made positive semi definite.\todo{developper plus les autres kernels? }
 \todo{comment les méthodes operent : differentes sous methodes (ex methode avaec labels, methode avec orienté ou pas) $\implies$ partie déjà assez longue ?}
 \subsubsection{Graphlets}
 A graphlet is a non-empty graph of $k=3$, $4$ or $5$ nodes. The idea of the graphlet kernel $\kappa$ is to generate a set $S$ all possible graphlets of a certain size $k$ and calculate for each of them the frequency of occurrence in a certain graph $G=(V,E)$ to build a vector $\vec{f}_G$ of size $\abs{S}$. The kernel is then defined as follows
@@ -360,16 +360,10 @@ tableau cocher avantages inconvenients
 
 \newpage
 \section{Experiments}
-\todo{experiences : détailler db, tests, méthodes, les parametres, construction label, donner tableaux, resultats, teps de calculs, précision, discuter tout cela}
 A big part of this project consisted in implementing the different methods used to compute the random walk kernel\cite{vishwanathan_graph_2010}, verifying the results obtained in that article, and making new attempts to accelerate those algorithms while keeping the best accuracy possible.
 \subsection{Databases and Metrics}
-\todo{Donner métrique utilisée et son equation}
-Implementing code from the main paper was a challenge in itself. Several problems aren't really documented and finding functions to solve them, or even explanations on how to solve them is sometimes difficult.
-\subsubsection{Graphs}
-\todo{DOnner nom BD et donner des statistiques dessus}
-\todo{Experiments on synthetic data...on real data}
-\todo{rappeller toy data}
-The first thing that had to be done was to create a graph database generator, of very simple and standard graphs that had expectable behaviors and could thus be used for tests. Those graphs would also be altered using simple transformations, in order to create different graphs belonging to the same class.\\
+\subsubsection{A synthetic graph database}
+In order to conduct experiments and verify claims made in the article, toy data was necessary. The first thing that had to be done was to create a graph database generator, of very simple and standard graphs that had expectable behaviors and could thus be used for standard tests. Those graphs would also be altered using simple transformations, in order to create different graphs belonging to the same class.
 \begin{figure}[!htb]
 	\begin{multicols}{4}
 		\includegraphics[width=\linewidth]{data/generated-graphs/ring_base.png}\par
@@ -379,7 +373,7 @@ The first thing that had to be done was to create a graph database generator, of
 	\end{multicols}
 	\caption{Ring graphs, resp. unlabelled, labelled, altered structured, altered labels}
 \end{figure}
-For simplicity, it was decided to only use 3 classes to stay as simple as possible. We studied 3 standard types of graphs : the ring, the star and the tree. A ring graph is a connected graph where each vertex is connected to exactly two vertices, it thus forms one big cycle. A star graph is composed of a central node, and of several other nodes that are all and only connected to the central node, it should look like a star, or perhaps a flower.\todo{Est-ce que je devrais dire ça ?}. Finally, a tree is a famous type of graph : it is a connected graph without any cycles, but here we will be studying a special type of tree, since each vertex is at most of degree 3.\\
+For simplicity, it was decided to only use 3 classes to stay as simple as possible. Focus was put on 3 standard types of graphs : the ring, the star and the tree. A ring graph is a connected graph where each vertex is connected to exactly two vertices, it thus forms one big cycle. A star graph is composed of a central node, and of several other nodes that are all and only connected to the central node, it should look like a star, or perhaps a flower.\todo{Est-ce que je devrais dire ça ?}. Finally, a tree is a famous type of graph : it is a connected graph without any cycles, but here a special type of tree will be studying, since each vertex is at most of degree 3.\\
 \begin{figure}[!htb]
 	\begin{multicols}{4}
 		\includegraphics[width=\linewidth]{data/generated-graphs/star_base.png}\par
@@ -389,13 +383,13 @@ For simplicity, it was decided to only use 3 classes to stay as simple as possib
 	\end{multicols}
 	\caption{Star graphs, resp. unlabelled, labelled, altered structured, altered labels}
 \end{figure}
-The database generator works as follows:\todo{verifier si anglais, et c'est ok mettre deux points ?} for each type of graph, it will create a graph of predetermined size with randomly generated edge labels in a certain given interval. Then, for each graph, it will alter it a predefined number of times, and each time will create a new graph that has been both altered on structure and on labels. Alteration on structure involves removing or adding a predefined number of nodes in respect of the type of the graph thus staying in the same class as the source. 
+Thus a synthetic graph database generator was created. For each type of graph, it will create a graph of predetermined size with randomly generated edge labels in a certain given interval. Then, for each graph, it will alter it a predefined number of times, and each time will create a new graph that has been both altered on structure and on labels. Alteration on structure involves removing or adding a predefined number of nodes in respect of the type of the graph thus staying in the same class as the source. 
 \begin{enumerate}
 	\item Ring graphs are simply regenerated slightly longer or shorter randomly.
 	\item Star graphs are also regenerated either with more or less nodes, randomly.
 	\item Tree graphs are either expanded by adding randomly leaves anywhere in the graph, or reduced by randomly removing leaves.
 \end{enumerate}
-Alteration on labels will randomly switch a predefined\todo{predefined beaucoup répété, c'est un probleme ?} number of edge labels. Once this is done, the generator will create two databases out of the set of previously generated graphs, one will be made of the adjacency matrix of each graph without looking at labels, and the second one will be an array of adjacency matrices taken from graphs induced by selecting only edges with a specific label, and that for all labels in the label set.
+Alteration on labels will randomly switch a predefined number of edge labels. Once this is done, the generator will create two databases out of the set of previously generated graphs, one will be made of the adjacency matrix of each graph without looking at labels, and the second one will be an array of adjacency matrices taken from graphs induced by selecting only edges with a specific label, and that for all labels in the label set.
 \begin{figure}[!htb]
 	\begin{multicols}{4}
 		\includegraphics[width=\linewidth]{data/generated-graphs/tree_base.png}\par
@@ -404,81 +398,84 @@ Alteration on labels will randomly switch a predefined\todo{predefined beaucoup 
 		\includegraphics[width=\linewidth]{data/generated-graphs/tree_altered_labels.png}\par
 	\end{multicols}
 	\caption{Tree graphs, resp. unlabeled, labeled, altered structured, altered labels}
-\end{figure}
+\end{figure}\\
+This generator will create databases with the following statistics\todo{parler quand stats ajoutées}
+\begin{table}[!htb]
+	\begin{center}
+		\begin{tabular}{|p{30mm}|c|c|}
+			\hline
+			\# of vertices\newline asked & X & Y \\
+			\hline
+			\# of vertices\newline per graph & & \\
+			\hline
+			\# of edges\newline per graph & & \\
+			\hline
+			mean vertex\newline degree & & \\
+			\hline
+		\end{tabular}
+	\end{center}
+	\caption {Statistics on the synthetic database}
+	\label{tab:stats_db}
+\end{table}
+\subsubsection{Metrics}
+During the following experiments only two simple metrics will be used to compare the different methods. First, the  structural risk referred to as accuracy is computing simply using the 0-1 loss function as follows
+\begin{equation}
+L(X,\vec{y})=\frac{1}{\abs{X}}\sum\limits_{i=1}^{\abs{X}}\left\{
+\begin{matrix}
+1 & \mbox{if } f(\vec{x}_i) \neq y_i \\
+0 & \mbox{otherwise}
+\end{matrix}
+\right.
+\end{equation}
+This function gives the rate of prediction errors on test data.\\
+The second metric used is the computation time, expressed in seconds. 
 \subsection{Evaluation Protocols}
-\todo{Rappeller résolution des méthodes}
+Implementing code from the main paper was a challenge in itself. Several problems aren't really documented and finding functions to solve them, or even explanations on how to solve them is sometimes difficult.
 \paragraph{Support Vector Machines}
+The Support Vector Machines algorithm was not implemented since it was not the focus of this project. Instead, the famous library \textbf{libsvm}\cite{cc2011libsvm} was used through the python library scikit-learn\cite{pedregosa2011scikit} because of its efficiency and renown. Moreover, there are some hyperparameters to optimize, namely the penalty coefficient on classification mistakes $C$. Since it is not the topic of this project it has not been optimized.\todo{Faire ça rapidement}
+\paragraph{Gram Matrix}todo\todo{faire ça}
 \paragraph{Raw Kernel}
-N iter
+The Raw Kernel is very simple to implement however encounters an issue : a sum to infinity cannot be computed as is, and thus a choice had to be made. It was decided that the raw kernel would be computed over $N$ iterations where $N$ would be the number of vertices of the largest graph. The advantage is that all graph kernel values would be computed with the same number of iterations and the number of iterations would be kept small while all vertices would be reachable from any other vertex (the shortest path between two vertices in a connected graph $G=(V,E)$ is at most $\abs{V}$ long).  
 \paragraph{Inverse Kernel}
+This kernel was also very simple to implement  since it only required computing $I-\lambda W_{\times}$ and its inverse, which was handled exclusively by numpy (part of the scipy project).
 \paragraph{Sylvester Equation}
-The Sylvester Equation is a good example of poorly documented problems (compared to the others). There are very few resources on the subject, and even less implementation of solvers. We could theoretically use the Sylvester Equation on both labeled and discrete-labeled graphs which are respectively represented as Sylvester and Generalized Sylvester Equations (involving a sum of matrices), however, the only library available solves the first one, but not the second one. There seems to be confusing terminology since there is a solver for the Generalized Sylvester Equation, but a different one than the one described in the studied source\cite{vishwanathan_graph_2010}. The same source also mentions a way to solve the generalized version\cite{lathauwer2004}, however, this option was not explored.  
+The Sylvester Equation is a good example of poorly documented problems (compared to the others). There are very few resources on the subject, and even less implementation of solvers. We could theoretically use the Sylvester Equation on both labeled and discrete-labeled graphs which are respectively represented as Sylvester and Generalized Sylvester Equations (involving a sum of matrices), however, the only library available solves the first one, but not the second one. There seems to be confusing terminology since there is a solver for the Generalized Sylvester Equation, but a different one than the one described in the studied source\cite{vishwanathan_graph_2010}. The same source also mentions a way to solve the generalized version\cite{lathauwer2004}, however, this option was not explored because of a lack of time.  
 \todo{changé ça ?}
-\todo{Rajouter papier à citer}
 \paragraph{Conjugate Gradient Method}
-Note : Preconditioner random vector : $x \cdot x^{T}$ fonctionne bien\\
-The Conjugate Gradient Method is however very well documented\cite{nesterov_lectures_2018} and there are several libraries implementing this algorithm (we will be using scipy).
-\todo{a faire}
+The Conjugate Gradient Method is however very well documented\cite{nesterov_lectures_2018} and there are several libraries implementing this algorithm. In this case, we first used the function $cg$ of scipy\cite{jones2016scipy} but the results weren't satisfying. After some research, it was found that providing a preconditioner for the inverse of the matrix $I-\lambda W_\times$ in the form of a random vector $\vec{x}$ multiplied by itself $\vec{x} \cdot \vec{x}^{\top}$ largely improved the results. Moreover the algorithm requires the matrix to be positive definite thus the matrix was symmetrized. However this function only handles sparse matrices and gave very poor results. It was then decided to implement it directly and gave much better results. As said previously, the algorithm guarantees convergence in $n$ step where $n$ is the effective rank of the matrix $I-\lambda W_\times$. 
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.7\linewidth]{data/conj_grad/acc_time_fct_iter.png}
+	\caption{Accuracy and computation time depending on number of maximum iterations}
+\end{figure}
+However, by grid search on the maximum number of iterations allowed for the algorithm, it was discovered that on synthetic data the effective rank of the matrices are very low and the algorithm converges very quickly. This can be cause by the fact that the synthetic database is too simplistic and the adjacency matrices too sparse, making the problem too easy to solve.
 \paragraph{Fixed Point Iterations}
-Rapidité de la convergence : géométrique avec un ratio $\lambda$1/$\lambda$2???
-si lambda trop proche de l'inverse de la valeur propre peut etre tres lent à converger quand la matrice d'adjacence est très dense\\
-The Fixed Point Iterations method was very easy to implement and gave rapidly good results, however there is a constraint on the lambda(the geometric factor) used in the kernel as we have proved. Experiments showed that a lambda very close to the constraint increases significantly the time of computation to convergence.\todo{image}
+The Fixed Point Iterations method was very easy to implement since the algorithm only consists in repeating $x_{t+1}=p_{\times}+\lambda W_{\times}x_t$ until either convergence is obtained or the maximum number of iterations reached. It rapidly gave good results thus being used as a tool of comparison with other kernels that struggled more at the beginning.
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=0.7\linewidth]{data/fixed_point/acc_comp_time_fct_lambda.png}
+	\caption{Accuracy and computation time depending on chosen $\lambda$}
+\end{figure}
+However there is a constraint on the lambda (the geometric factor) used in the kernel as proved above. Experiments showed that a lambda very close to the constraint increases significantly the time of computation to convergence, as well as the density of the adjacency matrix to a lower extent.
 
-\paragraph{Spectral Decompostion}
-can't inverse Left eigenvectors : 
-\url{https://arxiv.org/pdf/1708.00064.pdf}
+\paragraph{Spectral Decomposition}
+The Spectral Decomposition method is also very well documented since it is simply another name for the eigendecomposition, one of the main problems of linear algebra. Because of that it was very simple to implement while following all the smaller accelerations recommended. However, in some cases on the synthetic database the eigenvalues would not be real thus causing some problems. In order to prevent that, the adjacency matrices were also symmetrized. Moreover, in some other cases the left eigenvectors matrix was singular and was not invertible. In order to fix that, an $\epsilon$ was added to all the diagonal such that it wouldn't alter the results (and didn't) while allowing all kernels to be computed.
 \paragraph{Nearest Kronecker Product}
-\url{https://www.sciencedirect.com/science/article/pii/S0377042700003939?via\%3Dihub}
-	\url{https://www.imageclef.org/system/files/CLEF2016_Kronecker_Decomposition.pdf}
-	\url{http://dx.doi.org/10.1007/978-94-015-8196-7_17}
-	\url{https://mathematica.stackexchange.com/questions/91651/nearest-kronecker-product}
+\todo{finir}
+En travail\\
+\url{https://www.sciencedirect.com/science/article/pii/S0377042700003939?via\%3Dihub}\\
+\url{https://www.imageclef.org/system/files/CLEF2016_Kronecker_Decomposition.pdf}\\
+\url{http://dx.doi.org/10.1007/978-94-015-8196-7_17}\\
+\url{https://mathematica.stackexchange.com/questions/91651/nearest-kronecker-product}\\
 	
 
 \subsection{Performance}
+First of all the different methods will be tested with synthetic data to verify claims made in the article. Then, the methods will be applied to real world problems. 
 \subsubsection{Performance on synthetic data}
-\paragraph{Accuracy comparison between labeled and unlabeled graphs}
-Même score, car donne même matrice ???
-\begin{table}[!htb]
-\begin{center}
-\begin{tabular}{|l|l|l|}
-    \hline
-    & Unlabelled & Labelled \\
-    \hline
-    Accuracy & ? & ? \\
-    \hline
-    Time & ? & ? \\
-    \hline
-\end{tabular}
-\end{center}
-\caption {Time and Accuracy of learning resp. for unlabelled and labelled graphs} \label{tab:lab_vs_nolab} 
-\end{table}
-
-\paragraph{Efficiency of alternate methods}
-\begin{table}[!htb]
-\begin{center}
-\begin{tabular}{|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|}
-    \hline
-    & Raw\newline kernel & Inverse\newline Kernel & Sylvester\newline Equation & Conjugate\newline Gradients & Fixed\newline points & Spectral\newline Decomp. & Nearest\newline Kronecker Product \\
-    \hline
-    Accuracy & 67\% & 67\% & ? & 67\% & 67\% & ? & ? \\
-    \hline
-    Time & 18.40s  & 5.72 & ? & 7.62s & 5.94s & ? & ? \\
-    \hline
-\end{tabular}
-\end{center}
-\caption {Time and Accuracy of learning for the raw kernel and other methods} \label{tab:kernel_comparison} 
-\end{table}
-\paragraph{Experiments on a biology dataset}
-\url{https://ls11-www.cs.tu-dortmund.de/staff/morris/graphkerneldatasets} 
-\url{http://members.cbio.mines-paristech.fr/~nshervashidze/code/}
-enzymes
-
-\paragraph{Label use}
-Comparison using labels and no labels
-\paragraph{Comparison of their gram matrices}
-The algorithms approximate the kernel using very different techniques, thus the gram matrices obtained from the kernels were similar in appearance, but had significant differences of scale. It was then decided to normalize very simply the gram matrices so they could be more easily compared.
+\paragraph{Gram Matrices}
+The algorithms approximate the kernel using very different techniques, thus the gram matrices obtained from the kernels were similar in appearance, but had significant differences of scale. It was then decided to normalize very simply the gram matrices so they could be more easily compared.\todo{Comparer différences}
 \begin{equation}
-	M = (M - min(M) )/max(M)
+M = (M - min(M) )/max(M)
 \end{equation}
 \begin{figure}[!htb]
 	\begin{multicols}{2}
@@ -489,42 +486,65 @@ The algorithms approximate the kernel using very different techniques, thus the 
 \end{figure}
 Afterwards, in order to verify all the algorithms gave similar results, it was decided to compute the Frobenius norm of the difference of two gram matrices (divided by the size of the matrix, thus giving the mean standard deviation). The following results were obtained and were satisfying.
 \begin{table}[!htb]
-\begin{center}
-\begin{tabular}{|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|}
-	\hline
-	& Raw\newline kernel & Inverse\newline Kernel & Sylvester\newline Equation & Conjugate\newline Gradients & Fixed\newline points & Spectral\newline Decomp. \\
-	\hline
-	Raw. & 0 & 1.1e-4 & 9.8e-5 & 8.9e-5 & 1.0e-4 & 1.0e-04  \\
-	\hline
-	Inv. & - & 0 & 2.1e-5 & 7.9e-5 & 4.0e-6 & 6.8e-6 \\
-	\hline
-	Syl. & - & - & 0 & 8.0e-5 & 1.7e-5 & 1.4e-5  \\
-	\hline
-	Con. & - & - & - & 0 & 7.9e-5 & 7.9e-5  \\
-	\hline
-	Fix. & - & - & - & - & 0 & 2.8e-6 \\
-	\hline
-	Spe. & - & - & - & - & - & 0 \\
-	\hline
-\end{tabular}
-\end{center}
-\caption {Approximate standard deviation of matrix entries (?)}
-\label{tab:frobenius_norm_diff} 
+	\begin{center}
+		\begin{tabular}{|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|}
+			\hline
+			& Raw\newline kernel & Inverse\newline Kernel & Sylvester\newline Equation & Conjugate\newline Gradients & Fixed\newline points & Spectral\newline Decomp. \\
+			\hline
+			Raw. & 0 & 1.1e-4 & 9.8e-5 & 8.9e-5 & 1.0e-4 & 1.0e-04  \\
+			\hline
+			Inv. & - & 0 & 2.1e-5 & 7.9e-5 & 4.0e-6 & 6.8e-6 \\
+			\hline
+			Syl. & - & - & 0 & 8.0e-5 & 1.7e-5 & 1.4e-5  \\
+			\hline
+			Con. & - & - & - & 0 & 7.9e-5 & 7.9e-5  \\
+			\hline
+			Fix. & - & - & - & - & 0 & 2.8e-6 \\
+			\hline
+			Spe. & - & - & - & - & - & 0 \\
+			\hline
+		\end{tabular}
+	\end{center}
+	\caption {Mean standard deviation of matrix entries}
+	\label{tab:frobenius_norm_diff} 
 \end{table}
-\todo{correct nom ?}
-Indeed, the 
+Indeed, the mean standard deviation is significantly enough small in most cases so that the different acceleration methods are probably going to give approximately correct results.
+\paragraph{Label Use}
+The synthetic database generates at the same time adjacency matrices of each graph, and the list of adjacency matrices filtered by each label. Thus, we can compare the scores obtained for each of our metrics, computed using the fixed point kernel since it is both fast and allows the use of labels.
+\begin{figure}[!htb]
+	\begin{multicols}{2}
+		\includegraphics[width=\linewidth]{data/lab_nolab/acc.png}\par
+		\includegraphics[width=\linewidth]{data/lab_nolab/time.png}\par
+	\end{multicols}
+\caption {Accuracy and computation time of learning for unlabeled and labeled graphs}
+\end{figure}
+The accuracy has a lot of variance and thus it is hard to compare it. It can probably \todo{refaire cette experience en changeant quoi ?}be explained by the fact that we are working on graphs that are not big enough, and thus a small change in labels could have a big effect on the kernel, for example on the central edge of a tree graph. It is conjectured that provided a graph large and connected enough that a small change in label does not alter much its list of adjacency matrices, labels will have a positive impact on the accuracy. Concerning the computation time, the difference is quite small though by increasing the size of the database the difference can be better observed. There is a small factor of difference during the computation of the tensor product.
+\paragraph{Comparison of methods depending on  number of graphs}
+Pas de sens, grandit à la meme vitesse = taille de bd au carré ?
+\begin{figure}[!htb]
+	\begin{multicols}{2}
+		\includegraphics[width=\linewidth]{data/nb_graph/acc.png}\par
+		\includegraphics[width=\linewidth]{data/nb_graph/time.png}\par
+	\end{multicols}
+	\caption{Accuracy and Computation time of different methods depending on the size of the database}
+\end{figure}
 
-\paragraph{Complexity and Accuracy}
-
-\paragraph{Individual kernel analysis ?}
-\todo{mettre ici les images variations degré d'approximation}
-\paragraph{Nearest Kronecker product ?}
+\paragraph{Comparison of methods depending on number of nodes}
+todo
+\begin{figure}[!htb]
+	\begin{multicols}{2}
+		\includegraphics[width=\linewidth]{data/nb_nodes/acc.png}\par
+		\includegraphics[width=\linewidth]{data/nb_nodes/time.png}\par
+	\end{multicols}
+\caption{Accuracy and Computation time of different methods depending on the size of graphs}
+\end{figure}
+\paragraph{Nearest Kronecker product}
+En implémentation\todo{finir}
 
 \subsubsection{Performance on real datasets}
+This implementation was also tested on two real databases being PROTEINS and ENZYMES
 
-\subsection{Improvements}
 
-\newpage
 \section{Conclusion and Future Work}
 experiences : détailler db, tests, méthodes, les parametres, construction label, donner tableaux, resultats, teps de calculs, précision, discuter tout cela
 section 4 : 1 page ou page et demi : conclusion et discussion
@@ -532,10 +552,11 @@ section 4 : 1 page ou page et demi : conclusion et discussion
 \newpage
 \appendix
 \section{Appendix}
+Proofs ?
 
-\section{Acknowledgements}
-This work was done during the first year of my master.
-
+\section*{Acknowledgements}
+This work was done during the first year of my master's at Sorbonne Université. I would really like to thank Professor Sahbi for all the time he dedicated to me, and for his extraordinary and expert coaching on this project. This project taught me a lot and made me closer to becoming a researcher, while also making me a more mature person.
+\todo{Mettre ces listes ou pas ?}
 \listoffigures
 \listoftables
 bibliographie et index

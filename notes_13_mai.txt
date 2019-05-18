@@ -1,8 +1,8 @@
 difference matrices de gram montrer et montrer les images
 faire courbes pour comparer complexité et expliquer pk pareil au debut et apres diff augmente
-evacuer rapidement les graphiques qui font varier les perf en fct de leur parametres
-les graphiques les plus concluants : croissance temps de calcul par rapport taille de la base
-dire comment calculées svm et matrices de gram 
+--evacuer rapidement les graphiques qui font varier les perf en fct de leur parametres
+--les graphiques les plus concluants : croissance temps de calcul par rapport taille de la base
+--dire comment calculées svm et matrices de gram 
 dire que classe de meme poids et accuracy testée
 rajouter barres de stddev calcul accuracy
 faire label vs nolabel fct taille bd
