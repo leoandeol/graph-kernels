@@ -141,14 +141,29 @@ SVMs are models used in classification introduced about 25 years ago. They have 
 	\end{multicols}
 \end{block}
 \end{frame}
-\begin{frame}{Background : support vector machines}
-	SVM
+\begin{frame}{Background : Support Vector Machines}
+	\begin{block}{Classification}
+		Classification is the problem of finding the best function $f :  \R^d \longrightarrow \{0..k\}$ among a set of functions $F$ while minimizing a risk function $R$
+		\begin{equation*}
+		f\star = \mbox{argmin}_f R(f)
+		\end{equation*}
+		where $k$ is the number of classes of the problem and $d$ the number of features of data 
+	\end{block}
+	\begin{block}{Support Vector Machines}
+		\begin{equation*}
+			\gamma_i = \frac{y_{i}(\vec{x}_{i} \cdot \vec{w} + w_{0})}{\norm{\vec{w}}}
+		\end{equation*}
+		\begin{equation*}
+			\min \frac{1}{2}\norm{\vec{w}}^{2} \quad
+			\textup{s.t.}\quad y_{i}(\vec{x}_{i} \cdot \vec{w} + w_{0}) \geq 1 \quad \forall i \in \{1..n\}
+		\end{equation*}
+	\end{block}
 \end{frame}
 \begin{frame}{Background : kernels}
 	\begin{definition}
 		In its dual form, the SVM problem only requires a dot product between the observations' vectors. 
 		\begin{equation*}
-		\text{max} \sum\limits_{i=1}^{n} \alpha_i - \frac{1}{2} 
+		\text{max} \sum\limits_{i=1}^{n} \alpha_i - \frac{1}{2} \sum\limits_{j=1}^{n}\sum\limits_{i=1}^{n}\alpha_{i}\alpha_{j}y_{i}y_{j}\vec{x_{i}}^{\top}\vec{x_{j}}
 		\end{equation*}
 		This means the vectors can be mapped to higher dimensions with a function $\phi$. Moreover, even the dot product itself can be replaced by a function $\kappa$ without explicitly specifying the map $\phi$ as long as the function is positive semi definite.
 		\begin{equation*}
@@ -159,10 +174,25 @@ SVMs are models used in classification introduced about 25 years ago. They have 
 	\end{definition}
 \end{frame}
 \begin{frame}{Graph Kernels}
-    
+    \begin{definition}
+    	Graph Kernels are a type of R-convolution kernels\cite{haussler99convolution} applied to graphs, which are kernels that are based on decompositions of complex objects and comparisons of those decompositions.
+    \end{definition}
+	\begin{itemize}
+		\item Random walks
+		\item Graphlets
+		\item Shortest paths, subtree
+	\end{itemize}
 \end{frame}
 \begin{frame}{Graphlets}
-    
+    \begin{definition}
+   		Let $G$ and $G_2$ be two graphs, $\vec{f}_G$ and $\vec{f}_{G_2}$ the frequency vectors of respectively $G$ and $G_2$, then the kernel $\kappa$ is defined as
+   		\begin{equation*}
+   		\kappa(G,G_{2})=\vec{f}_{G}^{\top}\vec{f}_{G_2}
+   		\end{equation*}
+    \end{definition}
+	\begin{itemize}
+		\item Complexity of computing $\vec{f}_G$ is $O(n^k)$
+	\end{itemize}
 \end{frame}
 \begin{frame}{Random Walks}
 \begin{block}{Random Walks}
@@ -174,17 +204,28 @@ It has been shown\cite{imrich2000product} that computing random walks on two sep
 \end{block}
 \begin{figure}
 \begin{multicols}{3}
-\includegraphics[width=1.5cm]{data/prod_graph/g1.png}
-\includegraphics[width=1.5cm]{data/prod_graph/g2.png}
-\includegraphics[width=1.5cm]{data/prod_graph/gx.png}
+\includegraphics[width=1.5cm]{data/prod_graph/g1.png}\par
+\includegraphics[width=1.5cm]{data/prod_graph/g2.png}\par
+\includegraphics[width=1.5cm]{data/prod_graph/gx.png}\par
 \end{multicols}
 \caption{A graph $G_1$, a graph $G_2$ and the product graph $G_1 \otimes G_2$}
 \end{figure}
 \end{frame}
 \begin{frame}{Random Walk}
-	\begin{definition}
-		kernel def
-	\end{definition}
+	\begin{block}{Product graph}
+		\begin{multicols}{2}
+			\begin{itemize}
+				\item $W_{\times}=A_1\otimes A_2$
+				\item 
+				$W_{\times}=\sum\limits_{l=1}^{d} A_1^{(l)} \otimes A_2^{(l)}$\\
+			\end{itemize}
+		\end{multicols}
+	\end{block}
+	\begin{block}{Kernel Definition}
+		\begin{equation*}
+		\kappa(G,G') = \sum\limits_{k=0}^{\infty}\mu(k)q_{\times}^{\top}W_{\times}^{k}p_{\times}
+		\end{equation*}
+	\end{block}
 \end{frame}
 \begin{frame}{Acceleration methods}
 Cas particulier
@@ -195,16 +236,40 @@ On va vouloir accelerer machin
 ce kernel va être l'objectif de plusieurs méthodes
 \end{frame}
 \begin{frame}{Sylvester Equation}
-	content...
+\begin{definition}
+	Let $A$, $B$, and $C$ be matrices of compatible shapes, then the Sylvester equation is
+	\begin{equation*}
+	AX+XB=C
+	\end{equation*}
+	And the discrete-time Sylvester Equation is 
+	\begin{equation*}
+	AXB+C=X
+	\end{equation*}
+	Which can be generalized as
+	\begin{equation*}
+	\sum_{i=0}^{d}A_{i}XB_{i}=X
+	\end{equation*}
+\end{definition}
 \end{frame}
 \begin{frame}{Conjugate Gradient}
-	content...
+	Conjugate idea is...
+	\begin{figure}[!htb]
+		\centering
+		\includegraphics[height=0.3\textheight]{data/sota/conj_grad.png}
+		\caption{Conjugate gradient (red) compared to Gradient Descent (green)}
+		\label{fig:conj_grad}
+	\end{figure} 
 \end{frame}
 \begin{frame}{Fixed Point}
-content...
+\begin{equation*}
+x_{n+1} = f(x_n)
+\end{equation*}
 \end{frame}
 \begin{frame}{Spectral Decomposition}
-content...
+\begin{itemize}
+	\item $\kappa(G_1,G_2)=\sum\limits_{k=0}^{\infty}\mu(k)q_{\times}^{\top}(V_{\times}D_{\times}V_{\times}^{-1})^{k}p_{\times} = q_{\times}^{\top}V_{\times}\left(\sum\limits_{k=0}^{\infty}\mu(k)D_{\times}^{k}\right)V_{\times}^{-1}p_{\times}$
+	\item $A_1 \otimes A_2=(V_{1}D_{1}V_{1}^{-1})\otimes(V_{2}D_{2}V_{2}^{-1})=(V_1\otimes V_2)(D_1 \otimes D_2)(V_1 \otimes V_2)^{-1}$
+\end{itemize}
 \end{frame}
 \begin{frame}{Nearest Kronecker Product Approximation}
 \begin{itemize}
@@ -220,13 +285,118 @@ content...
 \begin{frame}{Summary}
   \tableofcontents[currentsection]
 \end{frame}
-\begin{frame}{Frame}
-    
+\begin{frame}{Databases and metrics}
+    \begin{block}{Synthetic Database}
+    	A database of toy data was required to verify claims made in the studied article. A generator was written that can make graphs of "star", "tree" and "ring" types, of different sizes with different labels.
+    \end{block}
+	\pause
+	\begin{block}{Real Databases}
+		\begin{itemize}
+			\item Proteins : 1113 proteins, 2 classes
+			\item Enzymes : 600 enzymes, 6 classes
+		\end{itemize}
+	\end{block}
+	\pause
+	\begin{block}{Metrics}
+		\begin{equation*}
+		L(X,\vec{y})=\frac{1}{\abs{X}}\sum\limits_{i=1}^{\abs{X}}\left\{
+		\begin{matrix}
+		1 & \mbox{if } f(\vec{x}_i) \neq y_i \\
+		0 & \mbox{otherwise}
+		\end{matrix}
+		\right.
+		\end{equation*}
+	\end{block}
 \end{frame}
+\begin{frame}{Implementation}
+	%\setlength{\columnsep}{-2.1in}
+	\begin{multicols}{2}
+		\begin{itemize}
+			\setlength\itemsep{4em}
+			\item Sylvester Equation\\$A_{1}XA_{2}+C=X$
+			\pause
+			\item Conjugate Gradient\\$(I-\lambda W_{\times})x=p_{\times}$
+			\pause
+			\setlength\itemsep{4em}
+			\item Fixed point\\$x_{t+1}=\lambda W_{\times}x_{t}+p_{\times}$
+			\pause
+			\item Spectral Decomposition\\$q_{\times}^{\top}P_{\times}(I-\lambda D_{\times})^{-1}P_{\times}^{-1}p_{\times}$
+		\end{itemize}
+	\end{multicols}
+\end{frame}
+
+\begin{frame}{Performance : Gram matrices}
+\begin{figure}[!htb]
+	\begin{multicols}{3}
+		\includegraphics[width=\linewidth]{data/gram/gram3.png}\par
+		\includegraphics[width=\linewidth]{data/gram/gram4.png}\par
+		\includegraphics[width=\linewidth]{data/gram/gram5.png}\par
+	\end{multicols}
+	\caption{A gram matrix computed with the raw method, another with the fixed point method, and the difference between the two}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Performance : Gram matrices}
+	\begin{table}[!htb]
+		\begin{center}
+			\begin{tabular}{|p{7mm}|p{9mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|}
+				\hline
+				& Raw\newline kernel & Inverse\newline Kernel & Sylvester\newline Equation & Conjugate\newline Gradients & Fixed\newline points & Spectral\newline Decomp. \\
+				\hline
+				Raw. & 0 & 1.1e-4 & 9.8e-5 & 8.9e-5 & 1.0e-4 & 1.0e-04  \\
+				\hline
+				Inv. & - & 0 & 2.1e-5 & 7.9e-5 & 4.0e-6 & 6.8e-6 \\
+				\hline
+				Syl. & - & - & 0 & 8.0e-5 & 1.7e-5 & 1.4e-5  \\
+				\hline
+				Con. & - & - & - & 0 & 7.9e-5 & 7.9e-5  \\
+				\hline
+				Fix. & - & - & - & - & 0 & 2.8e-6 \\
+				\hline
+				Spe. & - & - & - & - & - & 0 \\
+				\hline
+			\end{tabular}
+		\end{center}
+		\caption {Mean standard deviation of matrix entries}
+		\label{tab:frobenius_norm_diff} 
+	\end{table}
+\end{frame}
+
+\begin{frame}{Performance : Label Use}
+\begin{figure}[!htb]
+	\begin{multicols}{2}
+		\includegraphics[width=\linewidth]{data/lab_nolab/acc.png}\par
+		\includegraphics[width=\linewidth]{data/lab_nolab/time.png}\par
+	\end{multicols}
+	\caption {Accuracy and computation time of learning for unlabeled and labeled graphs}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Performance : Complexity}
+\begin{figure}[!htb]
+	\begin{multicols}{2}
+		\includegraphics[width=\linewidth]{data/nb_nodes/acc.png}\par
+		\includegraphics[width=\linewidth]{data/nb_nodes/time.png}\par
+	\end{multicols}
+	\caption{Accuracy and Computation time of different methods depending on the size of graphs}
+\end{figure}
+\end{frame}
+\begin{frame}{Protein and Enzymes}
+
+\end{frame}
+
 
 \section{Conclusion}
 \begin{frame}[plain]{Conclusion}
-conclu
+\begin{block}{Conclusion}
+	todo
+\end{block}
+\begin{block}{Future work}
+	\begin{itemize}
+		\item Generalized Sylvester Equation : algorithm and complexity
+		\item Generalizing the Spectral Decomposition to labeled graphs
+	\end{itemize}
+\end{block}
 \end{frame}
 
 \renewcommand\bibsection{\subsection{\refname}}
