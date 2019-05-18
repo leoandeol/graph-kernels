@@ -7,7 +7,7 @@ import scipy.sparse as sp
 from random import random
 import pickle as pk
 from time import time
-from grakel import datasets
+from grakel import datasets, Graph
 
 
 class Database:
@@ -279,18 +279,23 @@ class Database:
 
     def load_db(self,name):
         print("Loading ",name)
-        data = datasets.fetch_dataset(name, verbose=False)
+        data = datasets.fetch_dataset(name, verbose=False, as_graphs=True)
+        #uniques = np.unique(data.target)
         #my part
         db_A = []
         db_B = []
+        print(len(data.data))
         for G,typ in zip(data.data,data.target):
-            G = nx.line_graph(G)
             #uncolored
-            A_ = nx.to_numpy_matrix(G).T
+            G = G.get_adjacency_matrix().astype(np.float32)
+            A_ = G.T
             somme = np.sum(A_,axis=0)
             somme[np.where(somme==0)]=1 # to avoid division by zero, anyway column is 0
             D = np.diagflat(1/somme)
             A = A_ @ D
+            A = np.array(A,dtype=np.float32)
+            typ=str(typ)
+            #print(A,type(A))
             db_B.append((A,typ))
             #colored
             A = []
@@ -306,5 +311,5 @@ class Database:
             #         D = np.diagflat(1/somme)
             #         tmp = tmp @ D
             #         A.append(tmp)
-            db_A.append((A,typ))
+            #db_A.append(np.array([A,typ])
         return np.array(db_A),np.array(db_B)
