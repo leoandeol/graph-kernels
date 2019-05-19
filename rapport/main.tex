@@ -373,7 +373,7 @@ In order to conduct experiments and verify claims made in the article, toy data 
 	\end{multicols}
 	\caption{Ring graphs, resp. unlabelled, labelled, altered structured, altered labels}
 \end{figure}
-For simplicity, it was decided to only use 3 classes to stay as simple as possible. Focus was put on 3 standard types of graphs : the ring, the star and the tree. A ring graph is a connected graph where each vertex is connected to exactly two vertices, it thus forms one big cycle. A star graph is composed of a central node, and of several other nodes that are all and only connected to the central node, it should look like a star, or perhaps a flower.\todo{Est-ce que je devrais dire ça ?}. Finally, a tree is a famous type of graph : it is a connected graph without any cycles, but here a special type of tree will be studying, since each vertex is at most of degree 3.\\
+For simplicity, it was decided to only use 3 classes to stay as simple as possible. Focus was put on 3 standard types of graphs : the ring, the star and the tree. A ring graph is a connected graph where each vertex is connected to exactly two vertices, it thus forms one big cycle. A star graph is composed of a central node, and of several other nodes that are all and only connected to the central node, thus looking like stars in cartoon representations. Finally, a tree is a famous type of graph : it is a connected graph without any cycles, but here a special type of tree will be studying, since each vertex is at most of degree 3.
 \begin{figure}[!htb]
 	\begin{multicols}{4}
 		\includegraphics[width=\linewidth]{data/generated-graphs/star_base.png}\par
@@ -433,7 +433,8 @@ The second metric used is the computation time, expressed in seconds.
 Implementing code from the main paper was a challenge in itself. Several problems aren't really documented and finding functions to solve them, or even explanations on how to solve them is sometimes difficult.
 \paragraph{Support Vector Machines}
 The Support Vector Machines algorithm was not implemented since it was not the focus of this project. Instead, the famous library \textbf{libsvm}\cite{cc2011libsvm} was used through the python library scikit-learn\cite{pedregosa2011scikit} because of its efficiency and renown. Moreover, there are some hyperparameters to optimize, namely the penalty coefficient on classification mistakes $C$. Since it is not the topic of this project it has not been optimized.\todo{Faire ça rapidement}
-\paragraph{Gram Matrix}todo\todo{faire ça}
+\paragraph{Gram Matrix}
+The SVM library we used allows us to precompute the kernel and feeding it to the algorithm. This kernel matrix is called a gram matrix where its entries $M_{i,j}\in [0,1]$ represents the similarity between $G_i$ and $G_j$. Thus this matrix is obviously symmetric and it is only required to compute approximately half of the entries (precisely $\frac{n^2+n}{2}$).
 \paragraph{Raw Kernel}
 The Raw Kernel is very simple to implement however encounters an issue : a sum to infinity cannot be computed as is, and thus a choice had to be made. It was decided that the raw kernel would be computed over $N$ iterations where $N$ would be the number of vertices of the largest graph. The advantage is that all graph kernel values would be computed with the same number of iterations and the number of iterations would be kept small while all vertices would be reachable from any other vertex (the shortest path between two vertices in a connected graph $G=(V,E)$ is at most $\abs{V}$ long).  
 \paragraph{Inverse Kernel}
@@ -547,10 +548,25 @@ En implémentation\todo{finir}
 
 \subsubsection{Performance on real datasets}
 This implementation was also tested on two real databases being PROTEINS and ENZYMES
-TABLEAU
+\begin{table}
+	\begin{center}
+		\begin{tabular}{|c||c|c}
+			\hline
+			& PROTEINS & ENZYMES\\
+			\hline
+			Sylv. Eq. & & \\
+			Conj. Gr. & & \\
+			Fixed Pn. & & \\
+			Spec. De. & & \\
+			\hline
+		\end{tabular}
+	\end{center}
+\caption{Computation time of two real databases using different methods}
+\end{table}
 
 \section{Conclusion and Future Work}
-
+todo
+\todo{Mettre liste des tables/figures ou pas ?}
 
 \newpage
 \appendix
@@ -559,7 +575,6 @@ Proofs ?
 
 \section*{Acknowledgments}
 This work was done during the first year of my master's at Sorbonne Université. I would really like to thank Professor Sahbi for all the time he dedicated to me, and for his extraordinary and expert coaching on this project. This project taught me a lot and made me closer to becoming a researcher, while also making me a more mature person.
-\todo{Mettre ces listes ou pas ?}
 \listoffigures
 \listoftables
 bibliographie et index
