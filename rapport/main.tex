@@ -256,7 +256,7 @@ A Sylvester equation, also sometimes called Lyapunov equation is a matrix equati
 	\end{equation}
 	Which can be generalized as
 	\begin{equation}
-		\sum_{i=0}^{d}A_{i}XB_{i}=X
+		\sum_{i=0}^{d}A_{i}XB_{i}+C=X
 	\end{equation}
 \end{definition}
 Only the discrete-time Sylvester and its generalization will be used in this method and will be referred to as the Sylvester equation. These equations are solved usually using Schur decompositions in $O(n^3)$ for the basic Sylvester equation and in unknown time for the generalized version\cite{vishwanathan_graph_2010}.\\
@@ -281,7 +281,7 @@ The Conjugate Gradient method was introduced as a fix for that issue. The idea o
 However, this algorithm has limitations, it can only be used to solve linear systems of equations as $Ax=b$ under the constraint that $A$ is symmetric positive definite.
 In our case, this algorithm can be used to solve the following problem 
 \begin{equation}
-	(I-\lambda W_{\times}x=p_{\times}
+	(I-\lambda W_{\times})x=p_{\times}
 \end{equation}
 And the kernel value can be obtained by computing $q_{\times}^{\top}x$. The complexity of that method is $O(rn^3)$ for unlabeled graphs and $O(rdn^3)$ for labeled graphs where $r$ is the effective rank of the matrix $W_{\times}$. It is important to note that this kernel also assumes a geometric $\mu(k)$ function. \\
 This method is thus slower than the Sylvester Equation, however it is easily applied to labeled graphs, which is its main advantage.
@@ -347,7 +347,7 @@ By rewriting the spectral decomposition kernel taking advantage of this property
 \begin{equation}
 	\kappa(G_1,G_2)=(q_{1}^{\top}V_{1}\otimes q_{2}^{\top}V_{2})(\sum\limits_{k=0}^{\infty}\mu(k)(D_{1}\otimes D_{2})^k)(V_{1}^{-1}p_{1}^{\top}\otimes V_{2}^{-1}p_{2}^{\top})
 \end{equation}
-Which can also be altered by choosing specific $\mu(k)$ as described above. This method ends up being the most efficient of all for unlabeled graphs as it is computed in $O(pn^3)$ where $p$ is the computation time of the power series $\mu$. Moreover this complexity can further improve the computation time of the gram matrix because the eigendecomposition of an adjacency matrix only needs to be computed once. However, this method cannot be expanded to labeled graphs as it encounters difficulties applying the property mentioned above.
+Which can also be altered by choosing specific $\mu(k)$ as described above. This method ends up being the most efficient of all for unlabeled graphs as it is computed in $O(pn^2)$ where $p$ is the computation time of the power series $\mu$. Moreover this complexity can further improve the computation time of the gram matrix because the eigendecomposition of an adjacency matrix only needs to be computed once. However, this method cannot be expanded to labeled graphs as it encounters difficulties applying the property mentioned above.
 \paragraph{Nearest Kronecker Product Approximation}
 This method is more particular as it is not a new way to compute the kernel, but rather a way to generalize all the other methods. Indeed the Nearest Kronecker Product Approximation\cite{van1993approximation} is used to approximate two matrices $A$ and $B$ as if their Kronecker product was equal to the Kronecker product of two labeled graphs' adjacency matrices $W_{\times} \approx A \otimes B$. This methods allows using any of the methods mentioned above since it returns only two matrices and thus brings back the problem to unlabeled graphs. This method tries to minimize the Frobenius norm of the difference between the two $\norm{W_\times - A\otimes B}_F$. It can be computed in $O(dn^2)$ since $W_\times$ is a sum of Kronecker products.\\
 However this method also brings its own set of drawbacks. Since it required the Kronecker product of each couple of adjacency matrices to be computed, the previous advantage of the Spectral Decomposition (only computing once the eigendecomposition for each adjacency matrix) is lost as the obtained matrices are unique for each $W_\times$.

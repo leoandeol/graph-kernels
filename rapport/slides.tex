@@ -184,6 +184,7 @@ SVMs are models used in classification introduced about 25 years ago. They have 
 	\end{itemize}
 \end{frame}
 \begin{frame}{Graphlets}
+rajouter info sur quels sont les graphlet
     \begin{definition}
    		Let $G$ and $G_2$ be two graphs, $\vec{f}_G$ and $\vec{f}_{G_2}$ the frequency vectors of respectively $G$ and $G_2$, then the kernel $\kappa$ is defined as
    		\begin{equation*}
@@ -192,6 +193,7 @@ SVMs are models used in classification introduced about 25 years ago. They have 
     \end{definition}
 	\begin{itemize}
 		\item Complexity of computing $\vec{f}_G$ is $O(n^k)$
+		\item Sampling is required	
 	\end{itemize}
 \end{frame}
 \begin{frame}{Random Walks}
@@ -201,6 +203,7 @@ SVMs are models used in classification introduced about 25 years ago. They have 
 \end{block}
 \begin{block}{Product graph}
 It has been shown\cite{imrich2000product} that computing random walks on two separate graphs is equivalent to computing it on the product graph of the two. The product graph is computed using the Kronecker (or tensor) product $\otimes$
+$O(pn^6)$ complexity
 \end{block}
 \begin{figure}
 \begin{multicols}{3}
@@ -221,21 +224,26 @@ It has been shown\cite{imrich2000product} that computing random walks on two sep
 			\end{itemize}
 		\end{multicols}
 	\end{block}
-	\begin{block}{Kernel Definition}
+	\begin{block}{Kernel Definition}Let $p_{\times}$ and $q_{\times}$ be respectively the start and end probability of each node, and let $W_{\times}$ be the adjacency matrix of the product graph of $G$ and $G'$, and finally $\mu(k)$ be a convergent function of $k$.
 		\begin{equation*}
 		\kappa(G,G') = \sum\limits_{k=0}^{\infty}\mu(k)q_{\times}^{\top}W_{\times}^{k}p_{\times}
 		\end{equation*}
 	\end{block}
 \end{frame}
 \begin{frame}{Acceleration methods}
-Cas particulier
 \begin{block}{Inverse Kernel}
-	inv ker 
+A special case where $\mu(k)=\lambda^k$ leads to the following kernel
+	\begin{equation*}
+	\kappa(G_1,G_2)=q_{\times}^{\top}(I-\lambda W_\times)^{-1}p_{\times}
+	\end{equation*}
 \end{block}
-On va vouloir accelerer machin
-ce kernel va être l'objectif de plusieurs méthodes
+\begin{itemize}
+	\item $O(n^6)$ complexity
+	\item Some methods will try to accelerate it
+\end{itemize}
 \end{frame}
 \begin{frame}{Sylvester Equation}
+complexity
 \begin{definition}
 	Let $A$, $B$, and $C$ be matrices of compatible shapes, then the Sylvester equation is
 	\begin{equation*}
@@ -247,12 +255,20 @@ ce kernel va être l'objectif de plusieurs méthodes
 	\end{equation*}
 	Which can be generalized as
 	\begin{equation*}
-	\sum_{i=0}^{d}A_{i}XB_{i}=X
+	\sum_{i=0}^{d}A_{i}XB_{i}+C=X
 	\end{equation*}
 \end{definition}
 \end{frame}
 \begin{frame}{Conjugate Gradient}
-	Conjugate idea is...
+	\begin{block}{Idea}
+		\begin{itemize}
+			\item The idea is to make new gradient orthogonal to the former
+			\item Convergence guaranteed in $\abs{V}$ steps to solve the following problem
+		\end{itemize}
+		\begin{equation}
+		(I-\lambda W_{\times})x=p_{\times}
+		\end{equation}
+	\end{block}
 	\begin{figure}[!htb]
 		\centering
 		\includegraphics[height=0.3\textheight]{data/sota/conj_grad.png}
@@ -260,16 +276,36 @@ ce kernel va être l'objectif de plusieurs méthodes
 		\label{fig:conj_grad}
 	\end{figure} 
 \end{frame}
-\begin{frame}{Fixed Point}
+\begin{frame}{Fixed Point Iterations}
+\begin{block}{Definition}
+Fixed point iterations is a method of computing a fixed point of a function by applying repeatedly the following equation until $\norm{x_{n+1}-x_{n}}<\epsilon$ where $\epsilon$ is the acceptable level of error.
 \begin{equation*}
 x_{n+1} = f(x_n)
 \end{equation*}
+Since this method requires the computation of $W_\times$, the kernel value can be computed for any type of labeling. For unlabeled graphs, the complexity is $O(kn^3)$ and $O(kdn^3)$ for labeled graphs, where $d$ is the number of labels and $k$ the number of iterations which can be estimated by
+\begin{equation*}
+k=O\left(\frac{\ln \epsilon}{\ln \lambda + \ln \abs{\xi}}\right)
+\end{equation*}
+\end{block}
 \end{frame}
 \begin{frame}{Spectral Decomposition}
-\begin{itemize}
-	\item $\kappa(G_1,G_2)=\sum\limits_{k=0}^{\infty}\mu(k)q_{\times}^{\top}(V_{\times}D_{\times}V_{\times}^{-1})^{k}p_{\times} = q_{\times}^{\top}V_{\times}\left(\sum\limits_{k=0}^{\infty}\mu(k)D_{\times}^{k}\right)V_{\times}^{-1}p_{\times}$
-	\item $A_1 \otimes A_2=(V_{1}D_{1}V_{1}^{-1})\otimes(V_{2}D_{2}V_{2}^{-1})=(V_1\otimes V_2)(D_1 \otimes D_2)(V_1 \otimes V_2)^{-1}$
-\end{itemize}
+\begin{block}{Definition}
+	\begin{itemize}
+		\item Eigendecomposition of the adjacency matrix
+		\item Inverse becomes trivial to compute on diagonal matrix
+	\end{itemize}
+	\begin{equation*}
+		 \kappa(G_1,G_2)=\sum\limits_{k=0}^{\infty}\mu(k)q_{\times}^{\top}(V_{\times}D_{\times}V_{\times}^{-1})^{k}p_{\times} = q_{\times}^{\top}V_{\times}\left(\sum\limits_{k=0}^{\infty}\mu(k)D_{\times}^{k}\right)V_{\times}^{-1}p_{\times}
+	\end{equation*}
+	However the following property is given from the Kronecker product
+	\begin{equation*}
+		A_1 \otimes A_2=(V_{1}D_{1}V_{1}^{-1})\otimes(V_{2}D_{2}V_{2}^{-1})=(V_1\otimes V_2)(D_1 \otimes D_2)(V_1 \otimes V_2)^{-1}
+	\end{equation*}
+	Taking advantage of that property
+	\begin{equation}
+	\kappa(G_1,G_2)=(q_{1}^{\top}V_{1}\otimes q_{2}^{\top}V_{2})(\sum\limits_{k=0}^{\infty}\mu(k)(D_{1}\otimes D_{2})^k)(V_{1}^{-1}p_{1}^{\top}\otimes V_{2}^{-1}p_{2}^{\top})
+	\end{equation}
+\end{block}
 \end{frame}
 \begin{frame}{Nearest Kronecker Product Approximation}
 \begin{itemize}
@@ -387,9 +423,14 @@ x_{n+1} = f(x_n)
 
 
 \section{Conclusion}
-\begin{frame}[plain]{Conclusion}
+\begin{frame}{Conclusion}
 \begin{block}{Conclusion}
-	todo
+	\begin{itemize}
+		\item Random walks : decent accuracy
+		\item Several acceleration methods were introduced
+		\item Performances are greatly improved
+		\item conclusion on real data : todo
+	\end{itemize}
 \end{block}
 \begin{block}{Future work}
 	\begin{itemize}
@@ -400,7 +441,7 @@ x_{n+1} = f(x_n)
 \end{frame}
 
 \renewcommand\bibsection{\subsection{\refname}}
-\begin{frame}[plain]{References}
+\begin{frame}{References}
 \nocite{bondy1976graph,borgwardt_protein_2005,imrich2000product,burges_tutorial_1998,vapnik_statistical_1998,nesterov_lectures_2018,shervashidze_efficient_2009}
 \bibliographystyle{ieeetr}
 \footnotesize
