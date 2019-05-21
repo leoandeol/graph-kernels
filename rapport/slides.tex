@@ -55,14 +55,20 @@
   \tableofcontents[currentsection]
 \end{frame}
 \begin{frame}{Motivation}
-
-\begin{itemize}
-	\item A lot of data can be represented as graphs such as proteins or social networks
-	\item Being able to compare them would be useful (classification, clustering)
-\end{itemize}
+\begin{multicols}{2}
+	\begin{itemize}
+		\item A lot of data can be represented as graphs such as proteins or social networks
+		\item Being able to compare them would be useful (classification, clustering)
+	\end{itemize}
+	\begin{figure}
+		\includegraphics[height=.3\textheight]{data/sociogram.png}\par
+		\caption{\footnotesize Moreno's sociogram (Source : Wikipedia)}
+	\end{figure}
+\end{multicols}
 
 \begin{figure}
-	\includegraphics[width=\linewidth]{data/ecoli.png}
+	\centering
+	\includegraphics[height=.15\textheight, width=\linewidth]{data/ecoli.png}
 \caption{A fragment of a protein transformed into a graph\cite{vishwanathan_graph_2010}}
 \end{figure}
 
