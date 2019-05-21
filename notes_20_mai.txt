@@ -1,52 +1,52 @@
-parler big data dans la motivation + graph social network
-mettre plus de références en citant nom/année
-rappeler svm données vectorielles
-vectorial data corriger
+--parler big data dans la motivation + graph social network
+--mettre plus de références en citant nom/année
+--rappeler svm données vectorielles
+???vectorial data corriger
 vectoriser matrices = pas de sens, invariant par permutation et pas invariant par cardinal (nb de dimension different) pas perte d'information
-objectif => motivation & objectif sur les trois slides en numérotant
-pas trop s'enfoncer => rendre linéaire
-rappeler les propriété graphe quand on en parler
-enlever slide graphes et eparpiller sur le reste
-on peut mettre image de wikipedia pour svm
-noter RN(f) pas R(f) risque empirique	 (virer ça )
-faire attention pas N nb exemple et nb noeuds
-note objectif svm avec des paires d'entrainement (X,Y) avec y -1 +1 trouver la fonction qui separe les deux en maximisant la marge => minimiser l'erreur de généralisation
-enlever gamma i
-mettre hard margin et soft margin et expliquer difference
-une figure hardmargin et une soft ou sinon un seul
-kernel : rajouter dans le dual le C en gras avec la commande visible (overlay) en latex
-mettre quelle variable on minimise w et {alpha i}
-texte : petite note pour moi ou rappels pour  ceux qui lisent
-"in its dual form ........."=> "dual form"
-rappel : uniquement sous forme produit scalaire
-mettre figure de map phi en plus haute dimension
-mettre du texte mais le minimum
-dans le slide graph kernel rappeler 
-comment faire si données sont pas vectorielles et des graphes
-regarder xfig, faire figure k(graphe1,graphe2)
-pause et dire de quoi on va parler dans la partie
-rappeler le but dans le slide graph kernels et rappelle que ça utilise 
-presenter sur une graphe c'est quoi les sommets et les aretes dans le slide objectif
-enlever R-convolution et oute la def, juste la liste des variables ptite intro graphes
-dire que noyaux entre graphes et pas entre sommets 
-liste plusieurs plusieurs familles et mettre des références et accentuer random walk et introduire le probleme
-mettre slide graphlet en annexe
-marquer que graphlet est un probleme d'isomorphisme de sous graphe dans graphe
-mettre random walk en dernier en gras
-donner nuance random walk sur graphe produit
-numeroter les diapos de meme nom en romain
-definition random walk enlever, mettre figure et bullet point
-dire px et qx uniforme et c'est un prior 
-enlever le texte, introduire les variables à l'oral
-revoir la notation pour normaliser
-simplifier caption et faire pour chaque petite figure
-mettre l'equation de sylvestre qu'on utilise uniquement et mettre en annexe les autres équations
-rappeller quand applicable à l'inverse kernel, cas général, labelisé, 
-simplifier présentation conjugate gradient, diapo d'annexe, et virer caption
-slide spec decomp faire des visible
-pas de numéro d'équation
-donner les complexité
-nearest kron pro = dire que labelisé
+--objectif => motivation & objectif sur les trois slides en numérotant
+--pas trop s'enfoncer => rendre linéaire
+--rappeler les propriété graphe quand on en parler
+--enlever slide graphes et eparpiller sur le reste
+--on peut mettre image de wikipedia pour svm
+--noter RN(f) pas R(f) risque empirique	 (virer ça )
+--faire attention pas N nb exemple et nb noeuds
+--note objectif svm avec des paires d'entrainement (X,Y) avec y -1 +1 trouver la fonction qui separe les deux en maximisant la marge => minimiser l'erreur de généralisation
+--enlever gamma i
+--mettre hard margin et soft margin et expliquer difference
+--une figure hardmargin et une soft ou sinon un seul
+--kernel : rajouter dans le dual le C en gras avec la commande visible (overlay) en latex
+--mettre quelle variable on minimise w et {alpha i}
+--texte : petite note pour moi ou rappels pour  ceux qui lisent
+--"in its dual form ........."=> "dual form"
+--rappel : uniquement sous forme produit scalaire
+--mettre figure de map phi en plus haute dimension
+--mettre du texte mais le minimum
+--dans le slide graph kernel rappeler 
+--comment faire si données sont pas vectorielles et des graphes
+--regarder xfig, faire figure k(graphe1,graphe2)
+--pause et dire de quoi on va parler dans la partie
+--rappeler le but dans le slide graph kernels et rappelle que ça utilise 
+--presenter sur une graphe c'est quoi les sommets et les aretes dans le slide objectif
+--enlever R-convolution et oute la def, juste la liste des variables ptite intro graphes
+--dire que noyaux entre graphes et pas entre sommets 
+--liste plusieurs plusieurs familles et mettre des références et accentuer random walk et introduire le probleme
+--mettre slide graphlet en annexe
+--marquer que graphlet est un probleme d'isomorphisme de sous graphe dans graphe
+--mettre random walk en dernier en gras
+--donner nuance random walk sur graphe produit
+--numeroter les diapos de meme nom en romain
+--definition random walk enlever, mettre figure et bullet point
+--dire px et qx uniforme et c'est un prior 
+--enlever le texte, introduire les variables à l'oral
+--revoir la notation pour normaliser
+--simplifier caption et faire pour chaque petite figure
+--m1ettre l'equation de sylvestre qu'on utilise uniquement et mettre en annexe les autres équations
+--rappeller quand applicable à l'inverse kernel, cas général, labelisé, 
+--simplifier présentation conjugate gradient, diapo d'annexe, et virer caption
+--slide spec decomp faire des visible
+--pas de numéro d'équation
+--donner les complexité
+--nearest kron pro = dire que labelisé
 montrer graphique
 pendant la méthodo rappeler expériences
 accuracy par rapport acceleration
