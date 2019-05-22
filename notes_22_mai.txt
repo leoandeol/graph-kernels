@@ -1,0 +1,29 @@
+-> bien lire le titre en francais
+il serait interessant :NON -> On veut traiter le probleme de
+comparer => trouver une metrique 
+logo université
+vectorial data
+mettre adjacence longue variable
+automorphisme pas isomorphisme
+pas vec(M) => X
+ensemble entre accolades
+||w|| norme de la normale de l'hyperplan
+pas "rarement" lineairemnt separable => il se peut
+séparabilité lineaire pas séparation
+donner des exemples de noyaux classiques 
+nombre d'étapes de la marche aléatoire 
+Gx = G cross
+mu fonction de pondération des longueurs
+sylvester : mettre forme généralisée et dire applicable au labels => complexité inconnue pour labels (reference)
+Enlever le A de conjugate gradient
+T= nb iterations : remplace p pour complexité mu (en fait non)
+citer pk dn^^2 aprox kron
+dire que acceleration toujours cubique
+etre prudent par rapport à fortran
+mean squared error pas std dev
+rajouter graphiques sur les parametres
+variation accuracy causée par instabilité numérique
+slides 22/23 fusionner
+fusionner au max
+eviter mentionner generalized sylvester equation
+montrer FACTEUR d'ACCELERATION sur unn exemple (dans les données réeeles ou conclusion)

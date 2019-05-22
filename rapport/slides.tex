@@ -69,7 +69,8 @@
 
 \begin{figure}
 	\centering
-	\includegraphics[height=.15\textheight, width=\linewidth]{data/ecoli.png}
+	\vspace*{-0.5cm}
+	\includegraphics[height=.25\textheight]{data/ecoli.png}
 \caption*{Fragment of a protein transformed into a graph \citep{vishwanathan_graph_2010}}
 \end{figure}
 
@@ -78,7 +79,7 @@
 \begin{frame}{Motivation and Objectives II : Current methods}
 	\begin{block}{Support Vector Machine \citep{cortes_support-vector_1995}}
 		\begin{itemize}
-			\item Operates on vector data
+			\item Operates on vectorial
 			\item Great accuracy
 			\item Great capacity of generalization
 			\item Allows the use of kernels in its dual form
@@ -95,7 +96,7 @@
 
 \begin{frame}{Motivation and Objectives III}
 \begin{itemize}
-	\item These methods are adapted to \textbf{vector data}
+	\item These methods are adapted to \textbf{vectorial data}
 	\item Graphs are not
 	\item Vectorizing adjacency matrices does not solve the problem (isomorphism)
 	\item New types of kernels were discovered
@@ -128,7 +129,7 @@
 \begin{frame}{Support Vector Machines}
 \begin{multicols}{2}
 	{\begin{itemize}
-		\item We have a set of pairs $(\vec{x_i},y_i)$ of size $N$ where $y_i \in {-1,+1}$
+		\item We have a set of pairs $\{(\vec{x_i},y_i)\}$ of size $N$ where $y_i \in \{-1,+1\}$
 		\item We want to maximize the margin, and to minimize the generalization error
 		\item We thus minimize
 	\end{itemize}
@@ -169,7 +170,7 @@
 		\end{figure}
 		\vfill\null
 		\columnbreak
-		{We want to classify non \textbf{vector data}. There are two types of methods available :
+		{We want to classify non \textbf{vectorial data}. There are two types of methods available :
 			\begin{itemize}
 				\item Kernels on graphs
 				\item Kernels on graph nodes
@@ -209,7 +210,7 @@
 \end{multicols}
 \end{figure}
 \begin{itemize}
-	\item Computing a random walk on a product graph is equivalent to computing a random walk on each graph \citep{imrich2000product}
+	\item Computing a random walk on a product graph is equivalent to computing a common walk on both graph \citep{imrich2000product}
 	\item The product graph is computed using the Kronecker product $\otimes$
 \end{itemize}
 \end{frame}
@@ -250,7 +251,7 @@ A special case where $\mu(k)=\lambda^k$ leads to the following kernel
 	\end{equation*}
 	by multiplying $X$ to $q_\times$ we get 
 	\begin{equation*}
-		q_{\times}^{\top}\text{vec}(M)=q_{\times}^{\top}(I-\lambda W_{\times})^{-1}p_{\times}
+		q_{\times}^{\top}\text{vec}(X)=q_{\times}^{\top}(I-\lambda W_{\times})^{-1}p_{\times}
 	\end{equation*}
 \end{block}
 \begin{itemize}
@@ -271,7 +272,7 @@ A special case where $\mu(k)=\lambda^k$ leads to the following kernel
 	\end{block}
 \begin{itemize}
 	\item The complexity is $O(rdn^3)$ for $r$ iterations and $d$ labels
-	\item Efficient if the matrix has a small effective rank
+	\item Efficient if the matrix has a small effective rank $r$
 \end{itemize}
 \end{frame}
 \begin{frame}{Fixed Point Iterations}
@@ -311,7 +312,7 @@ Either until $\norm{x_{t+1}-x_t}<\epsilon$ or a maximum number of iterations is 
 \end{frame}
 \begin{frame}{Spectral Decomposition II}
 \begin{itemize}
-	\item The complexity is $O(pn^3)$ for $p$ the complexity of the power series
+	\item The complexity is $O(pn^3)$ with $p$ which depends on the complexity of $\mu(k)$
 	\item It is even lower since the eigendecomposition of each graph is computed only once
 	\item Currently our most efficient method on unlabeled graphs
 \end{itemize}
@@ -390,7 +391,7 @@ Either until $\norm{x_{t+1}-x_t}<\epsilon$ or a maximum number of iterations is 
 			\hline
 		\end{tabular}
 	\end{center}
-	\caption {Mean standard deviation of matrix entries}
+	\caption*{MSE of matrix entries}
 	\label{tab:frobenius_norm_diff} 
 \end{table}
 \end{frame}
