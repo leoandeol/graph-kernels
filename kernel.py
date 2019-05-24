@@ -143,7 +143,7 @@ class Kernel:
         for i in range(itera):
             last = x
             x = func(x)
-            if np.linalg.norm(x-last)<=1e-7:
+            if np.linalg.norm(x-last)<=1e-5:
                 break
         
         k = np.real(np.asscalar(qx.T@x))
@@ -201,10 +201,12 @@ class Kernel:
         q1 = np.ones((n1,1))/n1
         p2 = np.ones((n2,1))/n2
         q2 = np.ones((n2,1))/n2
-
+        
         # always using an exponential kernel
         part1 = self.kron(q1.T@P1,q2.T@P2)
-        part2 = np.diag(np.vectorize(exp)(self.lbd*np.diag(np.kron(D1,D2))))
+        part2 = 1/np.diag(np.identity(n1*n2)-self.lbd*np.kron(D1,D2))
+        part2[np.isnan(part2)]=0
+        part2=np.diag(part2)
         part3 = self.kron(Pinv1@p1,Pinv2@p2)
         k = part1 @ part2 @part3
         return k
