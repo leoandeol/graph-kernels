@@ -179,8 +179,7 @@ This section will review the state of the art kernels for graphs. Particular att
 \subsubsection{Graph Kernels}
 Graph Kernels are a type of R-convolution kernels\cite{haussler99convolution} applied to graphs, which are kernels that are based on decompositions of complex objects and comparisons of those decompositions.\\
 Graph Kernels have been studied since Support Vector Machines started getting popular\cite{kashima_graphkers_2003}. Since then, a lot of progress has been made, and several types of kernels have been discovered, such as random walk and graphlet\cite{shervashidze_efficient_2009} kernels, the two main families of kernels (and the ones studied in this section), but not the only ones.
-There are also graph kernels that use subtrees\cite{ramon2003expressivity}, shortest paths\cite{borgwardt2005shortest} and several others that are unfortunately usually  either too complex to compute or not positive semi-definite\cite{shervashidze2012scalable}. However it has been shown\cite{schlkopf_learning_2001} that in some cases non positive semi definite kernels can still be used efficiently either by using them as a dissimilarity measure, or by artificially making them positive semi definite.\todo{developper plus les autres kernels? }
-\todo{comment les méthodes operent : differentes sous methodes (ex methode avaec labels, methode avec orienté ou pas) $\implies$ partie déjà assez longue ?}
+There are also graph kernels that use subtrees\cite{ramon2003expressivity}, shortest paths\cite{borgwardt2005shortest} and several others that are unfortunately usually  either too complex to compute or not positive semi-definite\cite{shervashidze2012scalable}. However it has been shown\cite{schlkopf_learning_2001} that in some cases non positive semi definite kernels can still be used efficiently either by using them as a dissimilarity measure, or by artificially making them positive semi definite.
 \subsubsection{Graphlets}
 A graphlet is a small graph (with few nodes $k \leq 5$). The idea of the graphlet kernel $\kappa$ is to generate a set $S$ of all possible graphlets of a certain size $k$ and calculate for each of them the frequency of occurrence in a certain graph $G=(V,E)$ to build a vector $\vec{f}_G$ of dimension $\abs{S}$. The kernel is then defined as follows
 \begin{definition}
@@ -233,7 +232,7 @@ Where $d$ is the size of the label set and $A^{(l)}$ the adjacency matrix of $G_
 The idea of the kernel is to perform random walks simultaneously on two graphs in order to compare the walks they have in common. As shown above, this can be achieved by simply performing a random walk on the product graph.
 By making the adjacency matrix stochastic, and computing the $k$-th power of the matrix $W_\times$, the probabilities obtained are the ones of walks in common (starting and ending at the same nodes) between the two graphs of length $k$.
 By taking into account the start $p_\times$ and end $q_\times$ probabilities, the sum of walks of all possible lengths can be calculated. Moreover using a power series $\mu(k)$ helps de-emphasizing longer walks and makes the sum converge. 
-\begin{definition}Let $p_{\times}$ and $q_{\times}$ be respectively the start and end probability of each node, and let $W_{\times}$ be the adjacency matrix of the product graph of $G$ and $G'$, and finally $\mu(k)$ be a convergent function of $k$, we define the random walk kernel as\cite{vishwanathan_graph_2010}
+\begin{definition}Let $p_{\times}$ and $q_{\times}$ be respectively the start and end probability of each node, and let $W_{\times}$ be the adjacency matrix of the product graph of $G$ and $G'$, and finally $\mu(k)$ be a convergent function of $k$, the random walk kernel is defined as\cite{vishwanathan_graph_2010}
 	\begin{equation}
 		\kappa(G_1,G_2) = \sum\limits_{k=0}^{\infty}\mu(k)q_{\times}^{\top}W_{\times}^{k}p_{\times}
 	\end{equation}
@@ -259,7 +258,7 @@ A Sylvester equation, also sometimes called Lyapunov equation is a matrix equati
 	\end{equation}
 \end{definition}
 These equations will be referred to as Sylvester Equation and Generalized Sylvester Equation. These equations are solved usually using Schur decompositions in $O(n^3)$ for the basic Sylvester equation and in unknown time for the generalized version\cite{vishwanathan_graph_2010}.\\
-This equation can be used to solve our kernel faster assuming a geometric function $\mu(k)=\lambda^k$ with $\lambda$ an hyperparameter. It can be achieved by replacing the $A$ and $B$ matrices by our adjacency matrices $A_1$ and $A_2$, adding $\lambda$, and $C$ by our start probabilities $p_\times$ while vectorizing the whole equation thus obtaining
+This equation can be used to compute the kernel faster assuming a geometric function $\mu(k)=\lambda^k$ with $\lambda$ an hyperparameter. It can be achieved by replacing the $A$ and $B$ matrices by the adjacency matrices $A_1$ and $A_2$, adding $\lambda$, and $C$ by the start probability vector $p_\times$ while vectorizing the whole equation thus obtaining
 \begin{equation}
 	vec(X) = vec(\lambda A_{1}XA_{2}) + p_{\times}
 \end{equation}
@@ -276,9 +275,9 @@ The Conjugate Gradient Method\cite{nesterov_lectures_2018} is an optimization al
 	\caption{Conjugate gradient (red) compared to Gradient Descent (green)}
 	\label{fig:conj_grad}
 \end{figure} 
-The Conjugate Gradient method is introduced as a fix for that issue. The idea of the algorithm is to keep former gradients in order improve the convergence speed by making the new gradient orthogonal to all former ones through the Gram-Schmidt process, at each step. Thus, unless there are approximation errors, the algorithm guarantees convergence in $r$ steps, being the number of dimensions of the problem, here the size of our graph.\\
+The Conjugate Gradient method is introduced as a fix for that issue. The idea of the algorithm is to keep former gradients in order improve the convergence speed by making the new gradient orthogonal to all former ones through the Gram-Schmidt process, at each step. Thus, unless there are approximation errors, the algorithm guarantees convergence in $r$ steps, being the number of dimensions of the problem, here the size of the graph.\\
 However, this algorithm has limitations, it can only be used to solve linear systems of equations as $Ax=b$ under the constraint that $A$ is symmetric positive definite.
-In our case, this algorithm can be used to solve the following problem 
+In this case, the following algorithm can be used to solve the following problem 
 \begin{equation}
 	(I-\lambda W_{\times})x=p_{\times}
 \end{equation}
@@ -448,15 +447,15 @@ Implementing code from the main paper is a challenge in itself. Several problems
 \paragraph{Support Vector Machines}
 The Support Vector Machines algorithm is not implemented since it is not the focus of this project. Instead, the famous library libsvm\cite{cc2011libsvm} is used through the python library scikit-learn\cite{pedregosa2011scikit} because of its efficiency and renown. Moreover, there are some hyperparameters to optimize, namely the penalty coefficient on classification mistakes $C$. Several experiments on various databases shower that the penalty coefficient $C$ had virtually no effect on the accuracy, thus was kept at a value of 1.
 \paragraph{Gram Matrix}
-The SVM library we used allows us to precompute the kernel and feeding it to the algorithm. This kernel matrix is called a gram matrix where its entries $M_{i,j}\in [0,1]$ represents the similarity between $G_i$ and $G_j$. Thus this matrix is obviously symmetric and it is only required to compute approximately half of the entries (precisely $\frac{n^2+n}{2}$).
+The SVM library used in the project allows us to precompute the kernel and feeding it to the algorithm. This kernel matrix is called a gram matrix where its entries $M_{i,j}\in [0,1]$ represents the similarity between $G_i$ and $G_j$. Thus this matrix is obviously symmetric and it is only required to compute approximately half of the entries (precisely $\frac{n^2+n}{2}$).
 \paragraph{Raw Kernel}
 The Raw Kernel is very simple to implement however encounters an issue : a sum to infinity cannot be computed as is, and thus a choice had to be made. It is decided that the raw kernel would be computed over $T$ iterations where $T$ would be the number of vertices of the largest graph. Moreover it was also decided to use the aforementioned power series $\mu(k)=\lambda^k$ to be able to compare results with the other methods restricted to it. The advantage is that all graph kernel values would be computed with the same number of iterations and the number of iterations would be kept small while all vertices would be reachable from any other vertex (the shortest path between two vertices in a connected graph $G=(V,E)$ is at most $\abs{V}$ long).  
 \paragraph{Inverse Kernel}
 This kernel is also very simple to implement  since it only required computing $I-\lambda W_{\times}$ and its inverse, which is handled exclusively by numpy (part of the scipy project).
 \paragraph{Sylvester Equation}
-The Sylvester Equation is a good example of poorly documented problems (compared to the others). There are very few resources on the subject, and even less implementation of solvers. We could theoretically use the Sylvester Equation on both unlabeled and discrete-labeled graphs which are respectively represented as Sylvester and Generalized Sylvester Equations (involving a sum of matrices), however, the only library available so far solves the first one, but not the second one. There seems to be confusing terminology since there is a solver for the Generalized Sylvester Equation, but a different one than the one described in the studied source\cite{vishwanathan_graph_2010}. The same source also mentions a way to solve the generalized version\cite{lathauwer2004}, however, this option is not explored because of a lack of time.  
+The Sylvester Equation is a good example of poorly documented problems (compared to the others). There are very few resources on the subject, and even less implementation of solvers. The Sylvester Equation could theoretically be used on both unlabeled and discrete-labeled graphs which are respectively represented as Sylvester and Generalized Sylvester Equations (involving a sum of matrices), however, the only library available so far solves the first one, but not the second one. There seems to be confusing terminology since there is a solver for the Generalized Sylvester Equation, but a different one than the one described in the studied source\cite{vishwanathan_graph_2010}. The same source also mentions a way to solve the generalized version\cite{lathauwer2004}, however, this option is not explored because of a lack of time.  
 \paragraph{Conjugate Gradient Method}
-The Conjugate Gradient Method is however very well documented\cite{nesterov_lectures_2018} and there are several libraries implementing this algorithm. Since the main library in python\cite{jones2016scipy} only implemented this method on sparse matrices, it gave very poor computational time efficiency on our matrices. It was then decided to implement it directly and gave much better results. As said previously, the algorithm guarantees convergence in $r$ step where $r$ is the effective rank of the matrix $I-\lambda W_\times$. 
+The Conjugate Gradient Method is however very well documented\cite{nesterov_lectures_2018} and there are several libraries implementing this algorithm. Since the main library in python\cite{jones2016scipy} only implemented this method on sparse matrices, it gave very poor computational time efficiency on the synthetic database. It was then decided to implement it directly and gave much better results. As said previously, the algorithm guarantees convergence in $r$ step where $r$ is the effective rank of the matrix $I-\lambda W_\times$. 
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.7\linewidth]{data/conj_grad/acc_time_fct_iter.png}
@@ -475,7 +474,7 @@ However there is a constraint on the lambda (the geometric factor) used in the k
 \paragraph{Spectral Decomposition}
 The Spectral Decomposition method is also very well documented since it is simply another name for the eigendecomposition, one of the main problems of linear algebra. Because of that it is very simple to implement since the method only requires Kronecker products and inverses. However, the fact that several inversions are required can lead to an accumulation of numerical imprecision. Moreover, in some other cases the left eigenvectors matrix is singular and is not invertible. In order to fix that, an $\epsilon$ was added to all the diagonal of the adjacency matrices such that it wouldn't alter the results (and did not) while allowing all kernels to be computed. Finally, the chosen $\mu(k)$ function is the power series to keep the method comparable to others.
 \paragraph{Nearest Kronecker Product}
-The Nearest Kronecker Product Approximation (NKP)\cite{van1993approximation} is used in conjunction with others methods in order to make them compatible with labeled graphs, it is especially useful with the spectral decomposition which is theoretically the fastest method available. There is some documentation of the topic however it is relatively hard to get a good grasp on the topic. Thus, a simple version of the NKP was implemented that does not take into account the special property of our product graph being composed of a sum of Kronecker products, making the overall complexity $O(n^3)$ instead of $O(dn^2)$.
+The Nearest Kronecker Product Approximation (NKP)\cite{van1993approximation} is used in conjunction with others methods in order to make them compatible with labeled graphs, it is especially useful with the spectral decomposition which is theoretically the fastest method available. There is some documentation of the topic however it is relatively hard to get a good grasp on the topic. Thus, a simple version of the NKP was implemented that does not take into account the special property of the product graph being composed of a sum of Kronecker products, making the overall complexity $O(n^3)$ instead of $O(dn^2)$.
 	
 
 \subsection{Performance}
@@ -521,7 +520,7 @@ Afterwards, in order to verify all the algorithms gave similar results, it was d
 \end{table}
 Indeed, the mean squared error is small in most cases so that the different acceleration methods are probably going to give approximately correct results.
 \paragraph{Label Use}
-The synthetic database generates at the same time adjacency matrices of each graph, and the list of adjacency matrices filtered by each label. Thus, we can compare the scores obtained for each of our metrics, computed using the fixed point kernel since it is both fast and allows the use of labels.
+The synthetic database generates at the same time adjacency matrices of each graph, and the list of adjacency matrices filtered by each label. Thus, the scores obtained for each of the metrics can be compared, computed using the fixed point kernel since it is both fast and allows the use of labels.
 \begin{figure}[!htb]
 	\begin{multicols}{2}
 		\includegraphics[width=\linewidth]{data/lab_nolab/acc.png}\par
@@ -529,15 +528,16 @@ The synthetic database generates at the same time adjacency matrices of each gra
 	\end{multicols}
 \caption {Accuracy and computation time of learning for unlabeled and labeled graphs}
 \end{figure}
-Overall in most cases the unlabeled version gives better accuracy which can probably be explained by the fact that we are working on graphs that are not big enough with a set of labels too large, and thus a small change on labels could have a big effect on the kernel, for example on the central edge of a tree graph. It is conjectured that provided a large graph and connected enough, a small change in label does not alter much its list of adjacency matrices, labels will have a positive impact on the accuracy. Concerning the computation time, the difference is quite small though by increasing the size of the database the difference can be better observed. There is a small factor of difference during the computation of the tensor product.
+Overall in most cases the unlabeled version gives better accuracy which can probably be explained by the fact that the graphs used in the experiments are not big enough with a set of labels too large, and thus a small change on labels could have a big effect on the kernel, for example on the central edge of a tree graph. It is conjectured that provided a large graph and connected enough, a small change in label does not alter much its list of adjacency matrices, labels will have a positive impact on the accuracy. Concerning the computation time, the difference is quite small though by increasing the size of the database the difference can be better observed. There is a small factor of difference during the computation of the tensor product.
 \paragraph{Comparison of methods depending on number of graphs}
-Pas de sens, grandit à la meme vitesse = taille de bd au carré ?\todo{faire ça}
+This method is rather different from the others. Indeed, the variables in this experiment, the number of graphs, does not directly impact the complexity of the different methods. It is actually used to enhance the visibility on the differences of complexity between the methods at a given point. Thus, it confirms that the raw random walk kernel evolve jointly, as the 4 others evolve jointly too. 
 \begin{figure}[!htb]
-	\begin{multicols}{2}
-		\includegraphics[width=\linewidth]{data/nb_graph/acc.png}\par
-		\includegraphics[width=\linewidth]{data/nb_graph/time.png}\par
-	\end{multicols}
-	\caption{Accuracy and Computation time of different methods depending on the size of the database}
+	\centering
+	%\begin{multicols}{1}
+		%\includegraphics[width=\linewidth]{data/nb_graph/acc.png}\par
+		\includegraphics[width=.5\linewidth]{data/nb_graph/time.png}\par
+	%\end{multicols}
+	\caption{Computation time of different methods depending on the size of the database}
 \end{figure}
 
 \paragraph{Comparison of methods depending on number of nodes}
@@ -553,10 +553,25 @@ Concerning the accuracy, the conjecture on fixed point accuracy made earlier is 
 On the other hand, computation time. It is important to remind that in this case some methods (fixed point, conjugate gradient) were implemented entirely for this project, while the Spectral Decomposition and Inverse methods used tools to compute eigenvalues and inverses, and finally the Sylvester Equation solver was taken from a library based in Fortran. This library is a lot more optimized than my personal code and thus creates a bias in computation time.\\
 The difference of complexity between the raw method, the inverse method and others is very noticeable and thus the acceleration methods are very time efficient. The most particular case is again the fixed point method which has a complexity increasing much faster than other methods, which could be explained by the number of iterations being much higher than the conjugate gradient for example, and thus computing the matrix vector products several more times.
 \paragraph{Nearest Kronecker Product}
-This acce
+This method was to be used in conjunction to other methods in order to adapt them to unlabeled graphs. It has been implemented as specified earlier, in a non-optimal manner ($O(n^3)$) but gave good results. 
+\begin{figure}[!htb]
+	\begin{multicols}{2}
+		\includegraphics[width=\linewidth]{data/nkp/acc.png}\par
+		\includegraphics[width=\linewidth]{data/nkp/time.png}\par
+	\end{multicols}
+\caption{Accuracy and Computation time comparison between using a labeled database and the Nearest Kronecker Product Approximation}
+\end{figure}Indeed, the accuracy obtained by approximating the Kronecker product from two labeled graphs has virtually the same values as the original one, taking variations into account. Moreover, the computation time is slightly increased, which can be explained by the fact as precised before, that the method implemented was the general NKP and not the specific case for sums of Kronecker products, thus effectively multiplying the complexity of the method used by a constant.\\
+In order to visualize the approximation better, two gram matrices were computed on the same dataset, the first one using the product adjacency matrix of labeled graphs, and the second one computed using the NKP. It can be seen that the matrices are very similar, the first one being more clear with less monotonic changes in the matrices, and the second being a lot more smooth, induced by the noise obtained by the Singular Value Decomposition used in the algorithm.
+\begin{figure}[!htb]
+	\begin{multicols}{2}
+		\includegraphics[width=\linewidth]{data/nkp/gram.png}\par
+		\includegraphics[width=\linewidth]{data/nkp/gram_approx.png}\par
+	\end{multicols}
+\caption{Two gram matrices computed resp. using labeled graphs and using the NKP of those graphs}
+\end{figure}
 
 \subsubsection{Performance on real datasets}
-This implementation was also tested on two real databases being Proteins and Enzymes
+This implementation was also tested on two real databases being Enzymes and MUTAG. First of all, the computation time bias conjecture concerning the Sylvester Equation method is confirmed there on the Enzymes, where the its computation time relative to the others does not match with previous studies\cite{vishwanathan_graph_2010,shervashidze_efficient_2009}. Then, the different accuracies obtained on Enzymes are above the ones obtained by random walk by\cite{shervashidze_efficient_2009}, and on MUTAG are even as good as their best results, and much better than their random walk kernel.
 \begin{table}[!htb]
 	\begin{center}
 		\begin{tabular}{|c||c|c||c|c|}
@@ -575,9 +590,15 @@ This implementation was also tested on two real databases being Proteins and Enz
 	\end{center}
 \caption{Classification accuracy in percent \% with standard deviation and computation time for each acceleration method on two datasets}
 \end{table}
+Concerning the computation times, the Sylvester equation method and the Conjugate Gradient method are the two performing best, compared to the fixed point iterations which takes too many steps to converge in this case. Finally, the Spectral Decomposition method is less efficient than expected, which may be caused by the fact that the eigendecompositions are computed twice for every pair of graphs, which is computationally expensive. 
 
 \section{Conclusion and Future Work}
-todo
+\paragraph{Conclusion}
+In this project, different graph kernels were introduced, and focus was put on the random walk kernel, which is computationally expensive ($O(n^6)$). Thus, several acceleration methods were introduced in order to lower the complexity to a more acceptable bound $O(n^3)$, the lowest found yet. Another method, the Nearest Kronecker product was also introduced to enable any acceleration method to compute the kernel on labeled graphs by approximating them as unlabeled graphs. The computation time is lowered, but the at the potential cost of lost accuracy.\\
+In order to experiment with these methods, a synthetic database was created, and two real datasets (Enzymes and MUTAG) were used. After having solved some implementations issues, experiments were lead on the methods. It was shown that the computational time of the fixed point iterations increase wildly when $\lambda$ is in the neighborhood of the inverse of the matrix's largest eigenvalue. It was also shown that the number of iterations of conjugate gradient had virtually no impact on the synthetic database.\\
+Then, the complexity of the different methods was verified, by computing the different methods on a synthetic database composed of graphs of different sizes. The accuracy of the Nearest Kronecker Product was tested as satisfying on the synthetic database. Finally, the different methods were tested on the two real datasets and gave good to significantly better results that previous studies.
+\paragraph{Future Work}
+Some options in this project were not explored by lack of time, especially two, one theoretical, another slightly more technical. The first option is to generalize the Spectral Decomposition method to labeled graph, as it is the fastest method theoretically and the only one that can be combined with any weighting function, it would become the best option in any scenario. The second option is to work on an algorithm to solve the Generalized Sylvester Equation so that it can also be applied to labeled graphs in practice, but also finding its complexity, which is unknown as of latest research.
 
 \section*{Acknowledgments}
 This work was done during the first year of my master's at Sorbonne Université. I would really like to thank Professor Sahbi for all the time he dedicated to me, and for his extraordinary and expert coaching on this project. This project taught me a lot and made me closer to becoming a researcher, while also making me a more mature person.
