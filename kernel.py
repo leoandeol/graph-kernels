@@ -27,6 +27,12 @@ class Kernel:
                 Wx = Wx + np.kron(A1[i],A2[i])
             return Wx
 
+    def shape(self, A):
+        if type(A)==np.matrix or type(A)==np.ndarray:
+            return A.shape
+        else:
+            return A[0].shape
+
     def conjugate_grad(self,A, b, x=None):
         """
         Description
@@ -225,7 +231,7 @@ class Kernel:
                 A = db[i] # np.copy() ?
                 B = db[j]
                 if nkp:
-                    A,B,_ = self.nkp(np.kron(A,B), A.shape, B.shape, hermit=False)
+                    A,B,_ = self.nkp(self.kron(A,B), self.shape(A), self.shape(B), hermit=False)
                 ker = kernel(A,B)
                 gram[i, j] = ker
                 if i != j:
