@@ -4,6 +4,8 @@ from scipy.optimize import fixed_point
 from control import dlyap
 from math import exp
 from time import time
+from scipy.sparse.linalg import svds
+
 
 #coder graph labélisés
 class Kernel:
@@ -211,7 +213,7 @@ class Kernel:
         k = part1 @ part2 @part3
         return k
     
-    def build_gram_matrix(self, db, kernel):
+    def build_gram_matrix(self, db, kernel, nkp=False):
         try:
             self.N = np.max([x.shape[0] for x in db])
         except:
@@ -222,6 +224,8 @@ class Kernel:
             for j in range(i+1):
                 A = db[i] # np.copy() ?
                 B = db[j]
+                if nkp:
+                    A,B,_ = self.nkp(np.kron(A,B), A.shape, B.shape, hermit=False)
                 ker = kernel(A,B)
                 gram[i, j] = ker
                 if i != j:
@@ -256,3 +260,44 @@ class Kernel:
             M2 -= np.ones(M2.shape)*np.min(M2)
             M2 /= np.max(M2)
         return np.linalg.norm(M1-M2)/(M1.shape[0]*M1.shape[1])
+
+    def nkp(self, A, bdim, cdim, hermit=False):
+        A = np.asarray(A)
+        m = A.shape[0]
+        n = A.shape[1]
+        m1 = bdim[0]
+        n1 = bdim[1]
+        m2 = cdim[0]
+        n2 = cdim[1]
+        
+        assert m == m1 * m2
+        assert n == n1 * n2
+        
+        if hermit:
+            assert m1 == n1
+            assert m2 == n2
+            A = 0.5 * ( A + A.T)
+        
+        R = A.reshape((m2, m1, n2, n1))
+        R = np.transpose(R, (1, 3, 0, 2))
+        R = R.reshape((m1*n1, m2*n2))
+        
+        B, S, C  =  svds(R,1)
+        
+        SqrtS = np.sqrt(np.asscalar(S))
+        
+        B = (B * SqrtS).reshape((m1, n1))
+        C = (C * SqrtS).reshape((m2, n2))
+        
+        if hermit:
+            B = 0.5 * ( B + B.T)
+            C = 0.5 * ( C + C.T)
+            
+            if np.all(np.diag( B ) < 0) and np.all(np.diag( C ) < 0):
+                B = -B
+                C = -C
+                
+        D = A - np.kron(B,C)
+        if hermit:
+            D = 0.5 * ( D + D.T)
+        return B, C, np.linalg.norm(D)/(m*n)

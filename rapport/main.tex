@@ -41,7 +41,7 @@
 \newtheoremrep{theorem}{Theorem}
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}
-\renewcommand{\putbib}{\bibliographystyle{ieeetr}\bibliography{references}}
+\renewcommand{\putbib}{\listoffigures\listoftables\bibliographystyle{ieeetr}\bibliography{references}}
 \renewcommand{\appendixbibliographystyle}{ieetr}
 \renewcommand{\appendixbibliographyprelim}{\newpage}
 \renewcommand{\appendixrefname}{References}
@@ -63,7 +63,7 @@
  \paragraph{}Nowadays the world is shifting towards a new era where data is the most valuable resource, and researchers are working on algorithms to exploit it the best possible way. Most research is currently focused on the so-called "big data", huge quantities of data which are very sparse and of poor quality. However, there also exist structured databases of good quality, in the form of graphs, this different form being the one studied throughout this project. Graphs can be very useful in various fields, but are partly known for their use in biology, as they can be used to represent proteins or other types of molecules.
  \paragraph{}Classification of such graphs is an important problem of pattern recognition which affects a lot of sectors such as medicine, biology, and more. It was studied since the beginning of the millennium and significant progress has been made : several methods were discovered and gave good results but met a big issue, the complexity of these methods. Indeed, they do not scale well to large graphs as their complexity tends to be several times polynomial. Since then, the main objective of research on this topic has been to either find more computationally efficient algorithms, or to find methods to accelerate the ones already in use.
  \paragraph{}The first part of this report will introduce all the necessary background knowledge which are graphs as already mentioned, but also Support Vector Machines (SVMs) which is a powerful classification algorithm, and kernels which are transformations of data usually used to increase the accuracy of SVMs. However, graphs being non-vectorial data, kernels have also the purpose of becoming a metric of comparison between two instances of graphs. Thus, the main principles of graph kernels will be introduced as well as their definitions. Afterwards, the different methods used to improve the computation complexity of the kernel will be introduced together with their complexities, advantages and disadvantages.
-\paragraph{}The second part of this report will be focused on the technical side and experiments conducted during the project. A synthetic graph database made of toy data was required to conduct simple and quick experiments. Indeed, it was made in order to verify the claims made in the main publication studied thanks to easy control on matters such as labeled and unlabeled graphs, and variations of the size of either the database or the graphs inside of it. Different challenges and problems met during the implementation will be explained, as well as their found solutions. Then, the main subject of this part will be discussed : the accuracy and computational time of different methods, estimation of their complexities and different attempts to approximate those methods. Finally, an experiment on real datasets of enzymes and proteins is conducted, and the results analyzed.\todo{garder sommaire ? en général il n'y en a pas}
+\paragraph{}The second part of this report will be focused on the technical side and experiments conducted during the project. A synthetic graph database made of toy data was required to conduct simple and quick experiments. Indeed, it was made in order to verify the claims made in the main publication studied thanks to easy control on matters such as labeled and unlabeled graphs, and variations of the size of either the database or the graphs inside of it. Different challenges and problems met during the implementation will be explained, as well as their found solutions. Then, the main subject of this part will be discussed : the accuracy and computational time of different methods, estimation of their complexities and different attempts to approximate those methods. Finally, an experiment on real datasets of enzymes and proteins is conducted, and the results analyzed.
 
 \newpage
 \section{Methodology}
@@ -239,7 +239,7 @@ By taking into account the start $p_\times$ and end $q_\times$ probabilities, th
 	\end{equation}
 \end{definition}
 \noindent
-This kernel can be computed in $O(kn^6)$ where $k$ is the number of iterations.
+This kernel can be computed in $O(kpn^6)$ with $k$ the the number of iterations and $p$ a constant which depends on the complexity of $\mu(k)$.
 \paragraph{Inverse Kernel}
 There is a specific case of the kernel provided that a power series is used. Indeed, by replacing the power series as follows $\mu(k)=\lambda^k$ the following kernel is obtained 
 \begin{equation}
@@ -337,7 +337,7 @@ That kernel is even more trivial to compute as the inverse of a diagonal matrix 
 \begin{equation}
 	\kappa(G,G_2)=q_{\times}^{\top}V_{\times}{e^{\lambda D_{\times}}}V_{\times}^{-1}p_{\times}
 \end{equation}
-However, the complexity of the computation of the eigendecomposition is as large as the raw kernel $O(n^6)$, but, for unlabeled graphs, a big improvement is possible by simply calculating the eigendecompositions of the original adjacency matrices $A_1$ and $A_2$ thus cutting the time to $O(n^3)$, thanks to a property of the Kronecker product
+However, the complexity of the computation of the eigendecomposition is as large as the raw kernel $O(pn^6)$, but, for unlabeled graphs, a big improvement is possible by simply calculating the eigendecompositions of the original adjacency matrices $A_1$ and $A_2$ thus cutting the time to $O(pn^3)$, thanks to a property of the Kronecker product
 \begin{equation}
 	A_1 \otimes A_2=(V_{1}D_{1}V_{1}^{-1})\otimes(V_{2}D_{2}V_{2}^{-1})=(V_1\otimes V_2)(D_1 \otimes D_2)(V_1 \otimes V_2)^{-1}
 \end{equation}
@@ -351,24 +351,25 @@ This method is more particular as it is not a new way to compute the kernel, but
 However this method also brings its own set of drawbacks. Since it required the Kronecker product of each couple of adjacency matrices to be computed, the previous advantage of the Spectral Decomposition (only computing once the eigendecomposition for each adjacency matrix) is lost as the obtained matrices are unique for each $W_\times$.
 
 \subsubsection{Digest}
-tableau cocher avantages inconvenients
-\begin{table}
+Several acceleration methods were introduced with various advantages and disadvantages. The following table sums up the most important attributes of each acceleration method.
+\begin{table}[!htb]
 	\begin{center}
-		\begin{tabular}{|c|c|c||c|c||c|}
+		\begin{tabular}{|c|c|c||c|c||c|c|}
 			\hline
-			& \multicolumn{2}{c||}{Labels} & \multicolumn{2}{c||}{$\mu(k)$} & Complexity\\
-			\cline{2-6}
-			& None & Finite Set & $\lambda^{k}$ & Any & \\
+			& \multicolumn{2}{c||}{Labels} & \multicolumn{2}{c||}{$\mu(k)$} & \multicolumn{2}{c|}{Complexity}\\
+			\cline{2-7}
+			Method & None & Finite Set & ${\lambda}^{k}$ & Any & Unlabeled & Labeled\\
 			\hline
-			Sylv. Equation & $\times$\footnotemark\footnotetext{foo bar} & $\times$\footnote{Theoretically} & $\times$ & &\\
-			Conjugate Gradient & $\times$ & $\times$ & $\times$ & &\\
-			Fixed point & $\times$ & $\times$ & $\times$ & &\\
-			Spec. Decomp.& $\times$ & & $\times$ & $\times$ & \\
+			Sylvester Equation & $\times$ & $\times$\footnotemark & $\times$ & & $O(n^3)$ & Unknown\\
+			Conjugate Gradient & $\times$ & $\times$ & $\times$ & & $O(rn^3)$ & $O(rdn^3)$ \\
+			Fixed Point Iterations& $\times$ & $\times$ & $\times$ & & $O(kn^3)$ & $O(kdn^3)$\\
+			Spectral Decomposition& $\times$ & & $\times$ & $\times$ & $O(pn^3)$ & \\
 			\hline
 		\end{tabular}
 	\end{center}
 	\caption{Digest of the different properties of the aforementioned methods}
-\end{table}
+\end{table}\footnotetext{Theoretically\cite{lathauwer2004}}
+The next section will be focused on experiments. It starts by introducing the framework used for this project and then analyzes the performances of those methods. 
 
 
 
@@ -412,41 +413,24 @@ Alteration on labels will randomly switch a predefined number of edge labels. On
 		\includegraphics[width=\linewidth]{data/generated-graphs/tree_altered_labels.png}\par
 	\end{multicols}
 	\caption{Tree graphs, resp. unlabeled, labeled, altered structured, altered labels}
-\end{figure}\\
-This generator will create databases with the following statistics\todo{parler quand stats ajoutées}
+\end{figure}
+\subsubsection{Real databases}
+After testing the different methods on synthetic data, they will be applied to two real datasets. The two selected datasets are Enzymes and MUTAG, respectively a dataset of protein structures and a dataset of chemical compounds. The objective for Enzymes is to classify the proteins into one of the 6 top-level classes, and for MUTAG to classify the chemical compounds based on their mutagenic effect on bacterium.
 \begin{table}[!htb]
 	\begin{center}
-		\begin{tabular}{|p{30mm}|c|c|}
+		\begin{tabular}{|c|c|c|c|c|}
 			\hline
-			\# of vertices\newline asked & X & Y \\
+			Dataset & size & classes & \# of vertices & \# of edges\\
 			\hline
-			\# of vertices\newline per graph & & \\
-			\hline
-			\# of edges\newline per graph & & \\
-			\hline
-			mean vertex\newline degree & & \\
+			Enzymes & 600 & 6 & 33 & 124\\
+			MUTAG & 188 & 2 & 18 & 39\\
 			\hline
 		\end{tabular}
 	\end{center}
-	\caption {Statistics on the synthetic database}
-	\label{tab:stats_db}
-\end{table}
-\subsubsection{Real databases}
-statistics\\
-\todo{MUTAG et Enzymes}
+	\caption {Statistics on the real datasets}
+	\label{tab:stats_real}
+\end{table}on va analayser le temps de calcul
 
-ENZYMES is a dataset of protein tertiary structures obtained from (Borgwardt et al., 2005) 
-consisting of 600 enzymes from the BRENDA enzyme database (Schomburg et al., 2004). 
-In this case the task is to correctly assign each enzyme to one of the 6 EC top-level 
-classes. \\
-The MUTAG dataset consists of 188 chemical compounds divided into two 
-classes according to their mutagenic effect on a bacterium. 
-
-The chemical data was obtained form http://cdb.ics.uci.edu and converted 
-to graphs, where vertices represent atoms and edges represent chemical 
-bonds. Explicit hydrogen atoms have been removed and vertices are labeled
-by atom type and edges by bond type (single, double, triple or aromatic).
-Chemical data was processed using the Chemistry Development Kit (v1.4).
 \subsubsection{Metrics}
 In the following experiments only two simple metrics will be used to compare the different methods. First, the accuracy is evaluated in a given set $X$ simply using the 0-1 loss function as follows
 \begin{equation}
@@ -462,7 +446,7 @@ The second metric used is the computation time, expressed in seconds.
 \subsection{Evaluation Protocols}
 Implementing code from the main paper is a challenge in itself. Several problems aren't really documented and finding functions to solve them, or even explanations on how to solve them is sometimes difficult.
 \paragraph{Support Vector Machines}
-The Support Vector Machines algorithm is not implemented since it is not the focus of this project. Instead, the famous library \textbf{libsvm}\cite{cc2011libsvm} is used through the python library scikit-learn\cite{pedregosa2011scikit} because of its efficiency and renown. Moreover, there are some hyperparameters to optimize, namely the penalty coefficient on classification mistakes $C$. Since it is not the topic of this project it has not been optimized.\todo{Faire ça rapidement}
+The Support Vector Machines algorithm is not implemented since it is not the focus of this project. Instead, the famous library libsvm\cite{cc2011libsvm} is used through the python library scikit-learn\cite{pedregosa2011scikit} because of its efficiency and renown. Moreover, there are some hyperparameters to optimize, namely the penalty coefficient on classification mistakes $C$. Several experiments on various databases shower that the penalty coefficient $C$ had virtually no effect on the accuracy, thus was kept at a value of 1.
 \paragraph{Gram Matrix}
 The SVM library we used allows us to precompute the kernel and feeding it to the algorithm. This kernel matrix is called a gram matrix where its entries $M_{i,j}\in [0,1]$ represents the similarity between $G_i$ and $G_j$. Thus this matrix is obviously symmetric and it is only required to compute approximately half of the entries (precisely $\frac{n^2+n}{2}$).
 \paragraph{Raw Kernel}
@@ -471,7 +455,6 @@ The Raw Kernel is very simple to implement however encounters an issue : a sum t
 This kernel is also very simple to implement  since it only required computing $I-\lambda W_{\times}$ and its inverse, which is handled exclusively by numpy (part of the scipy project).
 \paragraph{Sylvester Equation}
 The Sylvester Equation is a good example of poorly documented problems (compared to the others). There are very few resources on the subject, and even less implementation of solvers. We could theoretically use the Sylvester Equation on both unlabeled and discrete-labeled graphs which are respectively represented as Sylvester and Generalized Sylvester Equations (involving a sum of matrices), however, the only library available so far solves the first one, but not the second one. There seems to be confusing terminology since there is a solver for the Generalized Sylvester Equation, but a different one than the one described in the studied source\cite{vishwanathan_graph_2010}. The same source also mentions a way to solve the generalized version\cite{lathauwer2004}, however, this option is not explored because of a lack of time.  
-\todo{changé ça ?}
 \paragraph{Conjugate Gradient Method}
 The Conjugate Gradient Method is however very well documented\cite{nesterov_lectures_2018} and there are several libraries implementing this algorithm. Since the main library in python\cite{jones2016scipy} only implemented this method on sparse matrices, it gave very poor computational time efficiency on our matrices. It was then decided to implement it directly and gave much better results. As said previously, the algorithm guarantees convergence in $r$ step where $r$ is the effective rank of the matrix $I-\lambda W_\times$. 
 \begin{figure}[!htb]
@@ -520,7 +503,7 @@ It can be seen that the two matrices are indeed very similar, but locally there 
 Afterwards, in order to verify all the algorithms gave similar results, it was decided to compute the Frobenius norm of the difference of two gram matrices (divided by the size of the matrix, thus giving the mean squared error of any entry). The following results were obtained and were satisfying.
 \begin{table}[!htb]
 	\begin{center}
-		\begin{tabular}{|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|p{15mm}|}
+		\begin{tabular}{|c|p{12mm}|p{13mm}|p{15mm}|p{15mm}|p{15mm}|p{13mm}|p{15mm}|}
 			\hline
 			& Raw\newline kernel & Inverse\newline Kernel & Sylvester\newline Equation & Conjugate\newline Gradients & Fixed\newline points & Spectral\newline Decomp. \\
 			\hline
@@ -553,7 +536,7 @@ The synthetic database generates at the same time adjacency matrices of each gra
 \end{figure}
 The accuracy has a lot of variation and thus it is hard to compare it. It can probably \todo{refaire cette experience en changeant quoi ?}be explained by the fact that we are working on graphs that are not big enough, and thus a small change in labels could have a big effect on the kernel, for example on the central edge of a tree graph. It is conjectured that provided a large graph and connected enough, a small change in label does not alter much its list of adjacency matrices, labels will have a positive impact on the accuracy. Concerning the computation time, the difference is quite small though by increasing the size of the database the difference can be better observed. There is a small factor of difference during the computation of the tensor product.
 \paragraph{Comparison of methods depending on number of graphs}
-Pas de sens, grandit à la meme vitesse = taille de bd au carré ?
+Pas de sens, grandit à la meme vitesse = taille de bd au carré ?\todo{faire ça}
 \begin{figure}[!htb]
 	\begin{multicols}{2}
 		\includegraphics[width=\linewidth]{data/nb_graph/acc.png}\par
@@ -579,40 +562,28 @@ En implémentation\todo{finir}
 
 \subsubsection{Performance on real datasets}
 This implementation was also tested on two real databases being Proteins and Enzymes
-\begin{table}
+\begin{table}[!htb]
 	\begin{center}
 		\begin{tabular}{|c||c|c||c|c|}
 			\hline
-			& \multicolumn{2}{c||}{Enzymes} & \multicolumn{2}{|c}{MUTAG}\\
+			& \multicolumn{2}{c||}{Enzymes} & \multicolumn{2}{|c|}{MUTAG}\\
 			%%% nb of graphs
-			\hline
-			& Accuracy & Comp. time & Accuracy & Comp. time\\
+			\cline{2-5}
+			Method & Accuracy  & Comp. time & Accuracy & Comp. time\\
 			\hline 
-			Sylv. Eq. & $0.182\pm 8.25e-3$ & 2'35" & & \\
-			Conj. Gr. & 0.182 & 2h21" & & \\
-			Fixed Pn. & 0.182 & 4h25'56" & & \\
-			Spec. De. & 0.180 & 1h23'10" & & \\
+			Sylvester Equation & $18.2\pm 0.83$ & 3'27" & $83.5\pm 2.8$ & 5"\\
+			Conjugate Gradient & $18.2\pm 0.83$ & 1h32'44" & $83.5\pm 2.8$ & 18"\\
+			Fixed Point Iterations & $18.2\pm 0.83$ & 3h14'59" & $83.5\pm 2.8$ & 47" \\
+			Spectral Decomposition & $18.0\pm 1.66$ & 2h15'23" & $82.4\pm 1.3$ & 43"\\
 			\hline
 		\end{tabular}
 	\end{center}
-\caption{Computation time of two real databases using different methods}
+\caption{Classification accuracy in percent \% with standard deviation and computation time for each acceleration method on two datasets}
 \end{table}
 
 \section{Conclusion and Future Work}
 todo
-\todo{Mettre liste des tables/figures ou pas ?}
-
-\newpage
-\appendix
-\section{Appendix}
-Proofs ?
 
 \section*{Acknowledgments}
 This work was done during the first year of my master's at Sorbonne Université. I would really like to thank Professor Sahbi for all the time he dedicated to me, and for his extraordinary and expert coaching on this project. This project taught me a lot and made me closer to becoming a researcher, while also making me a more mature person.
-\listoffigures
-\listoftables
-bibliographie et index
-
-%\bibliographystyle{ieeetr}
-%\bibliography{references}}
 \end{document}
