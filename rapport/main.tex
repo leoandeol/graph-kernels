@@ -385,7 +385,7 @@ In order to conduct experiments and verify claims made in the article, toy data 
 		\includegraphics[width=\linewidth]{data/generated-graphs/ring_altered_struct.png}\par
 		\includegraphics[width=\linewidth]{data/generated-graphs/ring_altered_labels.png}\par
 	\end{multicols}
-	\caption{Ring graphs, resp. unlabelled, labelled, altered structured, altered labels}
+	\caption{Ring graphs, resp. unlabeled, labeled, altered structured, altered labels}
 \end{figure}
 For simplicity, it was decided to only use 3 classes. Focus is put on 3 standard types of graphs : the ring, the star and the tree. A ring graph is a connected graph where each vertex is connected to exactly two vertices, it thus forms one big cycle. A star graph is a particular tree-structured graph composed of a central node, and of several other nodes that are only connected to the central node, thus looking like stars in cartoon representations. Finally, a tree is a famous type of graph : it is a connected graph without any cycle, but here a special type of tree will be studied, since each vertex has a maximum degree of 3.
 \begin{figure}[!htb]
@@ -413,7 +413,7 @@ Alteration on labels will randomly switch a predefined number of edge labels. On
 	\end{multicols}
 	\caption{Tree graphs, resp. unlabeled, labeled, altered structured, altered labels}
 \end{figure}
-\subsubsection{Real databases}
+\subsubsection{Real dataset}
 After testing the different methods on synthetic data, they will be applied to a real dataset. The selected dataset is MUTAG, a dataset of chemical compounds. The objective for MUTAG is to classify the chemical compounds based on their mutagenic effect on bacterium.
 \begin{table}[!htb]
 	\begin{center}
@@ -474,7 +474,7 @@ However there is a constraint on the lambda (the geometric factor) used in the k
 \paragraph{Spectral Decomposition}
 The Spectral Decomposition method is also very well documented since it is simply another name for the eigendecomposition, one of the main problems of linear algebra. Because of that it is very simple to implement since the method only requires Kronecker products and inverses. However, the fact that several inversions are required can lead to an accumulation of numerical imprecisions. Moreover, in some other cases the left eigenvectors matrix is singular and is not invertible. In order to fix that, an $\epsilon$ was added to all the diagonal of the adjacency matrices such that it would not alter the results (and did not) while allowing all kernels to be computed. Finally, the chosen $\mu(k)$ function is the power series to keep the method comparable to others.
 \paragraph{Nearest Kronecker Product}
-The Nearest Kronecker Product Approximation (NKP)\cite{van1993approximation} is used in conjunction with others methods in order to make them compatible with labeled graphs, it is especially useful with the spectral decomposition which is theoretically the fastest method available. There is some documentation on the topic however it is relatively hard to get a good grasp on the topic. Thus, a simple version of the NKP was implemented that does not take into account the special property of the product graph being composed of a sum of Kronecker products, making the overall complexity $O(n^3)$ instead of $O(dn^2)$.
+The Nearest Kronecker Product Approximation (NKP)\cite{van1993approximation} is used in conjunction with others methods in order to make them compatible with labeled graphs, it is especially useful with the spectral decomposition which is theoretically the fastest method available. There is some documentation on the topic however it is relatively hard to get a good grasp on the topic. Thus, a simple version of the NKP is implemented that does not take into account the special property of the product graph being composed of a sum of Kronecker products, making the overall complexity $O(n^3)$ instead of $O(dn^2)$.
 	
 
 \subsection{Performance}
@@ -529,7 +529,7 @@ The synthetic database generates at the same time adjacency matrices of each gra
 \caption {Accuracy and computational time of learning for unlabeled and labeled graphs}
 \end{figure}
 Overall in most cases the unlabeled version gives better accuracy which can probably be explained by the fact that the graphs used in the experiments are not big enough with a set of labels too large, and thus a small change on labels could have a big effect on the kernel, for example on the central edge of a tree graph. It is conjectured that provided a large and connected enough graph, a small change in label does not alter much its list of adjacency matrices, labels will have a positive impact on the accuracy. Concerning the computational time, the difference is quite small though by increasing the size of the database the difference can be better observed. There is a small factor of difference during the computation of the tensor product.
-\paragraph{Comparison of methods depending on number of graphs}
+\paragraph{Comparison of methods depending on the number of graphs}
 This method is rather different from the others. Indeed, the variable in this experiment, the number of graphs, does not directly impact the complexity of the different methods. It is actually used to enhance the visibility on the differences of complexity between the methods at a given point. Thus, it confirms that the raw random walk and inverse kernel evolve jointly, as the 4 others evolve jointly too. 
 \begin{figure}[!htb]
 	\centering
@@ -540,7 +540,7 @@ This method is rather different from the others. Indeed, the variable in this ex
 	\caption{Computational time of different methods depending on the size of the database}
 \end{figure}
 
-\paragraph{Comparison of methods depending on number of nodes}
+\paragraph{Comparison of methods depending on the number of nodes}
 In order to verify the complexities of the acceleration methods introduced above and compare their efficiency, their accuracy and computational time were calculated on synthetic databases with graphs of varying sizes. The databases were generated independently, thus the experiments of different sizes should not be compared in absolute values but rather relative. However, being generated following the same precise rules, the deviation is not too large.
 \begin{figure}[!htb]
 	\begin{multicols}{2}
@@ -550,18 +550,18 @@ In order to verify the complexities of the acceleration methods introduced above
 \caption{Accuracy and Computational time of different methods depending on the size of graphs}
 \end{figure}
 Concerning the accuracy, the conjecture on fixed point accuracy made earlier is verified in most cases : the fixed point method gives the best approximation of the raw kernel, albeit at the cost of higher computational time. It can be also noted that the raw kernel method is rarely beaten, only once by the fixed point kernel only. Surprisingly the inverse method is in average the worst performing, all the other methods approximating it giving better results than it. Finally, the Spectral Decomposition method gives disappointing results, which can be explained by the accumulation of numerical imprecisions.\\
-On the other hand, concerning computational time, it is important to remind that in this case some methods (fixed point, conjugate gradient) were implemented entirely for this project, while the Spectral Decomposition and Inverse methods used tools to compute eigenvalues and inverses, and finally the Sylvester Equation solver was taken from a library based in Fortran. This library is probably a lot more optimized than my personal code and thus may be the cause of a bias in computational time.\\
-The difference of complexity between the raw method, the inverse method and others is very noticeable and thus the acceleration methods are very time efficient. The most particular case is again the fixed point method which has a complexity increasing much faster than other methods, which could be explained by the number of iterations being much higher than the conjugate gradient for example, and thus computing the matrix vector products several more times, which is correlated to the error tolerance chosen for the fixed point iterations.
+On the other hand, concerning computational time, it is important to remind that in this case some methods (fixed point, conjugate gradient) were implemented entirely for this project, while the Spectral Decomposition and Inverse methods used tools to compute eigenvalues and inverses, and finally the Sylvester Equation solver is taken from a library based in Fortran. This library is probably a lot more optimized than my personal code and thus may be the cause of a bias in computational time.\\
+The difference of time complexity between the raw method, the inverse method and others is very noticeable and thus the acceleration methods are very time efficient. The most particular case is again the fixed point method which has a complexity increasing much faster than other methods, which could be explained by the number of iterations being much higher than the conjugate gradient for example, and thus computing the matrix vector products several more times, which is correlated to the error tolerance chosen for the fixed point iterations.
 \paragraph{Nearest Kronecker Product}
-This method was to be used in conjunction to other methods in order to adapt them to unlabeled graphs. It has been implemented as specified earlier, in a non-optimal manner ($O(n^3)$) but gave good results. 
+This method is to be used in conjunction to other methods in order to adapt them to unlabeled graphs. It has been implemented as specified earlier, in a non-optimal manner ($O(n^3)$) but gave good results. 
 \begin{figure}[!htb]
 	\begin{multicols}{2}
 		\includegraphics[width=\linewidth]{data/nkp/acc.png}\par
 		\includegraphics[width=\linewidth]{data/nkp/time.png}\par
 	\end{multicols}
 \caption{Accuracy and Computational time comparison between using a labeled database and the Nearest Kronecker Product Approximation}
-\end{figure}Indeed, the accuracy obtained by approximating the Kronecker product from two labeled graphs has virtually the same values as the original one, taking variations into account. Moreover, the computational time is slightly increased, which can probably be explained by the fact as precised before, that the method implemented was the general NKP in $O(n^3)$ and not the specific case for sums of Kronecker products in $O(dn^2)$, thus effectively multiplying the complexity of the method used by a constant, since all methods are in $O(n^3)$.\\
-In order to visualize the approximation better, two gram matrices were computed on the same dataset, the first one using the product adjacency matrix of labeled graphs, and the second one computed using the NKP and thus approximating the first. It can be seen that the matrices are very similar, the first one being more clear with less monotonic changes in the matrices, and the second being a lot smoother in its transitions, induced by the noise caused by the selections done on singular values in the algorithm.
+\end{figure}Indeed, the accuracy obtained by approximating the Kronecker product from two labeled graphs has virtually the same values as the original one, taking variations into account. Moreover, the computational time is slightly increased, which can probably be explained by the fact as precised before, that the method implemented is the general NKP in $O(n^3)$ and not the specific case for sums of Kronecker products in $O(dn^2)$, thus effectively multiplying the complexity of the method used by a constant, since all methods are in $O(n^3)$.\\
+In order to visualize the approximation better, two gram matrices were computed on the same dataset, the first one using the product adjacency matrix of labeled graphs, and the second one computed using the NKP and thus approximating the first. It can be seen that the matrices are very similar, the first one being more clear with less monotonic changes between its entries, and the second being a lot smoother in its transitions, induced by the noise caused by the selections done on singular values in the algorithm.
 \begin{figure}[!htb]
 	\begin{multicols}{2}
 		\includegraphics[width=\linewidth]{data/nkp/gram.png}\par
@@ -571,7 +571,7 @@ In order to visualize the approximation better, two gram matrices were computed 
 \end{figure}
 
 \subsubsection{Performance on real datasets}
-This implementation was also tested on a real database, which is MUTAG. First of all, the computational time bias on the Sylvester Method seems to appear also here, where its computational time relative to the others does not match with previous studies\cite{vishwanathan_graph_2010,shervashidze_efficient_2009}. Then, the different accuracies obtained  on MUTAG are even as good as the best results of a previous study using Graphlets \cite{shervashidze_efficient_2009}, and much better than their random walk kernel. The only exception is the Spectral Decomposition kernel which involves several operations subject to numerical imprecisions as said before.
+This implementation is also tested on a real database, which is MUTAG. First of all, the computational time bias on the Sylvester Method seems to appear also here, where its computational time relative to the others does not match with previous studies\cite{vishwanathan_graph_2010,shervashidze_efficient_2009}. Then, the different accuracies obtained  on MUTAG are even as good as the best results of a previous study using Graphlets \cite{shervashidze_efficient_2009}, and much better than their random walk kernel. The only exception is the Spectral Decomposition kernel which involves several operations subject to numerical imprecisions as said before.
 \begin{table}[!htb]
 	\begin{center}
 		\begin{tabular}{|c||c|c|}
@@ -596,10 +596,10 @@ Concerning the computational times, the Sylvester equation method and the Conjug
 \section{Conclusion and Future Work}
 \paragraph{Conclusion}
 In this project, different graph kernels were introduced, and focus was put on the random walk kernel, which is computationally expensive ($O(n^6)$). Thus, several acceleration methods were introduced in order to lower the complexity to a more acceptable bound $O(n^3)$, the lowest found yet. Another method, the Nearest Kronecker product was also introduced to enable any acceleration method to compute the kernel on labeled graphs by approximating them as unlabeled graphs. The computational time is lowered, but at the likely expense of a loss in accuracy.\\
-In order to experiment with these methods, a synthetic database was created, and a real dataset used. After having solved some implementations issues, experiments were lead on the methods. It was shown that the computational time of the fixed point iterations wildly increases when $\lambda$ is in the neighborhood of the inverse of the matrix's largest eigenvalue. It also was shown that the number of iterations of conjugate gradient had virtually no impact on the synthetic database.\\
-Then, the complexity of the different methods was verified, by computing the different methods on a synthetic database composed of graphs of different sizes. The accuracy of the Nearest Kronecker Product was tested as satisfying on the synthetic database. Finally, the different methods were tested on the real dataset and gave good to better results than previous studies.
+In order to experiment with these methods, a synthetic database was created, and a real dataset used. After having solved some implementations issues, experiments were lead on these methods. It was shown that the computational time of the fixed point iterations wildly increases when $\lambda$ is in the neighborhood of the inverse of the matrix's largest eigenvalue. It also was shown that the number of iterations of the conjugate gradient had virtually no impact on the synthetic database beyond very small values.\\
+Then, the complexity of the different methods was verified, by computing them on a synthetic database composed of graphs of different sizes. The accuracy of the Nearest Kronecker Product was tested on the synthetic database with similar levels of accuracy reached. Finally, the different methods were tested on the real dataset and gave good to better results than previous studies.
 \paragraph{Future Work}
-Some options in this project were not explored by lack of time, especially two, one theoretical, another slightly more technical. The first option is to generalize the Spectral Decomposition method to labeled graph, as it is the fastest method theoretically and the only one that can be combined with any weighting function, it would become the best option in any scenario. The second option is to work on an algorithm to solve the Generalized Sylvester Equation so that it can also be applied to labeled graphs in practice, but also finding its complexity, which is unknown as of latest research.
+Some options in this project were not explored by lack of time, especially two, one theoretical, another slightly more technical. The first option is to generalize the Spectral Decomposition method to labeled graphs, as it is the fastest method theoretically and the only one that can be combined with any weighting function, it would become the best option in any scenario. The second option is to work on an algorithm to solve the Generalized Sylvester Equation so that it can also be applied to labeled graphs in practice, but also finding its complexity, which is unknown as of latest research.
 
 \section*{Acknowledgments}
 This work was done during the first year of my master's at Sorbonne Université. I would really like to thank Professor Sahbi for all the time he dedicated to me, and for his extraordinary and expert coaching on this project. This project taught me a lot and made me closer to becoming a researcher, while also making me a more mature person.
