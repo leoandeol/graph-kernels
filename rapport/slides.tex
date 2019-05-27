@@ -199,7 +199,7 @@
 \end{frame}
 \begin{frame}{Random Walks I}
 \begin{multicols}{2}
-	Random walks on undirected, connected graphs 
+	Random walks on undirected graphs 
 	\begin{itemize}
 		\item Starts at a vertex
 		\item Randomly picks an edge and moves to the next vertex
@@ -256,7 +256,7 @@ A special case where $\mu(k)=\lambda^k$ leads to the following kernel
 \begin{block}{Method}
 	The Sylvester equation we solve is the following
 	\begin{equation*}
-	\sum\limits_{l=1}^{d}A_{1}^{(l)}XA_{2}^{(l)}]+C=X
+	\sum\limits_{l=1}^{d}A_{1}^{(l)}XA_{2}^{(l)}+C=X
 	\end{equation*}
 	by multiplying $X$ to $q_\times$ we get 
 	\begin{equation*}
@@ -272,7 +272,7 @@ A special case where $\mu(k)=\lambda^k$ leads to the following kernel
 	\begin{itemize}
 		\item Applicable to unlabeled and labeled graphs
 		\item Restricted to $\mu(k)=\lambda^k\quad\implies$ inverse kernel
-		\item The matrix should be symmetrized.
+		\item The matrix should be symmetrized
 	\end{itemize}
 	\begin{block}{Method}
 		\begin{itemize}
@@ -298,7 +298,7 @@ Either until $\norm{x_{t+1}-x_t}<\epsilon$ or a maximum number of iterations is 
 \end{block}
 \begin{itemize}
 	\item The complexity is $O(kdn^3)$ for k iterations and d labels
-	\item Convergence requires $\lambda \leq \frac{1}{\xi_1}$
+	\item Convergence requires $\lambda < \frac{1}{\xi_1}$
 \end{itemize}
 \end{frame}
 \begin{frame}{Spectral Decomposition I}
@@ -309,7 +309,6 @@ Either until $\norm{x_{t+1}-x_t}<\epsilon$ or a maximum number of iterations is 
 \begin{block}{Method}
 	\begin{itemize}
 		\item Eigendecomposition of the adjacency matrix
-		\item Inverse becomes trivial to compute on diagonal matrix
 	\end{itemize}
 	\begin{equation*}
 	\begin{split}
@@ -320,6 +319,15 @@ Either until $\norm{x_{t+1}-x_t}<\epsilon$ or a maximum number of iterations is 
 \end{block}
 \end{frame}
 \begin{frame}{Spectral Decomposition II}
+\begin{block}{Inverse Kernel}
+	\begin{itemize}
+		\item By choosing $\mu(k)=\lambda^k$, this method computes the inverse kernel
+		\item Inverse becomes trivial to compute on diagonal matrix
+	\end{itemize}
+	\begin{equation*}
+	\kappa(G,G_2)=q_{\times}^{\top}V_{\times}(I-\lambda D_{\times})^{-1}V_{\times}^{-1}p_{\times}
+	\end{equation*}
+\end{block}
 \begin{itemize}
 	\item The complexity is $O(pn^3)$ with $p$ which depends on the complexity of $\mu(k)$
 	\item It is even lower since the eigendecomposition of each graph is computed only once
@@ -329,7 +337,7 @@ Either until $\norm{x_{t+1}-x_t}<\epsilon$ or a maximum number of iterations is 
 \begin{frame}{Nearest Kronecker Product Approximation}
 \begin{itemize}
 	\item Labeled-graph kernel computation can be turned into an unlabeled one with some loss in accuracy, but gain in computation time
-	\item The idea is to approximate two matrices $S$ and $T$ such that $\norm{W_\times - A\otimes B}_F$ is minimized
+	\item The idea is to approximate two matrices $A$ and $B$ such that $\norm{W_\times - A\otimes B}_F$ is minimized
 	\item Computed in $O(dn^2)$ time \citep{van1993approximation}
 	\item All methods such as Spectral Decomposition can then be applied
 	\item The overall complexity remains unchanged
@@ -346,23 +354,36 @@ Either until $\norm{x_{t+1}-x_t}<\epsilon$ or a maximum number of iterations is 
     	A database of toy data was required to verify claims made in the studied article. A generator was written that can make graphs of "star", "tree" and "ring" types, of different sizes with different labels.
     \end{block}
 	\pause
-	\begin{block}{Real Databases}
+	\begin{block}{Real Dataset}
 		\begin{itemize}
-			\item Proteins : 1113 proteins, 2 classes
-			\item Enzymes : 600 enzymes, 6 classes
+			\item MUTAG : Classify whether a chemical compound is mutagen or not.
 		\end{itemize}
+	\begin{table}[!htb]
+	\begin{center}
+		\begin{tabular}{|c|c|c|c|c|}
+			\hline
+			Dataset & size & classes & \# of vertices & \# of edges\\
+			\hline
+			%Enzymes & 600 & 6 & 33 & 124\\
+			MUTAG & 188 & 2 & 18 & 39\\
+			\hline
+		\end{tabular}
+	\end{center}
+	\caption*{Statistics on the real dataset}
+	\label{tab:stats_real}
+	\end{table}
 	\end{block}
-	\pause
-	\begin{block}{Metrics}
-		\begin{equation*}
-		L(X,\vec{y})=\frac{1}{\abs{X}}\sum\limits_{i=1}^{\abs{X}}\left\{
-		\begin{matrix}
-		1 & \mbox{if } f(\vec{x}_i) \neq y_i \\
-		0 & \mbox{otherwise}
-		\end{matrix}
-		\right.
-		\end{equation*}
-	\end{block}
+%	\pause
+%	\begin{block}{Metrics}
+%		\begin{equation*}
+%		L(X,\vec{y})=\frac{1}{\abs{X}}\sum\limits_{i=1}^{\abs{X}}\left\{
+%		\begin{matrix}
+%		1 & \mbox{if } f(\vec{x}_i) \neq y_i \\
+%		0 & \mbox{otherwise}
+%		\end{matrix}
+%		\right.
+%		\end{equation*}
+%	\end{block}
 \end{frame}
 \begin{frame}{Implementation}
 	%\setlength{\columnsep}{-2.1in}
@@ -402,7 +423,7 @@ Either until $\norm{x_{t+1}-x_t}<\epsilon$ or a maximum number of iterations is 
 			\hline
 		\end{tabular}
 	\end{center}
-	\caption*{MSE of matrix entries}
+	\caption*{MSE of matrix entries normalized per entry}
 	\label{tab:frobenius_norm_diff} 
 	\end{table}
 	\vspace*{-1cm}
@@ -448,8 +469,26 @@ Either until $\norm{x_{t+1}-x_t}<\epsilon$ or a maximum number of iterations is 
 	\caption*{Accuracy and Computation time of different methods depending on the size of graphs}
 \end{figure}
 \end{frame}
-\begin{frame}{Enzymes and MUTAG}
-
+\begin{frame}{MUTAG}
+\begin{table}[!htb]
+	\begin{center}
+		\begin{tabular}{|c||c|c|}
+			\hline
+			& \multicolumn{2}{|c|}{MUTAG}\\
+			%%% nb of graphs
+			\cline{2-3}
+			Method & Accuracy & Comp. time\\
+			\hline 
+			Raw Kernel & $83.9\pm 3.1$ & 1'54"\\
+			Sylvester Equation & $83.5\pm 2.8$ & 5"\\
+			Conjugate Gradient & $83.5\pm 2.8$ & 18"\\
+			Fixed Point Iterations & $83.5\pm 2.8$ & 47" \\
+			Spectral Decomposition & $82.4\pm 1.3$ & 43"\\
+			\hline
+		\end{tabular}
+	\end{center}
+	\caption*{Accuracy and Computation time on the dataset}
+\end{table}
 \end{frame}
 
 
@@ -460,7 +499,7 @@ Either until $\norm{x_{t+1}-x_t}<\epsilon$ or a maximum number of iterations is 
 		\item Random walks : decent accuracy
 		\item Several acceleration methods were introduced
 		\item Performances are greatly improved
-		\item conclusion on real data : todo
+		\item Performances on MUTAG are on par with the state of the art
 	\end{itemize}
 \end{block}
 \begin{block}{Future work}

@@ -589,7 +589,7 @@ This implementation is also tested on a real database, which is MUTAG. First of 
 			\hline
 		\end{tabular}
 	\end{center}
-\caption{Classification accuracy in percent \% with standard deviation and computational time for each acceleration method on two datasets}
+\caption{Classification accuracy in percent \% with standard deviation and computational time for each acceleration method on the MUTAG dataset}
 \end{table}
 Concerning the computational times, the Sylvester equation method and the Conjugate Gradient method are the two best performing, compared to the fixed point iterations which takes too many steps to converge in this case. Finally, the Spectral Decomposition method is less efficient than expected, which is linked to the fact that the eigendecompositions are computed twice for every pair of graphs, which is computationally expensive. 
 
