@@ -1,14 +1,19 @@
-# graph-kernels
-First Master Thesis on the topic of Graph Kernels and SVMs for Pattern recognition, focusing on low-complexity kernels for labelled graphs using random walks
+# Graph Kernels and Support Vector Machines for Pattern Recognition
+This project was conducted during the first year of my master's at Sorbonne Université.
+The main focus was to find low-complexity methods for the random walk graph kernel, especially on labeled graphs.
 
-Libs : libsvm (through sklearn) + networkx
+## Prerequisites 
+- numpy
+- scipy
+- scikit-learn
+- grakel (to import graph databases)
+- control (dlyap)
+- slycot (necessary for dlyap in control)
+- jupyter (optional, for tests)
 
-Todo :
-- [X] master the state of the art
-- [X] write a graph generator (5/6 topologies) with labels with a seed
-- [X] write a perturbation function
-- [X] write an export function to create a db
-- [X] write a metric
-- [X] implement the state-of-the-art kernels
-- [X] randomize them
-- [X] either accelerate random walk kernel or propose a new approach
+## Content
+- Thesis report and presentation slides
+- A synthetic graph database generator
+- The Random Walk kernel introduced by (Vishwanathan et al, 2010)
+- 5 Acceleration Methods introduced in the same paper
+- Experiments on their speed and accuracy
